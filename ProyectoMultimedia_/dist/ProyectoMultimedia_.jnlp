@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="ProyectoMultimedia_.jnlp">
+  <information>
+    <title>ProyectoMultimedia_</title>
+    <vendor>Irechu</vendor>
+    <description>null</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="ProyectoMultimedia_.jar" size="2782390" download="eager" />
+    <jar href="lib\charm-glisten-4.4.1-javadoc.jar" size="2817088" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="800" height="600" main-class="multimedia.ProyectoMultimedia"  name="ProyectoMultimedia_" />
+  <update check="always"/>
+</jnlp>
