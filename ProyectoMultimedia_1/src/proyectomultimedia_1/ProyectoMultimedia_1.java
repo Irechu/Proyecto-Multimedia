@@ -17,7 +17,7 @@ import javafx.stage.Stage;
  * @author Irene Maria Padilla Munoz
  */
 public class ProyectoMultimedia_1 extends Application {
-    
+        
     @Override
     public void start(Stage stage) throws Exception {
         ResourceBundle resources = ResourceBundle.getBundle("languages.text_es");
@@ -27,6 +27,7 @@ public class ProyectoMultimedia_1 extends Application {
         
         stage.setScene(scene);
         stage.show();
+        
     }
 
     /**
