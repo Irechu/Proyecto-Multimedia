@@ -23,7 +23,13 @@ public class ProyectoMultimedia_1 extends Application {
     public void start(Stage stage) throws Exception {
         
 
-        ResourceBundle resources = ResourceBundle.getBundle("languages.text_es");
+        int idIdioma = reproductorController.leeIdioma();
+        ResourceBundle resources = null;
+        if(idIdioma == 0){
+            resources = ResourceBundle.getBundle("languages.text_es");
+        }else{
+            resources = ResourceBundle.getBundle("languages.text_en");
+        }
         Parent root = FXMLLoader.load(getClass().getResource("reproductor.fxml"), resources);
 
         Scene scene = new Scene(root);
