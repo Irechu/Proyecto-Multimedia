@@ -5,6 +5,7 @@
  */
 package proyectomultimedia_1;
 
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,17 +18,19 @@ import javafx.stage.Stage;
  * @author Irene Maria Padilla Munoz
  */
 public class ProyectoMultimedia_1 extends Application {
-        
+
     @Override
     public void start(Stage stage) throws Exception {
+        
+
         ResourceBundle resources = ResourceBundle.getBundle("languages.text_es");
-        Parent root = FXMLLoader.load(getClass().getResource("reproductor.fxml"),resources);
-        
+        Parent root = FXMLLoader.load(getClass().getResource("reproductor.fxml"), resources);
+
         Scene scene = new Scene(root);
-        
+
         stage.setScene(scene);
         stage.show();
-        
+
     }
 
     /**
@@ -36,5 +39,5 @@ public class ProyectoMultimedia_1 extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

@@ -9,25 +9,29 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 /**
  *
  * @author Irene Maria Padilla Munoz
  */
 public class reproductorController implements Initializable {
-    
+
     private Label label;
     @FXML
     private AnchorPane menuSplitPane;
@@ -131,13 +135,30 @@ public class reproductorController implements Initializable {
     private ImageView espanolBtn;
     @FXML
     private ImageView inglesBtn;
-   
+    @FXML
+    private RadioButton daltonicRadioBtn;
+    @FXML
+    private TextField path;
+    @FXML
+    private Button pathBtn;
+
+    //Variables
+    boolean daltonism;
     
+    
+    //IMAGENES//
+    /*Corazones*/
+    final private Image favRedImage = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
+    final private Image favImage = new Image(getClass().getResourceAsStream("/assets/imagenes/fav.png"));
+
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ObservableList<String> data = FXCollections.observableArrayList("cancion1","cancion2","...");
+        //Inicializamos las variables
+        daltonism = false;
+        ObservableList<String> data = FXCollections.observableArrayList("cancion1", "cancion2", "...");
         playlistList.setItems(data);
-    }    
+    }
 
     @FXML
     private void favouritesOnClick(MouseEvent event) {
@@ -157,6 +178,8 @@ public class reproductorController implements Initializable {
 
     @FXML
     private void favOnClick(MouseEvent event) {
+        fav.setImage(favRedImage);
+        //TODO segun si la canción está marcada como favorita o no, pintamos el fav
     }
 
     @FXML
@@ -186,5 +209,22 @@ public class reproductorController implements Initializable {
     @FXML
     private void enOnClick(MouseEvent event) {
     }
-    
+
+    @FXML
+    private void daltonismRadioBtnOnClick(MouseEvent event) {
+        daltonism = daltonicRadioBtn.isSelected();
+        if (daltonism) {
+            menuSplitPane.setStyle("-fx-background-color:#ff9500");
+            name.setTextFill(Color.web("#ff9500"));
+
+        } else {
+            menuSplitPane.setStyle("-fx-background-color:#4a0707");
+            name.setTextFill(Color.web("#4a0707"));
+        }
+    }
+
+    @FXML
+    private void pathBtnOnClick(MouseEvent event) {
+    }
+
 }
