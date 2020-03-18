@@ -48,8 +48,6 @@ public class reproductorController implements Initializable {
     @FXML
     private AnchorPane playlistPane;
     @FXML
-    private SplitPane playlistSplitPane;
-    @FXML
     private AnchorPane audioPane;
     @FXML
     private AnchorPane metadata_;
@@ -93,8 +91,6 @@ public class reproductorController implements Initializable {
     ListView<String> playlistList;
     @FXML
     private AnchorPane playlistSplit2;
-    @FXML
-    private VBox main;
     @FXML
     private TableColumn<?, ?> songColumnPl;
     @FXML
@@ -150,6 +146,12 @@ public class reproductorController implements Initializable {
     /*Corazones*/
     final private Image favRedImage = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
     final private Image favImage = new Image(getClass().getResourceAsStream("/assets/imagenes/fav.png"));
+    @FXML
+    private VBox menuVBox;
+    @FXML
+    private VBox principalVBox;
+    @FXML
+    private AnchorPane libraryEntrie;
 
 
     @Override
@@ -225,6 +227,10 @@ public class reproductorController implements Initializable {
 
     @FXML
     private void pathBtnOnClick(MouseEvent event) {
+    }
+
+    @FXML
+    private void libraryOnClick(MouseEvent event) {
     }
 
 }

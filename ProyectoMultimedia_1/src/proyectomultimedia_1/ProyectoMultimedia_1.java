@@ -27,8 +27,10 @@ public class ProyectoMultimedia_1 extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("reproductor.fxml"), resources);
 
         Scene scene = new Scene(root);
+        
 
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
 
     }
