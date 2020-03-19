@@ -163,6 +163,8 @@ public class reproductorController implements Initializable {
     private AnchorPane libraryEntrie;
     @FXML
     private AnchorPane main;
+    @FXML
+    private AnchorPane playerEntrie;
 
 
     @Override
@@ -343,6 +345,14 @@ public class reproductorController implements Initializable {
 
     @FXML
     private void libraryOnClick(MouseEvent event) {
+        System.out.println("Has pinchado en: BIBLIOTECA");
+        libraryPane.toFront();
+    }
+
+    @FXML
+    private void playerOnClick(MouseEvent event) {
+        System.out.println("Has pinchado en: REPRODUCTOR");
+        audioPane.toFront();
     }
 
 }
