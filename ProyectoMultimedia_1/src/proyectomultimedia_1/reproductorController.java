@@ -345,6 +345,8 @@ public class reproductorController implements Initializable {
 
     @FXML
     private void libraryOnClick(MouseEvent event) {
+        System.out.println("Has pinchado en: BIBLIOTECA");
+        libraryPane.toFront();
     }
 
     @FXML
