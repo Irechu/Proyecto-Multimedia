@@ -110,6 +110,23 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </AnchorPane>
+                  <AnchorPane fx:id="playerEntrie" layoutX="5.0" layoutY="214.0" onMouseClicked="#playerOnClick">
+                     <children>
+                        <Label layoutX="67.0" prefHeight="45.0" prefWidth="143.0" text="%player" textFill="#ababab" AnchorPane.leftAnchor="67.0">
+                           <font>
+                              <Font name="Arial Rounded MT Bold" size="25.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="32.0" fitWidth="30.0" layoutX="14.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="7.0">
+                           <image>
+                              <Image url="@assets/imagenes/play.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </AnchorPane>
                </children>
             </AnchorPane>
          </children>
@@ -170,22 +187,6 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane fx:id="favouritesPane" layoutX="10.0" layoutY="10.0" prefHeight="753.0" prefWidth="1078.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <TableView opacity="0.94" prefHeight="730.0" prefWidth="838.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <columns>
-                              <TableColumn fx:id="durationColumnFav" prefWidth="143.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%duration" />
-                              <TableColumn fx:id="songColumnFav" minWidth="25.0" prefWidth="146.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18; -fx-font-color: #393d42;" text="%name" />
-                              <TableColumn fx:id="artistColumnFav" prefWidth="182.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%artist" />
-                              <TableColumn fx:id="albumColumnFav" minWidth="0.0" prefWidth="174.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%album" />
-                              <TableColumn fx:id="dateColumnFav" prefWidth="184.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%date" />
-                           </columns>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
                      </children>
                   </AnchorPane>
                   <AnchorPane fx:id="audioPane" prefHeight="753.0" prefWidth="1078.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -342,6 +343,22 @@
                               <Font name="Arial Rounded MT Bold" size="52.0" />
                            </font>
                         </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="favouritesPane" layoutX="10.0" layoutY="10.0" prefHeight="753.0" prefWidth="1078.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <TableView opacity="0.94" prefHeight="730.0" prefWidth="838.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <columns>
+                              <TableColumn fx:id="durationColumnFav" prefWidth="143.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%duration" />
+                              <TableColumn fx:id="songColumnFav" minWidth="25.0" prefWidth="146.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18; -fx-font-color: #393d42;" text="%name" />
+                              <TableColumn fx:id="artistColumnFav" prefWidth="182.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%artist" />
+                              <TableColumn fx:id="albumColumnFav" minWidth="0.0" prefWidth="174.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%album" />
+                              <TableColumn fx:id="dateColumnFav" prefWidth="184.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%date" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
                      </children>
                   </AnchorPane>
                </children>
