@@ -24,7 +24,7 @@
                <children>
                   <AnchorPane fx:id="libraryEntrie" layoutX="17.0" layoutY="114.0" onMouseClicked="#libraryOnClick">
                      <children>
-                        <Label layoutX="55.0" layoutY="-1.0" prefHeight="45.0" prefWidth="166.0" text="%library" textFill="#ababab">
+                        <Label layoutX="55.0" layoutY="-1.0" prefHeight="45.0" prefWidth="166.0" text="%biblioteca" textFill="#ababab">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="25.0" />
                            </font>
@@ -364,7 +364,7 @@
                               <TableColumn fx:id="durationColumnFav1" prefWidth="143.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%duration" />
                            </columns>
                         </TableView>
-                        <Label alignment="CENTER" mouseTransparent="true" opacity="0.35" prefHeight="795.0" prefWidth="1077.0" text="%library" textFill="#4a0707" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <Label alignment="CENTER" mouseTransparent="true" opacity="0.35" prefHeight="795.0" prefWidth="1077.0" text="%biblioteca" textFill="#4a0707" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="60.0" />
                            </font>
