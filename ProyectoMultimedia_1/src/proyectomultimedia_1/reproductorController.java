@@ -10,7 +10,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.math.RoundingMode;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -28,7 +30,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -185,6 +190,66 @@ public class reproductorController implements Initializable {
     private ImageView aboutSelected;
     @FXML
     private ImageView playerSelected;
+    @FXML
+    private Label libraryEntrieLabel;
+    @FXML
+    private Label favouritesEntrieLabel;
+    @FXML
+    private Label playlistEntrieLabel;
+    @FXML
+    private Label playerEntrieLabel;
+    @FXML
+    private Label ecualizatorEntrieLabel;
+    @FXML
+    private Label settingsEntrieLabel;
+    @FXML
+    private Label aboutEntrieLabel;
+    @FXML
+    private AnchorPane playlistSplit1AnchorPane;
+    @FXML
+    private Label playlistSplit1Label;
+    @FXML
+    private Label libraryPaneLabel;
+    @FXML
+    private Label favouritesPaneLabel;
+
+    @FXML
+    private void sliderDurationKeyPressed(KeyEvent event) {
+        double valor = sliderDuration.getValue();
+        System.out.println("valor: " + valor);
+        String[] arr = String.valueOf(valor).split("\\.");
+        int minutos = Integer.parseInt(arr[0]);
+        int segundos = Integer.parseInt(arr[1].substring(0, 1));
+        System.out.println("minutos: " + minutos + " segundos: " + segundos);
+        tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
+        timeCounter.setText(tiempo);
+    }
+
+    private void sliderDurationOnScroll(ScrollEvent event) {
+                double valor = sliderDuration.getValue();
+        System.out.println("valor: " + valor);
+        String[] arr = String.valueOf(valor).split("\\.");
+
+        int minutos = Integer.parseInt(arr[0]);
+        int segundos = Integer.parseInt(arr[1].substring(0, 1));
+        System.out.println("minutos: " + minutos + " segundos: " + segundos);
+        tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
+        timeCounter.setText(tiempo);
+    }
+
+    @FXML
+    private void sliderDurationOnDragged(MouseEvent event) {
+                double valor = sliderDuration.getValue();
+        System.out.println("valor: " + valor);
+        String[] arr = String.valueOf(valor).split("\\.");
+
+        int minutos = Integer.parseInt(arr[0]);
+        int segundos = Integer.parseInt(arr[1].substring(0, 1));
+        System.out.println("minutos: " + minutos + " segundos: " + segundos);
+        tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
+        timeCounter.setText(tiempo);
+    }
+
 
     //Variables
     enum tabs {
@@ -195,12 +260,17 @@ public class reproductorController implements Initializable {
     boolean daltonism;
     boolean video;
     tabs tab;
+    String tiempo;
+    DecimalFormat df = new DecimalFormat("##.##");
+
     //IMAGENES//
     /*Corazones*/
     final private Image favRedImage = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
     final private Image favImage = new Image(getClass().getResourceAsStream("/assets/imagenes/fav.png"));
     final private Image changeMusic = new Image(getClass().getResourceAsStream("/assets/imagenes/music.png"));
     final private Image changeVideo = new Image(getClass().getResourceAsStream("/assets/imagenes/video.png"));
+    final private Image muteImage = new Image(getClass().getResourceAsStream("/assets/imagenes/mute.png"));
+    final private Image soundImage = new Image(getClass().getResourceAsStream("/assets/imagenes/sound.png"));
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -210,6 +280,8 @@ public class reproductorController implements Initializable {
         ObservableList<String> data = FXCollections.observableArrayList("cancion1", "cancion2", "...");
         playlistList.setItems(data);
         tab = PLAYER;
+        sliderVolume.setValue(50);
+        sliderDuration.setValue(0);
     }
 
     @FXML
@@ -439,6 +511,17 @@ public class reproductorController implements Initializable {
             musicImage.toFront();
             musicVideo.setVisible(false);
             musicImage.setVisible(true);
+        }
+    }
+
+    @FXML
+    private void volumeSliderMouseReleased(MouseEvent event) {
+        //sliderVolume.getValue();
+        System.out.println("volumen ajustado a: " + sliderVolume.getValue());
+        if (sliderVolume.getValue() == 0) {
+            sound.setImage(muteImage);
+        } else {
+            sound.setImage(soundImage);
         }
     }
 
