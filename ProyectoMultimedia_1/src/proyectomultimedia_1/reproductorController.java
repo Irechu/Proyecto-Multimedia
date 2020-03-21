@@ -14,8 +14,10 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.util.List;
+import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -34,10 +36,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -199,22 +205,59 @@ public class reproductorController implements Initializable {
     @FXML
     private TableColumn<?, ?> dateColumnFav;
     @FXML
-    private TableColumn<?, ?> songColumnFav1;
-    @FXML
-    private TableColumn<?, ?> artistColumnFav1;
-    @FXML
-    private TableColumn<?, ?> albumColumnFav1;
-    @FXML
-    private TableColumn<?, ?> dateColumnFav1;
-    @FXML
-    private TableColumn<?, ?> durationColumnFav1;
-    @FXML
     private Label libraryPaneLabel;
     @FXML
     private Label favouritesPaneLabel;
+    @FXML
+    private TableColumn<?, ?> songColumnLib;
+    @FXML
+    private TableColumn<?, ?> artistColumnLib;
+    @FXML
+    private TableColumn<?, ?> albumColumnLib;
+    @FXML
+    private TableColumn<?, ?> dateColumnLib;
+    @FXML
+    private TableColumn<?, ?> durationColumnLib;
+    @FXML
+    private TableView<?> favouritesTable;
+    @FXML
+    private TableView<?> libraryTable;
 
     @FXML
-    private void sliderDurationMouseReleased(MouseEvent event) {
+    private void sliderDurationKeyPressed(KeyEvent event) {
+        double valor = sliderDuration.getValue();
+        System.out.println("valor: " + valor);
+        String[] arr = String.valueOf(valor).split("\\.");
+        int minutos = Integer.parseInt(arr[0]);
+        int segundos = Integer.parseInt(arr[1].substring(0, 1));
+        System.out.println("minutos: " + minutos + " segundos: " + segundos);
+        tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
+        timeCounter.setText(tiempo);
+    }
+
+    private void sliderDurationOnScroll(ScrollEvent event) {
+        double valor = sliderDuration.getValue();
+        System.out.println("valor: " + valor);
+        String[] arr = String.valueOf(valor).split("\\.");
+
+        int minutos = Integer.parseInt(arr[0]);
+        int segundos = Integer.parseInt(arr[1].substring(0, 1));
+        System.out.println("minutos: " + minutos + " segundos: " + segundos);
+        tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
+        timeCounter.setText(tiempo);
+    }
+
+    @FXML
+    private void sliderDurationOnDragged(MouseEvent event) {
+        double valor = sliderDuration.getValue();
+        System.out.println("valor: " + valor);
+        String[] arr = String.valueOf(valor).split("\\.");
+
+        int minutos = Integer.parseInt(arr[0]);
+        int segundos = Integer.parseInt(arr[1].substring(0, 1));
+        System.out.println("minutos: " + minutos + " segundos: " + segundos);
+        tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
+        timeCounter.setText(tiempo);
     }
 
     @FXML
@@ -234,12 +277,17 @@ public class reproductorController implements Initializable {
     boolean persistentDaltonims;
     boolean video;
     int tab;
+    String tiempo;
+    DecimalFormat df = new DecimalFormat("##.##");
+
     //IMAGENES//
     /*Corazones*/
     final private Image favRedImage = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
     final private Image favImage = new Image(getClass().getResourceAsStream("/assets/imagenes/fav.png"));
     final private Image changeMusic = new Image(getClass().getResourceAsStream("/assets/imagenes/music.png"));
     final private Image changeVideo = new Image(getClass().getResourceAsStream("/assets/imagenes/video.png"));
+    final private Image muteImage = new Image(getClass().getResourceAsStream("/assets/imagenes/mute.png"));
+    final private Image soundImage = new Image(getClass().getResourceAsStream("/assets/imagenes/sound.png"));
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -268,6 +316,9 @@ public class reproductorController implements Initializable {
         }
 
         System.out.println("                                            INICIALIZA");
+
+        sliderVolume.setValue(50);
+        sliderDuration.setValue(0);
     }
 
     @FXML
@@ -604,6 +655,16 @@ public class reproductorController implements Initializable {
 
     private void fillLibrary() {
         //TODO codigo para saber directorios
+        /*String[] listado = file.list();
+                if (listado == null || listado.length == 0) {
+                    System.out.println("No hay elementos dentro de la carpeta actual");
+                    return;
+                } else {
+                    for (int i = 0; i < listado.length; i++) {
+                        System.out.println(listado[i]);
+                    }
+                }*/
+
         File dir = new File(path.getText());
         File[] listado = dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -616,8 +677,8 @@ public class reproductorController implements Initializable {
             return;
         } else {
             for (int i = 0; i < listado.length; i++) {
-
                 System.out.println(listado[i]);
+                
             }
         }
     }
