@@ -6,14 +6,19 @@
 package proyectomultimedia_1;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.URL;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -36,6 +41,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 
 /**
  *
@@ -190,18 +197,15 @@ public class reproductorController implements Initializable {
     private AnchorPane playlistSplit1AnchorPane;
     @FXML
     private Label playlistSplit1Label;
-    
+
     //Variables
     boolean daltonism;
-    String color ="#4a0707";
-    
-    
+    String color = "#4a0707";
+
     //IMAGENES//
     /*Corazones*/
     final private Image favRedImage = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
     final private Image favImage = new Image(getClass().getResourceAsStream("/assets/imagenes/fav.png"));
-    
-
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -271,7 +275,7 @@ public class reproductorController implements Initializable {
         Parent root = null;
         main.getChildren().remove(0);
         int es_EN = 0;
-        
+
         try {
             Locale.setDefault(new Locale("es_es"));
 
@@ -310,7 +314,7 @@ public class reproductorController implements Initializable {
 
         main.getChildren().add(root);
     }
-    
+
     public static int leeIdioma() {
         int es_EN;
         try {
@@ -364,11 +368,11 @@ public class reproductorController implements Initializable {
 
     @FXML
     private void daltonismRadioBtnOnClick(MouseEvent event) {
-        daltonism = daltonicRadioBtn.isSelected();        
+        daltonism = daltonicRadioBtn.isSelected();
         if (daltonism) {
             menuSplitPane.setStyle("-fx-background-color:#ff9500");
             name.setTextFill(Color.web("#ff9500"));
-            
+
             libraryEntrieLabel.setStyle("-fx-text-fill:#000000");
             settingsEntrieLabel.setStyle("-fx-text-fill:#000000");
             aboutEntrieLabel.setStyle("-fx-text-fill:#000000");
@@ -381,7 +385,7 @@ public class reproductorController implements Initializable {
         } else {
             menuSplitPane.setStyle("-fx-background-color:#4a0707");
             name.setTextFill(Color.web("#4a0707"));
-            
+
             libraryEntrieLabel.setStyle("-fx-text-fill:#ababab");
             settingsEntrieLabel.setStyle("-fx-text-fill:#ababab");
             aboutEntrieLabel.setStyle("-fx-text-fill:#ababab");
@@ -396,6 +400,51 @@ public class reproductorController implements Initializable {
 
     @FXML
     private void pathBtnOnClick(MouseEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Buscar Canciones");//TODO INTERNACIONALIZAR
+
+        // Agregar filtros para facilitar la busqueda
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("TODAS LAS CANCIONES", "*.*"),//TODO INTERNACIONALIZAR
+                new FileChooser.ExtensionFilter("MP3", "*.mp3"),
+                new FileChooser.ExtensionFilter("PNG", "*.png")
+        );
+
+        // Obtener la cancion seleccionada
+        //File song = fileChooser.showOpenDialog(null); //Solo una cancion
+        List<File> lista = fileChooser.showOpenMultipleDialog(null); //Poder abrir varias
+
+        // Mostar la imagen
+        if (!lista.isEmpty()) {
+            try {
+                File file = new File("./src/assets/library.txt");
+                //TODO codigo para saber directorios
+                /*String[] listado = file.list();
+                if (listado == null || listado.length == 0) {
+                    System.out.println("No hay elementos dentro de la carpeta actual");
+                    return;
+                } else {
+                    for (int i = 0; i < listado.length; i++) {
+                        System.out.println(listado[i]);
+                    }
+                }*/
+                FileWriter fstream = new FileWriter(file, true);
+                BufferedWriter out = new BufferedWriter(fstream);
+                for (File s : lista) {
+                    //Song image = new Image("file:" + song.getAbsolutePath());
+                    //song.setImage(image);
+                    System.out.println(s.getAbsolutePath());
+                    out.write(s.getAbsolutePath());
+                    out.write("\n");
+                }
+                out.close();
+            } catch (IOException ex) {
+                System.out.println("Error al abrir el fichero de la biblioteca");
+            }
+
+        } else {
+            System.out.println("Seleccione algo por favor");
+        }
     }
 
     @FXML

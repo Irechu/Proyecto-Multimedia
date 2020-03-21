@@ -25,7 +25,7 @@
                <children>
                   <AnchorPane fx:id="libraryEntrie" layoutX="17.0" layoutY="124.0" onMouseClicked="#libraryOnClick">
                      <children>
-                        <Label fx:id="libraryEntrieLabel" layoutX="55.0" layoutY="-1.0" prefHeight="45.0" prefWidth="166.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%library" textFill="#ababab">
+                        <Label fx:id="libraryEntrieLabel" layoutX="55.0" layoutY="-1.0" prefHeight="45.0" prefWidth="166.0" text="%library" textFill="#ababab">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="25.0" />
                            </font>
@@ -45,7 +45,7 @@
                   </AnchorPane>
                   <AnchorPane fx:id="settingsEntrie" layoutX="19.0" layoutY="621.0" onMouseClicked="#settingsOnClick">
                      <children>
-                        <Label fx:id="settingsEntrieLabel" layoutX="56.0" layoutY="1.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%settings" textFill="#ababab">
+                        <Label fx:id="settingsEntrieLabel" layoutX="56.0" layoutY="1.0" text="%settings" textFill="#ababab">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="25.0" />
                            </font>
@@ -62,7 +62,7 @@
                   </AnchorPane>
                   <AnchorPane fx:id="aboutEntrie" layoutX="21.0" layoutY="582.0" onMouseClicked="#aboutOnClick">
                      <children>
-                        <Label fx:id="aboutEntrieLabel" layoutX="49.0" layoutY="3.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%about" textFill="#ababab">
+                        <Label fx:id="aboutEntrieLabel" layoutX="49.0" layoutY="3.0" text="%about" textFill="#ababab">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="25.0" />
                            </font>
@@ -79,7 +79,7 @@
                   </AnchorPane>
                   <AnchorPane fx:id="favouritesEntrie" layoutX="17.0" layoutY="168.0" onMouseClicked="#favouritesOnClick">
                      <children>
-                        <Label fx:id="favouritesEntrieLabel" layoutX="58.0" layoutY="1.0" prefHeight="45.0" prefWidth="129.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%favourites" textFill="#ababab" AnchorPane.leftAnchor="58.0">
+                        <Label fx:id="favouritesEntrieLabel" layoutX="58.0" layoutY="1.0" prefHeight="45.0" prefWidth="129.0" text="%favourites" textFill="#ababab" AnchorPane.leftAnchor="58.0">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="25.0" />
                            </font>
@@ -96,7 +96,7 @@
                   </AnchorPane>
                   <AnchorPane fx:id="playlistEntrie" layoutX="5.0" layoutY="65.0" onMouseClicked="#playlistOnClick">
                      <children>
-                        <Label fx:id="playlistEntrieLabel" layoutX="68.0" layoutY="2.0" prefHeight="45.0" prefWidth="143.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%playlists" textFill="#ababab" AnchorPane.leftAnchor="68.0">
+                        <Label fx:id="playlistEntrieLabel" layoutX="68.0" layoutY="2.0" prefHeight="45.0" prefWidth="143.0" text="%playlists" textFill="#ababab" AnchorPane.leftAnchor="68.0">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="25.0" />
                            </font>
@@ -113,7 +113,7 @@
                   </AnchorPane>
                   <AnchorPane fx:id="playerEntrie" layoutX="5.0" layoutY="214.0" onMouseClicked="#playerOnClick">
                      <children>
-                        <Label fx:id="playerEntrieLabel" layoutX="67.0" prefHeight="45.0" prefWidth="143.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%player" textFill="#ababab" AnchorPane.leftAnchor="67.0">
+                        <Label fx:id="playerEntrieLabel" layoutX="67.0" prefHeight="45.0" prefWidth="143.0" text="%player" textFill="#ababab" AnchorPane.leftAnchor="67.0">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="25.0" />
                            </font>
@@ -130,7 +130,7 @@
                   </AnchorPane>
                   <AnchorPane fx:id="ecualizatorEntrie" layoutX="5.0" layoutY="259.0" onMouseClicked="#playerOnClick">
                      <children>
-                        <Label fx:id="ecualizatorEntrieLabel" layoutX="67.0" prefHeight="45.0" prefWidth="143.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%ecualizator" textFill="#ababab" AnchorPane.leftAnchor="67.0">
+                        <Label fx:id="ecualizatorEntrieLabel" layoutX="67.0" prefHeight="45.0" prefWidth="143.0" text="%ecualizator" textFill="#ababab" AnchorPane.leftAnchor="67.0">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="25.0" />
                            </font>
@@ -157,17 +157,17 @@
                      <children>
                         <AnchorPane layoutX="105.0" layoutY="324.0">
                            <children>
-                              <Label styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%language" textFill="#ababab">
+                              <Label text="%language" textFill="#ababab">
                                  <font>
                                     <Font name="Arial Rounded MT Bold" size="30.0" />
                                  </font>
                               </Label>
-                              <Label layoutY="100.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%directory" textFill="#ababab">
+                              <Label layoutY="100.0" text="%directory" textFill="#ababab">
                                  <font>
                                     <Font name="Arial Rounded MT Bold" size="30.0" />
                                  </font>
                               </Label>
-                              <Label layoutY="200.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%daltonism" textFill="#ababab">
+                              <Label layoutY="200.0" text="%daltonism" textFill="#ababab">
                                  <font>
                                     <Font name="Arial Rounded MT Bold" size="30.0" />
                                  </font>
@@ -208,7 +208,7 @@
                               </RadioButton>
                            </children>
                         </AnchorPane>
-                        <Label layoutX="110.0" layoutY="121.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%settings" textFill="#ababab">
+                        <Label layoutX="110.0" layoutY="121.0" text="%settings" textFill="#ababab">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="52.0" />
                            </font>
@@ -217,81 +217,19 @@
                   </AnchorPane>
                   <AnchorPane fx:id="aboutPane" layoutX="10.0" layoutY="10.0" prefHeight="795.0" prefWidth="1077.0" style="-fx-background-color: #393d42;">
                      <children>
-                        <Label layoutX="110.0" layoutY="121.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%about" textFill="#ababab">
+                        <Label layoutX="110.0" layoutY="121.0" text="%about" textFill="#ababab">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="52.0" />
                            </font>
                         </Label>
-                        <Label layoutX="110.0" layoutY="282.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="Sergio Bonachera Romero" textFill="#ababab">
+                        <Label layoutX="110.0" layoutY="282.0" text="Sergio Bonachera Romero" textFill="#ababab">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="34.0" />
                            </font>
                         </Label>
-                        <Label layoutX="110.0" layoutY="341.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="Irene María Padilla Muñoz" textFill="#ababab">
+                        <Label layoutX="110.0" layoutY="341.0" text="Irene María Padilla Muñoz" textFill="#ababab">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="34.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane fx:id="settingsPane" prefHeight="795.0" prefWidth="1077.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <AnchorPane layoutX="105.0" layoutY="324.0">
-                           <children>
-                              <Label styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%language" textFill="#ababab">
-                                 <font>
-                                    <Font name="Arial Rounded MT Bold" size="30.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutY="100.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%directory" textFill="#ababab">
-                                 <font>
-                                    <Font name="Arial Rounded MT Bold" size="30.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutY="200.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%daltonism" textFill="#ababab">
-                                 <font>
-                                    <Font name="Arial Rounded MT Bold" size="30.0" />
-                                 </font>
-                              </Label>
-                              <ImageView fx:id="espanolBtn" fitHeight="45.0" fitWidth="110.0" layoutX="302.0" layoutY="1.0" onMouseClicked="#espOnClick" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../assets/imagenes/españita.jpg" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                              <ImageView fx:id="inglesBtn" fitHeight="45.0" fitWidth="110.0" layoutX="419.0" layoutY="1.0" onMouseClicked="#enOnClick" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../assets/imagenes/english.jpg" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                              <TextField fx:id="path" editable="false" layoutX="302.0" layoutY="109.0" promptText="%path">
-                                 <cursor>
-                                    <Cursor fx:constant="TEXT" />
-                                 </cursor>
-                              </TextField>
-                              <Button fx:id="pathBtn" layoutX="494.0" layoutY="109.0" mnemonicParsing="false" onMouseClicked="#pathBtnOnClick" text="%pathBtn">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </Button>
-                              <RadioButton fx:id="daltonicRadioBtn" layoutX="306.0" layoutY="208.0" mnemonicParsing="false" onMouseClicked="#daltonismRadioBtnOnClick" text="%daltonicRadioBtn" textFill="#ff8400">
-                                 <font>
-                                    <Font name="Arial Rounded MT Bold" size="21.0" />
-                                 </font>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </RadioButton>
-                           </children>
-                        </AnchorPane>
-                        <Label layoutX="110.0" layoutY="121.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%settings" textFill="#ababab">
-                           <font>
-                              <Font name="Arial Rounded MT Bold" size="52.0" />
                            </font>
                         </Label>
                      </children>
@@ -307,12 +245,12 @@
                               </ImageView>
                               <AnchorPane layoutX="12.0" layoutY="284.0" prefHeight="34.0" prefWidth="128.0">
                                  <children>
-                                    <Label fx:id="artist" layoutY="57.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%artist" textFill="#ababab">
+                                    <Label fx:id="artist" layoutY="57.0" text="%artist" textFill="#ababab">
                                        <font>
                                           <Font name="Arial Rounded MT Bold" size="27.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="name" layoutY="88.0" styleClass="textoRojo" stylesheets="@../assets/css/style.css" text="%name" textFill="#4a0707">
+                                    <Label fx:id="name" layoutY="88.0" text="%name" textFill="#4a0707">
                                        <font>
                                           <Font name="Arial Rounded MT Bold" size="51.0" />
                                        </font>
@@ -413,7 +351,7 @@
                               <TableColumn fx:id="durationColumnFav1" prefWidth="199.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%duration" />
                            </columns>
                         </TableView>
-                        <Label alignment="CENTER" mouseTransparent="true" opacity="0.35" prefHeight="795.0" prefWidth="1077.0" styleClass="textoRojo" stylesheets="@../assets/css/style.css" text="%library" textFill="#4a0707" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <Label alignment="CENTER" mouseTransparent="true" opacity="0.35" prefHeight="795.0" prefWidth="1077.0" text="%library" textFill="#4a0707" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="60.0" />
                            </font>
@@ -434,7 +372,7 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
-                        <Label alignment="CENTER" layoutX="402.0" layoutY="230.0" mouseTransparent="true" opacity="0.35" prefHeight="795.0" prefWidth="1077.0" styleClass="textoRojo" stylesheets="@../assets/css/style.css" text="%favourites" textFill="#4a0707" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <Label alignment="CENTER" layoutX="402.0" layoutY="230.0" mouseTransparent="true" opacity="0.35" prefHeight="795.0" prefWidth="1077.0" text="%favourites" textFill="#4a0707" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="60.0" />
                            </font>
@@ -448,7 +386,7 @@
                               <ListView fx:id="playlistList" editable="true" focusTraversable="false" layoutY="123.0" prefHeight="672.0" prefWidth="260.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="123.0" />
                               <AnchorPane fx:id="playlistSplit1AnchorPane" layoutX="33.0" layoutY="41.0" prefHeight="88.0" prefWidth="261.0" style="-fx-background-color: #4a0707; -fx-region-border: 1;" AnchorPane.bottomAnchor="632.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <Label fx:id="playlistSplit1Label" layoutX="71.0" layoutY="25.0" prefHeight="44.0" prefWidth="152.0" styleClass="textoGris" stylesheets="@../assets/css/style.css" text="%playlistList" textFill="WHITE" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="46.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="21.0">
+                                    <Label fx:id="playlistSplit1Label" layoutX="71.0" layoutY="25.0" prefHeight="44.0" prefWidth="152.0" text="%playlistList" textFill="WHITE" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="46.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="21.0">
                                        <font>
                                           <Font name="Arial Rounded MT Bold" size="25.0" />
                                        </font>
@@ -480,6 +418,68 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="settingsPane" prefHeight="795.0" prefWidth="1077.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <AnchorPane layoutX="105.0" layoutY="324.0">
+                           <children>
+                              <Label text="%language" textFill="#ababab">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="30.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutY="100.0" text="%directory" textFill="#ababab">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="30.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutY="200.0" text="%daltonism" textFill="#ababab">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="30.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fx:id="espanolBtn" fitHeight="45.0" fitWidth="110.0" layoutX="302.0" layoutY="1.0" onMouseClicked="#espOnClick" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/imagenes/españita.jpg" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                              <ImageView fx:id="inglesBtn" fitHeight="45.0" fitWidth="110.0" layoutX="419.0" layoutY="1.0" onMouseClicked="#enOnClick" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/imagenes/english.jpg" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                              <TextField fx:id="path" editable="false" layoutX="302.0" layoutY="109.0" promptText="%path">
+                                 <cursor>
+                                    <Cursor fx:constant="TEXT" />
+                                 </cursor>
+                              </TextField>
+                              <Button fx:id="pathBtn" layoutX="494.0" layoutY="109.0" mnemonicParsing="false" onMouseClicked="#pathBtnOnClick" text="%pathBtn">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
+                              <RadioButton fx:id="daltonicRadioBtn" layoutX="306.0" layoutY="208.0" mnemonicParsing="false" onMouseClicked="#daltonismRadioBtnOnClick" text="%daltonicRadioBtn" textFill="#ff8400">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="21.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </RadioButton>
+                           </children>
+                        </AnchorPane>
+                        <Label layoutX="110.0" layoutY="121.0" text="%settings" textFill="#ababab">
+                           <font>
+                              <Font name="Arial Rounded MT Bold" size="52.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
                </children>
