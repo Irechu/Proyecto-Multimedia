@@ -6,19 +6,26 @@
 package proyectomultimedia_1;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.URL;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -41,6 +48,8 @@ import static proyectomultimedia_1.reproductorController.tabs.LIBRARY;
 import static proyectomultimedia_1.reproductorController.tabs.PLAYER;
 import static proyectomultimedia_1.reproductorController.tabs.PLAYLIST;
 import static proyectomultimedia_1.reproductorController.tabs.SETTINGS;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 
 /**
  *
@@ -65,6 +74,8 @@ public class reproductorController implements Initializable {
     private AnchorPane playlistPane;
     @FXML
     private AnchorPane audioPane;
+    @FXML
+    private ImageView image;
     @FXML
     private AnchorPane metadata;
     @FXML
@@ -347,14 +358,78 @@ public class reproductorController implements Initializable {
             menuSplitPane.setStyle("-fx-background-color:#ff9500");
             name.setTextFill(Color.web("#ff9500"));
 
+            libraryEntrieLabel.setStyle("-fx-text-fill:#000000");
+            settingsEntrieLabel.setStyle("-fx-text-fill:#000000");
+            aboutEntrieLabel.setStyle("-fx-text-fill:#000000");
+            favouritesEntrieLabel.setStyle("-fx-text-fill:#000000");
+            playlistEntrieLabel.setStyle("-fx-text-fill:#000000");
+            playerEntrieLabel.setStyle("-fx-text-fill:#000000");
+            ecualizatorEntrieLabel.setStyle("-fx-text-fill:#000000");
+            playlistSplit1Label.setStyle("-fx-text-fill:#000000");
+            playlistSplit1AnchorPane.setStyle("-fx-background-color:#ff9500");
         } else {
             menuSplitPane.setStyle("-fx-background-color:#4a0707");
             name.setTextFill(Color.web("#4a0707"));
+
+            libraryEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            settingsEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            aboutEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            favouritesEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            playlistEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            playerEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            ecualizatorEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            playlistSplit1Label.setStyle("-fx-text-fill:#ababab");
+            playlistSplit1AnchorPane.setStyle("-fx-background-color:#4a0707");
         }
     }
 
     @FXML
     private void pathBtnOnClick(MouseEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Buscar Canciones");//TODO INTERNACIONALIZAR
+
+        // Agregar filtros para facilitar la busqueda
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("TODAS LAS CANCIONES", "*.*"),//TODO INTERNACIONALIZAR
+                new FileChooser.ExtensionFilter("MP3", "*.mp3"),
+                new FileChooser.ExtensionFilter("PNG", "*.png")
+        );
+
+        // Obtener la cancion seleccionada
+        //File song = fileChooser.showOpenDialog(null); //Solo una cancion
+        List<File> lista = fileChooser.showOpenMultipleDialog(null); //Poder abrir varias
+
+        // Mostar la imagen
+        if (!lista.isEmpty()) {
+            try {
+                File file = new File("./src/assets/library.txt");
+                //TODO codigo para saber directorios
+                /*String[] listado = file.list();
+                if (listado == null || listado.length == 0) {
+                    System.out.println("No hay elementos dentro de la carpeta actual");
+                    return;
+                } else {
+                    for (int i = 0; i < listado.length; i++) {
+                        System.out.println(listado[i]);
+                    }
+                }*/
+                FileWriter fstream = new FileWriter(file, true);
+                BufferedWriter out = new BufferedWriter(fstream);
+                for (File s : lista) {
+                    //Song image = new Image("file:" + song.getAbsolutePath());
+                    //song.setImage(image);
+                    System.out.println(s.getAbsolutePath());
+                    out.write(s.getAbsolutePath());
+                    out.write("\n");
+                }
+                out.close();
+            } catch (IOException ex) {
+                System.out.println("Error al abrir el fichero de la biblioteca");
+            }
+
+        } else {
+            System.out.println("Seleccione algo por favor");
+        }
     }
 
     @FXML
