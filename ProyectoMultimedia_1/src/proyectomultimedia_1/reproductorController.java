@@ -6,6 +6,7 @@
 package proyectomultimedia_1;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -144,16 +146,6 @@ public class reproductorController implements Initializable {
     private TextField path;
     @FXML
     private Button pathBtn;
-
-    //Variables
-    boolean daltonism;
-    String color ="#4a0707";
-    
-    
-    //IMAGENES//
-    /*Corazones*/
-    final private Image favRedImage = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
-    final private Image favImage = new Image(getClass().getResourceAsStream("/assets/imagenes/fav.png"));
     @FXML
     private VBox menuVBox;
     @FXML
@@ -180,6 +172,35 @@ public class reproductorController implements Initializable {
     private RadioButton daltonicRadioBtn1;
     @FXML
     private AnchorPane aboutPane;
+    @FXML
+    private Label libraryEntrieLabel;
+    @FXML
+    private Label settingsEntrieLabel;
+    @FXML
+    private Label aboutEntrieLabel;
+    @FXML
+    private Label favouritesEntrieLabel;
+    @FXML
+    private Label playlistEntrieLabel;
+    @FXML
+    private Label playerEntrieLabel;
+    @FXML
+    private Label ecualizatorEntrieLabel;
+    @FXML
+    private AnchorPane playlistSplit1AnchorPane;
+    @FXML
+    private Label playlistSplit1Label;
+    
+    //Variables
+    boolean daltonism;
+    String color ="#4a0707";
+    
+    
+    //IMAGENES//
+    /*Corazones*/
+    final private Image favRedImage = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
+    final private Image favImage = new Image(getClass().getResourceAsStream("/assets/imagenes/fav.png"));
+    
 
 
     @Override
@@ -343,14 +364,33 @@ public class reproductorController implements Initializable {
 
     @FXML
     private void daltonismRadioBtnOnClick(MouseEvent event) {
-        daltonism = daltonicRadioBtn.isSelected();
+        daltonism = daltonicRadioBtn.isSelected();        
         if (daltonism) {
             menuSplitPane.setStyle("-fx-background-color:#ff9500");
             name.setTextFill(Color.web("#ff9500"));
-
+            
+            libraryEntrieLabel.setStyle("-fx-text-fill:#000000");
+            settingsEntrieLabel.setStyle("-fx-text-fill:#000000");
+            aboutEntrieLabel.setStyle("-fx-text-fill:#000000");
+            favouritesEntrieLabel.setStyle("-fx-text-fill:#000000");
+            playlistEntrieLabel.setStyle("-fx-text-fill:#000000");
+            playerEntrieLabel.setStyle("-fx-text-fill:#000000");
+            ecualizatorEntrieLabel.setStyle("-fx-text-fill:#000000");
+            playlistSplit1Label.setStyle("-fx-text-fill:#000000");
+            playlistSplit1AnchorPane.setStyle("-fx-background-color:#ff9500");
         } else {
             menuSplitPane.setStyle("-fx-background-color:#4a0707");
             name.setTextFill(Color.web("#4a0707"));
+            
+            libraryEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            settingsEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            aboutEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            favouritesEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            playlistEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            playerEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            ecualizatorEntrieLabel.setStyle("-fx-text-fill:#ababab");
+            playlistSplit1Label.setStyle("-fx-text-fill:#ababab");
+            playlistSplit1AnchorPane.setStyle("-fx-background-color:#4a0707");
         }
     }
 
