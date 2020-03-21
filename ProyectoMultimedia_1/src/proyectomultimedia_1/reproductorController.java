@@ -24,7 +24,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -33,7 +32,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
+import static proyectomultimedia_1.reproductorController.tabs.ABOUT;
+import static proyectomultimedia_1.reproductorController.tabs.ECUALIZATOR;
+import static proyectomultimedia_1.reproductorController.tabs.FAVOURITES;
+import static proyectomultimedia_1.reproductorController.tabs.LIBRARY;
+import static proyectomultimedia_1.reproductorController.tabs.PLAYER;
+import static proyectomultimedia_1.reproductorController.tabs.PLAYLIST;
+import static proyectomultimedia_1.reproductorController.tabs.SETTINGS;
 
 /**
  *
@@ -58,8 +65,6 @@ public class reproductorController implements Initializable {
     private AnchorPane playlistPane;
     @FXML
     private AnchorPane audioPane;
-    @FXML
-    private ImageView image;
     @FXML
     private AnchorPane metadata;
     @FXML
@@ -144,16 +149,6 @@ public class reproductorController implements Initializable {
     private TextField path;
     @FXML
     private Button pathBtn;
-
-    //Variables
-    boolean daltonism;
-    String color ="#4a0707";
-    
-    
-    //IMAGENES//
-    /*Corazones*/
-    final private Image favRedImage = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
-    final private Image favImage = new Image(getClass().getResourceAsStream("/assets/imagenes/fav.png"));
     @FXML
     private VBox menuVBox;
     @FXML
@@ -169,48 +164,52 @@ public class reproductorController implements Initializable {
     @FXML
     private AnchorPane ecualizatorPane;
     @FXML
-    private ImageView espanolBtn1;
-    @FXML
-    private ImageView inglesBtn1;
-    @FXML
-    private TextField path1;
-    @FXML
-    private Button pathBtn1;
-    @FXML
-    private RadioButton daltonicRadioBtn1;
-    @FXML
     private AnchorPane aboutPane;
+    @FXML
+    private ImageView change;
+    @FXML
+    private ImageView musicImage;
+    @FXML
+    private MediaView musicVideo;
+    @FXML
+    private ImageView librarySelected;
+    @FXML
+    private ImageView favouritesSelected;
+    @FXML
+    private ImageView playlistSelected;
+    @FXML
+    private ImageView ecualizatorSelected;
+    @FXML
+    private ImageView settingsSelected;
+    @FXML
+    private ImageView aboutSelected;
+    @FXML
+    private ImageView playerSelected;
 
+    //Variables
+    enum tabs {
+        PLAYLIST, LIBRARY, FAVOURITES, PLAYER, ECUALIZATOR, ABOUT, SETTINGS
+    }
+    public static final tabs[] TABS = tabs.values();
+
+    boolean daltonism;
+    boolean video;
+    tabs tab;
+    //IMAGENES//
+    /*Corazones*/
+    final private Image favRedImage = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
+    final private Image favImage = new Image(getClass().getResourceAsStream("/assets/imagenes/fav.png"));
+    final private Image changeMusic = new Image(getClass().getResourceAsStream("/assets/imagenes/music.png"));
+    final private Image changeVideo = new Image(getClass().getResourceAsStream("/assets/imagenes/video.png"));
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //Inicializamos las variables
         daltonism = false;
+        video = false;
         ObservableList<String> data = FXCollections.observableArrayList("cancion1", "cancion2", "...");
         playlistList.setItems(data);
-    }
-
-    @FXML
-    private void favouritesOnClick(MouseEvent event) {
-        System.out.println("Has pinchado en: FAVORITOS");
-        favouritesPane.toFront();
-    }
-
-    @FXML
-    private void playlistOnClick(MouseEvent event) {
-        System.out.println("Has pinchado en: PLAYLIST");
-        playlistPane.toFront();
-    }
-
-    @FXML
-    private void settingsOnClick(MouseEvent event) {
-        System.out.println("Has pinchado en: OPCIONES");
-        settingsPane.toFront();
-    }
-
-    @FXML
-    private void aboutOnClick(MouseEvent event) {
-        System.out.println("Has pinchado en: INFO ---- TODAVIA NO HAY NA");
+        tab = PLAYER;
     }
 
     @FXML
@@ -250,7 +249,7 @@ public class reproductorController implements Initializable {
         Parent root = null;
         main.getChildren().remove(0);
         int es_EN = 0;
-        
+
         try {
             Locale.setDefault(new Locale("es_es"));
 
@@ -289,7 +288,7 @@ public class reproductorController implements Initializable {
 
         main.getChildren().add(root);
     }
-    
+
     public static int leeIdioma() {
         int es_EN;
         try {
@@ -359,15 +358,115 @@ public class reproductorController implements Initializable {
     }
 
     @FXML
+    private void favouritesOnClick(MouseEvent event) {
+        System.out.println("Has pinchado en: FAVORITOS");
+        favouritesPane.toFront();
+        cambiarSeleccion();
+        tab = FAVOURITES;
+        favouritesSelected.setVisible(true);
+    }
+
+    @FXML
+    private void playlistOnClick(MouseEvent event) {
+        System.out.println("Has pinchado en: PLAYLIST");
+        playlistPane.toFront();
+        cambiarSeleccion();
+        tab = PLAYLIST;
+        playlistSelected.setVisible(true);
+
+    }
+
+    @FXML
+    private void settingsOnClick(MouseEvent event) {
+        System.out.println("Has pinchado en: OPCIONES");
+        settingsPane.toFront();
+        cambiarSeleccion();
+        tab = SETTINGS;
+        settingsSelected.setVisible(true);
+
+    }
+
+    @FXML
+    private void aboutOnClick(MouseEvent event) {
+        System.out.println("Has pinchado en:INFO");
+        aboutPane.toFront();
+        cambiarSeleccion();
+        tab = ABOUT;
+        aboutSelected.setVisible(true);
+
+    }
+
+    @FXML
     private void libraryOnClick(MouseEvent event) {
         System.out.println("Has pinchado en: BIBLIOTECA");
         libraryPane.toFront();
+        cambiarSeleccion();
+        tab = LIBRARY;
+        librarySelected.setVisible(true);
+
     }
 
     @FXML
     private void playerOnClick(MouseEvent event) {
         System.out.println("Has pinchado en: REPRODUCTOR");
         audioPane.toFront();
+        cambiarSeleccion();
+        tab = PLAYER;
+        playerSelected.setVisible(true);
+
+    }
+
+    @FXML
+    private void ecualizatorOnClick(MouseEvent event) {
+        System.out.println("Has pinchado en: ECUALIZADOR");
+        ecualizatorPane.toFront();
+        cambiarSeleccion();
+        tab = ECUALIZATOR;
+        ecualizatorSelected.setVisible(true);
+    }
+
+    @FXML
+    private void changeOnClick(MouseEvent event) {
+        if (!video) {
+            change.setImage(changeMusic);
+            video = true;
+            musicVideo.toFront();
+            musicVideo.setVisible(true);
+            musicImage.setVisible(false);
+        } else {
+            change.setImage(changeVideo);
+            video = false;
+            musicImage.toFront();
+            musicVideo.setVisible(false);
+            musicImage.setVisible(true);
+        }
+    }
+
+    private void cambiarSeleccion() {
+        switch (tab) {
+            case PLAYLIST:
+                playlistSelected.setVisible(false);
+                break;
+            case LIBRARY:
+                librarySelected.setVisible(false);
+                break;
+            case PLAYER:
+                playerSelected.setVisible(false);
+                break;
+            case FAVOURITES:
+                favouritesSelected.setVisible(false);
+                break;
+            case ECUALIZATOR:
+                ecualizatorSelected.setVisible(false);
+                break;
+            case ABOUT:
+                aboutSelected.setVisible(false);
+                break;
+            case SETTINGS:
+                settingsSelected.setVisible(false);
+                break;
+
+        }
     }
 
 }
