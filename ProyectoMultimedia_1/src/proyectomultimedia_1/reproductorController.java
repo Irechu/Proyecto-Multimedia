@@ -18,6 +18,7 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.util.List;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -38,6 +39,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
@@ -115,15 +117,15 @@ public class reproductorController implements Initializable {
     @FXML
     private AnchorPane playlistSplit2;
     @FXML
-    private TableColumn<?, ?> songColumnPl;
+    private TableColumn<Song, String> songColumnPl;
     @FXML
-    private TableColumn<?, ?> artistColumnPl;
+    private TableColumn<Song, String> artistColumnPl;
     @FXML
-    private TableColumn<?, ?> albumColumnPl;
+    private TableColumn<Song, String> albumColumnPl;
     @FXML
-    private TableColumn<?, ?> dateColumnPl;
+    private TableColumn<Song, LocalDate> dateColumnPl;
     @FXML
-    private TableColumn<?, ?> durationColumnPl;
+    private TableColumn<Song, Double> durationColumnPl;
     @FXML
     private AnchorPane favouritesPane;
     @FXML
@@ -195,33 +197,33 @@ public class reproductorController implements Initializable {
     @FXML
     private Label playlistSplit1Label;
     @FXML
-    private TableColumn<?, ?> durationColumnFav;
+    private TableColumn<Song, Double> durationColumnFav;
     @FXML
-    private TableColumn<?, ?> songColumnFav;
+    private TableColumn<Song, String> songColumnFav;
     @FXML
-    private TableColumn<?, ?> artistColumnFav;
+    private TableColumn<Song, String> artistColumnFav;
     @FXML
-    private TableColumn<?, ?> albumColumnFav;
+    private TableColumn<Song, String> albumColumnFav;
     @FXML
-    private TableColumn<?, ?> dateColumnFav;
+    private TableColumn<Song, LocalDate> dateColumnFav;
     @FXML
     private Label libraryPaneLabel;
     @FXML
     private Label favouritesPaneLabel;
     @FXML
-    private TableColumn<?, ?> songColumnLib;
+    private TableColumn<Song, String> songColumnLib;
     @FXML
-    private TableColumn<?, ?> artistColumnLib;
+    private TableColumn<Song, String> artistColumnLib;
     @FXML
-    private TableColumn<?, ?> albumColumnLib;
+    private TableColumn<Song, String> albumColumnLib;
     @FXML
-    private TableColumn<?, ?> dateColumnLib;
+    private TableColumn<Song, LocalDate> dateColumnLib;
     @FXML
-    private TableColumn<?, ?> durationColumnLib;
+    private TableColumn<Song, Double> durationColumnLib;
     @FXML
-    private TableView<?> favouritesTable;
+    private TableView<Song> favouritesTable;
     @FXML
-    private TableView<?> libraryTable;
+    private TableView<Song> libraryTable;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
@@ -272,6 +274,9 @@ public class reproductorController implements Initializable {
     public static final int ECUALIZATOR = 4;
     public static final int ABOUT = 5;
     public static final int SETTINGS = 6;
+    public static final int LIBRARY_TABLE = 0;
+    public static final int FAVOURITES_TABLE = 1;
+    public static final int PLAYLISTS_TABLE = 2;
 
     boolean daltonism;
     boolean persistentDaltonims;
@@ -288,6 +293,72 @@ public class reproductorController implements Initializable {
     final private Image changeVideo = new Image(getClass().getResourceAsStream("/assets/imagenes/video.png"));
     final private Image muteImage = new Image(getClass().getResourceAsStream("/assets/imagenes/mute.png"));
     final private Image soundImage = new Image(getClass().getResourceAsStream("/assets/imagenes/sound.png"));
+
+    public class Song {
+        private String songName;
+        private String artist;
+        private String album;
+        private LocalDate date;
+        private Double duration;
+
+        public Song(String songName, String artist, String album, LocalDate date, Double duration) {
+            this.songName = songName;
+            this.artist = artist;
+            this.album = album;
+            this.date = date;
+            this.duration = duration;
+        }
+        
+        public Song() {
+            this.songName = "";
+            this.artist = "";
+            this.album = "";
+            this.date = LocalDate.now();
+            this.duration = new Double(0);
+        }
+
+        public String getSongName() {
+            return songName;
+        }
+
+        public void setSongName(String songName) {
+            this.songName = songName;
+        }
+
+        public String getArtist() {
+            return artist;
+        }
+
+        public void setArtist(String artist) {
+            this.artist = artist;
+        }
+
+        public String getAlbum() {
+            return album;
+        }
+
+        public void setAlbum(String album) {
+            this.album = album;
+        }
+
+        public LocalDate getDate() {
+            return date;
+        }
+
+        public void setDate(LocalDate date) {
+            this.date = date;
+        }
+
+        public Double getDuration() {
+            return duration;
+        }
+
+        public void setDuration(Double duration) {
+            this.duration = duration;
+        }
+        
+        
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -309,7 +380,9 @@ public class reproductorController implements Initializable {
 
         tab = preferences.getInt("tab", PLAYER);
         activaSeleccion();
-
+        
+        initializeTables();
+        
         if (!preferences.get("library", "").isEmpty()) {
             path.setText(preferences.get("library", ""));
             fillLibrary();
@@ -653,6 +726,26 @@ public class reproductorController implements Initializable {
         preferences.putInt("tab", tab);
     }
 
+    private void initializeTables() {
+        songColumnLib.setCellValueFactory(new PropertyValueFactory<>("songName"));
+        artistColumnLib.setCellValueFactory(new PropertyValueFactory<>("artist"));
+        albumColumnLib.setCellValueFactory(new PropertyValueFactory<>("album"));
+        dateColumnLib.setCellValueFactory(new PropertyValueFactory<>("date"));
+        durationColumnLib.setCellValueFactory(new PropertyValueFactory<>("duration"));
+        
+        songColumnFav.setCellValueFactory(new PropertyValueFactory<>("songName"));
+        artistColumnFav.setCellValueFactory(new PropertyValueFactory<>("artist"));
+        albumColumnFav.setCellValueFactory(new PropertyValueFactory<>("album"));
+        dateColumnFav.setCellValueFactory(new PropertyValueFactory<>("date"));
+        durationColumnFav.setCellValueFactory(new PropertyValueFactory<>("duration"));
+        
+        songColumnPl.setCellValueFactory(new PropertyValueFactory<>("songName"));
+        artistColumnPl.setCellValueFactory(new PropertyValueFactory<>("artist"));
+        albumColumnPl.setCellValueFactory(new PropertyValueFactory<>("album"));
+        dateColumnPl.setCellValueFactory(new PropertyValueFactory<>("date"));
+        durationColumnPl.setCellValueFactory(new PropertyValueFactory<>("duration"));
+    }
+    
     private void fillLibrary() {
         //TODO codigo para saber directorios
         /*String[] listado = file.list();
@@ -678,8 +771,22 @@ public class reproductorController implements Initializable {
         } else {
             for (int i = 0; i < listado.length; i++) {
                 System.out.println(listado[i]);
-                
+                Song s = new Song();
+                s.songName = listado[i].getName();
+                libraryTable.getItems().add(s);
+                //addEntrie(LIBRARY_TABLE, )
             }
+        }
+    }
+
+    private void addEntrie(int table, String song, String artist, String album, LocalDate date, Double duration) {
+        switch (table) {
+            case LIBRARY_TABLE:
+                break;
+            case FAVOURITES_TABLE:
+                break;
+            case PLAYLISTS_TABLE:
+                break;
         }
     }
 
