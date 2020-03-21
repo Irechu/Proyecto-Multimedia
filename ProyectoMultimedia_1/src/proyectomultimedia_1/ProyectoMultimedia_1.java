@@ -7,23 +7,32 @@ package proyectomultimedia_1;
 
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import static proyectomultimedia_1.reproductorController.PLAYER;
 
 /**
  *
  * @author Irene Maria Padilla Munoz
  */
 public class ProyectoMultimedia_1 extends Application {
-
+    
+    public static Preferences preferences = Preferences.userNodeForPackage(ProyectoMultimedia_1.class);
+    
     @Override
     public void start(Stage stage) throws Exception {
-        
-
-        int idIdioma = reproductorController.leeIdioma();
+        System.out.println("                                    START");
+        /*
+        preferences.putBoolean("daltonism", false);
+        preferences.putInt("idIdioma", 0);
+        preferences.putInt("tab", PLAYER);
+        preferences.put("library", "");
+        */
+        int idIdioma = preferences.getInt("idIdioma", PLAYER);
         ResourceBundle resources = null;
         if(idIdioma == 0){
             resources = ResourceBundle.getBundle("languages.text_es");
