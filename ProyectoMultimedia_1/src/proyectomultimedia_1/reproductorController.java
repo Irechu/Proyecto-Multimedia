@@ -5,6 +5,12 @@
  */
 package proyectomultimedia_1;
 
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.ID3v1Tag;
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,9 +22,14 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.math.RoundingMode;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.List;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -125,7 +136,7 @@ public class reproductorController implements Initializable {
     @FXML
     private TableColumn<Song, LocalDate> dateColumnPl;
     @FXML
-    private TableColumn<Song, Double> durationColumnPl;
+    private TableColumn<Song, String> durationColumnPl;
     @FXML
     private AnchorPane favouritesPane;
     @FXML
@@ -197,7 +208,7 @@ public class reproductorController implements Initializable {
     @FXML
     private Label playlistSplit1Label;
     @FXML
-    private TableColumn<Song, Double> durationColumnFav;
+    private TableColumn<Song, String> durationColumnFav;
     @FXML
     private TableColumn<Song, String> songColumnFav;
     @FXML
@@ -219,7 +230,7 @@ public class reproductorController implements Initializable {
     @FXML
     private TableColumn<Song, LocalDate> dateColumnLib;
     @FXML
-    private TableColumn<Song, Double> durationColumnLib;
+    private TableColumn<Song, String> durationColumnLib;
     @FXML
     private TableView<Song> favouritesTable;
     @FXML
@@ -262,10 +273,6 @@ public class reproductorController implements Initializable {
         timeCounter.setText(tiempo);
     }
 
-    @FXML
-    private void volumeSliderMouseReleased(MouseEvent event) {
-    }
-
     //Variables
     public static final int PLAYLIST = 0;
     public static final int LIBRARY = 1;
@@ -281,40 +288,53 @@ public class reproductorController implements Initializable {
     boolean daltonism;
     boolean persistentDaltonims;
     boolean video;
+    boolean shuffleActive;
+    boolean repeatActive;
+    boolean playActive;
+    boolean favActive;
     int tab;
     String tiempo;
     DecimalFormat df = new DecimalFormat("##.##");
 
     //IMAGENES//
-    /*Corazones*/
-    final private Image favRedImage = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
-    final private Image favImage = new Image(getClass().getResourceAsStream("/assets/imagenes/fav.png"));
-    final private Image changeMusic = new Image(getClass().getResourceAsStream("/assets/imagenes/music.png"));
-    final private Image changeVideo = new Image(getClass().getResourceAsStream("/assets/imagenes/video.png"));
-    final private Image muteImage = new Image(getClass().getResourceAsStream("/assets/imagenes/mute.png"));
-    final private Image soundImage = new Image(getClass().getResourceAsStream("/assets/imagenes/sound.png"));
+    final private Image favRedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
+    final private Image favImg = new Image(getClass().getResourceAsStream("/assets/imagenes/fav.png"));
+    final private Image favDaltImg = new Image(getClass().getResourceAsStream("/assets/imagenes/favDalt.png"));
+    final private Image changeMusicImg = new Image(getClass().getResourceAsStream("/assets/imagenes/music.png"));
+    final private Image changeVideoImg = new Image(getClass().getResourceAsStream("/assets/imagenes/video.png"));
+    final private Image muteImg = new Image(getClass().getResourceAsStream("/assets/imagenes/mute.png"));
+    final private Image soundImg = new Image(getClass().getResourceAsStream("/assets/imagenes/sound.png"));
+    final private Image shuffleSelectedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/shuffleSelected.png"));
+    final private Image shuffleSelectedDaltImg = new Image(getClass().getResourceAsStream("/assets/imagenes/shuffleSelectedDalt.png"));
+    final private Image shuffleNotSelectedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/shuffle.png"));
+    final private Image repeatSelectedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/repeatSelected.png"));
+    final private Image repeatSelectedDaltImg = new Image(getClass().getResourceAsStream("/assets/imagenes/repeatSelectedDalt.png"));
+    final private Image repeatNotSelectedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/repeat.png"));
+    final private Image pauseImg = new Image(getClass().getResourceAsStream("/assets/imagenes/pause.png"));
+    final private Image playImg = new Image(getClass().getResourceAsStream("/assets/imagenes/play.png"));
 
     public class Song {
+
         private String songName;
         private String artist;
         private String album;
         private LocalDate date;
-        private Double duration;
+        private String duration;
 
-        public Song(String songName, String artist, String album, LocalDate date, Double duration) {
+        public Song(String songName, String artist, String album, LocalDate date, String duration) {
             this.songName = songName;
             this.artist = artist;
             this.album = album;
             this.date = date;
             this.duration = duration;
         }
-        
+
         public Song() {
             this.songName = "";
             this.artist = "";
             this.album = "";
             this.date = LocalDate.now();
-            this.duration = new Double(0);
+            this.duration = "0:0";
         }
 
         public String getSongName() {
@@ -349,23 +369,25 @@ public class reproductorController implements Initializable {
             this.date = date;
         }
 
-        public Double getDuration() {
+        public String getDuration() {
             return duration;
         }
 
-        public void setDuration(Double duration) {
+        public void setDuration(String duration) {
             this.duration = duration;
         }
-        
-        
+
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //Inicializamos las variables
         persistentDaltonims = preferences.getBoolean("daltonism", false);
+        repeatActive = preferences.getBoolean("repeatActive", false);
+        shuffleActive = preferences.getBoolean("shuffleActive", false);
         daltonismFunc(persistentDaltonims);
         video = false;
+        
         ObservableList<String> data = FXCollections.observableArrayList("cancion1", "cancion2", "...");
         playlistList.setItems(data);
         playlistSelected.setVisible(false);
@@ -380,9 +402,9 @@ public class reproductorController implements Initializable {
 
         tab = preferences.getInt("tab", PLAYER);
         activaSeleccion();
-        
+
         initializeTables();
-        
+
         if (!preferences.get("library", "").isEmpty()) {
             path.setText(preferences.get("library", ""));
             fillLibrary();
@@ -396,13 +418,28 @@ public class reproductorController implements Initializable {
 
     @FXML
     private void favOnClick(MouseEvent event) {
-        fav.setImage(favRedImage);
-        //TODO segun si la canción está marcada como favorita o no, pintamos el fav
+        favActive = !favActive;
+        if (favActive) {
+            if (daltonism) {
+                fav.setImage(favDaltImg);
+            } else {
+                fav.setImage(favRedImg);
+            }
+        } else {
+            fav.setImage(favImg);
+        }
+
     }
 
     @FXML
     private void playOnClick(MouseEvent event) {
         System.out.println("Has pinchado en: PLAYSE");
+        playActive = !playActive;
+        if (playActive) {
+            play.setImage(pauseImg);
+        } else {
+            play.setImage(playImg);
+        }
     }
 
     @FXML
@@ -418,11 +455,66 @@ public class reproductorController implements Initializable {
     @FXML
     private void shuffleOnClick(MouseEvent event) {
         System.out.println("Has pinchado en: MODO ALEATORIO");
+        shuffleActive = !shuffleActive;
+        preferences.putBoolean("shuffleActive", shuffleActive);
+        if (shuffleActive) {
+            if (daltonism) {
+                shuffle.setImage(shuffleSelectedDaltImg);
+            } else {
+                shuffle.setImage(shuffleSelectedImg);
+            }
+        } else {
+            shuffle.setImage(shuffleNotSelectedImg);
+        }
     }
 
     @FXML
     private void repeatOnClick(MouseEvent event) {
         System.out.println("Has pinchado en: REPETIR");
+        repeatActive = !repeatActive;
+        preferences.putBoolean("repeatActive", repeatActive);
+        if (repeatActive) {
+            if (daltonism) {
+                repeat.setImage(repeatSelectedDaltImg);
+            } else {
+                repeat.setImage(repeatSelectedImg);
+            }
+        } else {
+            repeat.setImage(repeatNotSelectedImg);
+        }
+
+    }
+    
+    private void shuffleRepeatActive() {
+        if (shuffleActive) {
+            if (daltonism) {
+                shuffle.setImage(shuffleSelectedDaltImg);
+            } else {
+                shuffle.setImage(shuffleSelectedImg);
+            }
+        } else {
+            shuffle.setImage(shuffleNotSelectedImg);
+        }
+
+        if (repeatActive) {
+            if (daltonism) {
+                repeat.setImage(repeatSelectedDaltImg);
+            } else {
+                repeat.setImage(repeatSelectedImg);
+            }
+        } else {
+            repeat.setImage(repeatNotSelectedImg);
+        }
+
+        if (favActive) {
+            if (daltonism) {
+                fav.setImage(favDaltImg);
+            } else {
+                fav.setImage(favRedImg);
+            }
+        } else {
+            fav.setImage(favImg);
+        }
     }
 
     @FXML
@@ -511,10 +603,12 @@ public class reproductorController implements Initializable {
             libraryPaneLabel.setStyle("-fx-text-fill:#4a0707");
             favouritesPaneLabel.setStyle("-fx-text-fill:#4a0707");
         }
+        shuffleRepeatActive();
     }
 
     private void daltonismFunc(boolean persistentDaltonims) {
         daltonicRadioBtn.setSelected(persistentDaltonims); //Cambia el boton de radio
+        daltonism = persistentDaltonims;
         if (persistentDaltonims) {
             preferences.putBoolean("daltonism", true);
             menuSplitPane.setStyle("-fx-background-color:#ff9500");
@@ -548,6 +642,7 @@ public class reproductorController implements Initializable {
             libraryPaneLabel.setStyle("-fx-text-fill:#4a0707");
             favouritesPaneLabel.setStyle("-fx-text-fill:#4a0707");
         }
+        shuffleRepeatActive();
     }
 
     @FXML
@@ -564,6 +659,7 @@ public class reproductorController implements Initializable {
         if (selectedDirectory.isDirectory()) {
             path.setText(selectedDirectory.getAbsolutePath());
             preferences.put("library", selectedDirectory.getAbsolutePath());
+            fillLibrary();
         } else {
             System.out.println("Seleccione una carpeta, por favor");
         }
@@ -647,20 +743,31 @@ public class reproductorController implements Initializable {
     @FXML
     private void changeOnClick(MouseEvent event) {
         if (!video) {
-            change.setImage(changeMusic);
+            change.setImage(changeMusicImg);
             video = true;
             musicVideo.toFront();
             musicVideo.setVisible(true);
             musicImage.setVisible(false);
         } else {
-            change.setImage(changeVideo);
+            change.setImage(changeVideoImg);
             video = false;
             musicImage.toFront();
             musicVideo.setVisible(false);
             musicImage.setVisible(true);
         }
     }
-
+    
+    @FXML
+    private void volumeSliderMouseReleased(MouseEvent event) {
+        //sliderVolume.getValue();
+        System.out.println("volumen ajustado a: " + sliderVolume.getValue());
+        if (sliderVolume.getValue() == 0) {
+            sound.setImage(muteImg);
+        } else {
+            sound.setImage(soundImg);
+        }
+    }
+    
     private void cambiarSeleccion() {
         switch (tab) {
             case PLAYLIST:
@@ -732,20 +839,20 @@ public class reproductorController implements Initializable {
         albumColumnLib.setCellValueFactory(new PropertyValueFactory<>("album"));
         dateColumnLib.setCellValueFactory(new PropertyValueFactory<>("date"));
         durationColumnLib.setCellValueFactory(new PropertyValueFactory<>("duration"));
-        
+
         songColumnFav.setCellValueFactory(new PropertyValueFactory<>("songName"));
         artistColumnFav.setCellValueFactory(new PropertyValueFactory<>("artist"));
         albumColumnFav.setCellValueFactory(new PropertyValueFactory<>("album"));
         dateColumnFav.setCellValueFactory(new PropertyValueFactory<>("date"));
         durationColumnFav.setCellValueFactory(new PropertyValueFactory<>("duration"));
-        
+
         songColumnPl.setCellValueFactory(new PropertyValueFactory<>("songName"));
         artistColumnPl.setCellValueFactory(new PropertyValueFactory<>("artist"));
         albumColumnPl.setCellValueFactory(new PropertyValueFactory<>("album"));
         dateColumnPl.setCellValueFactory(new PropertyValueFactory<>("date"));
         durationColumnPl.setCellValueFactory(new PropertyValueFactory<>("duration"));
     }
-    
+
     private void fillLibrary() {
         //TODO codigo para saber directorios
         /*String[] listado = file.list();
@@ -757,10 +864,10 @@ public class reproductorController implements Initializable {
                         System.out.println(listado[i]);
                     }
                 }*/
-
-        File dir = new File(path.getText());
+        libraryTable.getItems().clear(); //Vaciamos por haber cambiado de directorio
+        File dir = new File(path.getText()); //Conseguimos la carpeta que quiere usar el usuario como biblioteca
         File[] listado = dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
+            public boolean accept(File dir, String name) { //Filtramos a las extensiones y obtenemos la lista
                 //TODO ampliar quizas
                 return (name.toLowerCase().endsWith(".mp3") || name.toLowerCase().endsWith(".avi"));
             }
@@ -769,21 +876,75 @@ public class reproductorController implements Initializable {
             System.out.println("No hay elementos dentro de la carpeta actual");
             return;
         } else {
-            for (int i = 0; i < listado.length; i++) {
-                System.out.println(listado[i]);
-                Song s = new Song();
-                s.songName = listado[i].getName();
-                libraryTable.getItems().add(s);
-                //addEntrie(LIBRARY_TABLE, )
+            try {
+                File file = new File("./src/assets/library.txt");//Guardamos las rutas para poder reproducirlas luego
+                FileWriter fstream = new FileWriter(file, false);
+                BufferedWriter out = new BufferedWriter(fstream);
+                for (File mp3 : listado) {
+                    out.write(mp3.getAbsolutePath()); //Vamos escribiendo las rutas
+                    out.write("\n");
+                    Mp3File mp3file = new Mp3File(mp3.getAbsoluteFile());
+                    //Atributos de la cancion por defecto, por si no hay
+                    String title = "---";
+                    String artist = "---";
+                    String album = "---";
+                    //La fecha de creacion la vamos a tener siempre
+                    LocalDate date = creationDate(mp3.getAbsoluteFile());
+                    //Duracion igual, simpre la vamos a tener
+                    String time = durationFormatted(mp3file.getLengthInMilliseconds());
+                    if (mp3file.hasId3v2Tag()) {
+                        ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                        title = id3v2Tag.getTitle();
+                        artist = id3v2Tag.getArtist();
+                        album = id3v2Tag.getAlbum();
+                    }
+                    Song s = new Song(title, artist, album, date, time);
+                    addEntrie(LIBRARY_TABLE, s);
+                }
+                out.close();
+            } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
+                System.out.println("Error al abrir el fichero de la biblioteca");
+                ex.printStackTrace();
             }
+
         }
     }
 
-    private void addEntrie(int table, String song, String artist, String album, LocalDate date, Double duration) {
+    private LocalDate creationDate(File file) {
+        BasicFileAttributes attrs;
+        LocalDate date = null;
+        try {
+            attrs = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+            FileTime time = attrs.creationTime();
+
+            String pattern = "yyyy-MM-dd";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+            String formatted = simpleDateFormat.format(new Date(time.toMillis()));
+            String split[] = formatted.split("-");
+            date = LocalDate.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return date;
+    }
+
+    private String durationFormatted(long durationMs) {
+        long minutes = (durationMs / 1000) / 60;
+        long seconds = (durationMs / 1000) % 60;
+        String time = String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
+        
+        return time;
+    }
+
+    private void addEntrie(int table, Song s) {
         switch (table) {
             case LIBRARY_TABLE:
+                libraryTable.getItems().add(s);
                 break;
             case FAVOURITES_TABLE:
+                favouritesTable.getItems().add(s);
                 break;
             case PLAYLISTS_TABLE:
                 break;
