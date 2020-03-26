@@ -11,6 +11,7 @@ import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import java.beans.EventHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,21 +32,29 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -55,6 +64,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
@@ -64,6 +74,8 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import static proyectomultimedia_1.ProyectoMultimedia_1.preferences;
 
 /**
@@ -320,13 +332,15 @@ public class reproductorController implements Initializable {
         private String album;
         private LocalDate date;
         private String duration;
+        private File file;
 
-        public Song(String songName, String artist, String album, LocalDate date, String duration) {
+        public Song(String songName, String artist, String album, LocalDate date, String duration, File file) {
             this.songName = songName;
             this.artist = artist;
             this.album = album;
             this.date = date;
             this.duration = duration;
+            this.file = file;
         }
 
         public Song() {
@@ -335,6 +349,7 @@ public class reproductorController implements Initializable {
             this.album = "";
             this.date = LocalDate.now();
             this.duration = "0:0";
+            this.file = null;
         }
 
         public String getSongName() {
@@ -377,6 +392,14 @@ public class reproductorController implements Initializable {
             this.duration = duration;
         }
 
+        public File getFile() {
+            return file;
+        }
+
+        public void setFile(File file) {
+            this.file = file;
+        }
+
     }
 
     @Override
@@ -387,7 +410,7 @@ public class reproductorController implements Initializable {
         shuffleActive = preferences.getBoolean("shuffleActive", false);
         daltonismFunc(persistentDaltonims);
         video = false;
-        
+
         ObservableList<String> data = FXCollections.observableArrayList("cancion1", "cancion2", "...");
         playlistList.setItems(data);
         playlistSelected.setVisible(false);
@@ -484,7 +507,7 @@ public class reproductorController implements Initializable {
         }
 
     }
-    
+
     private void shuffleRepeatActive() {
         if (shuffleActive) {
             if (daltonism) {
@@ -715,8 +738,8 @@ public class reproductorController implements Initializable {
         cambiarSeleccion();
         tab = LIBRARY;
         guardarSeleccion(tab);
+        fillLibrary();
         librarySelected.setVisible(true);
-
     }
 
     @FXML
@@ -756,7 +779,7 @@ public class reproductorController implements Initializable {
             musicImage.setVisible(true);
         }
     }
-    
+
     @FXML
     private void volumeSliderMouseReleased(MouseEvent event) {
         //sliderVolume.getValue();
@@ -767,7 +790,77 @@ public class reproductorController implements Initializable {
             sound.setImage(soundImg);
         }
     }
-    
+
+    @FXML
+    private void libraryTableOnClick(MouseEvent event) {
+        if (event.getButton().equals(MouseButton.SECONDARY) && (libraryTable.getSelectionModel().getSelectedItem() != null)) {
+            System.out.println(libraryTable.getSelectionModel().getSelectedItem().file);
+            //Creamos menu contextual del click derecho
+            ContextMenu context = new ContextMenu();
+            MenuItem play = new MenuItem("Reproducir"); //TODO Internacionalizar
+            play.setOnAction((ActionEvent e) -> {
+                System.out.println("PLAY");
+            });
+            MenuItem edit = new MenuItem("Editar");
+            edit.setOnAction((ActionEvent e) -> {
+                try {
+                    int idIdioma = preferences.getInt("idIdioma", PLAYER);
+                    ResourceBundle resources = null;
+                    if (idIdioma == 0) {
+                        resources = ResourceBundle.getBundle("languages.text_es");
+                    } else {
+                        resources = ResourceBundle.getBundle("languages.text_en");
+                    }
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(getClass().getResource("edtarArchivo.fxml"));
+                    loader.setResources(resources);
+                    AnchorPane page = (AnchorPane) loader.load();
+
+                    // Crear el dialogo de la escena
+                    Stage dialogStage = new Stage();
+                    dialogStage.setTitle("Edit Person");
+                    dialogStage.initModality(Modality.APPLICATION_MODAL);
+                    Scene scene = new Scene(page);
+                    dialogStage.setScene(scene);
+
+                    // Pasar el fichero de la cancion en cuestion
+                    EdtarArchivoController controller = loader.getController();
+                    controller.setDialogStage(dialogStage);
+                    controller.setFile(libraryTable.getSelectionModel().getSelectedItem().file);
+                    controller.fillWindow(libraryTable.getSelectionModel().getSelectedItem().file);
+
+                    // Se muestra y espera
+                    dialogStage.showAndWait();
+                    fillLibrary();
+                } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
+                    System.out.println("ALGO FUE MAL AL EDITAR");
+                }
+            });
+            MenuItem delete = new MenuItem("Borrar*");
+            delete.setOnAction((ActionEvent e) -> {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("¿Está Seguro?"); //TODO Internacionalizar
+                alert.setHeaderText("El archivo será borrado del disco por completo.");
+                alert.setContentText("¿Está seguro de querer realizar esto?");
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    libraryTable.getSelectionModel().getSelectedItem().file.delete();
+                    fillLibrary();
+                } else {
+                    // El usuario cancela y no se hace nada
+                }
+            });
+            //Añadimos las opciones con un separador en borrar ya que esto borrara el fichero del disco.
+            context.getItems().addAll(play, edit, new SeparatorMenuItem(), delete);
+            libraryTable.setContextMenu(context);
+            //Añadimos el gestor de eventos del raton para la seleccion del menú
+
+        } else if (event.getButton().equals(MouseButton.PRIMARY) && (event.getClickCount() == 2) && (libraryTable.getSelectionModel().getSelectedItem() != null)) {
+            System.out.println(libraryTable.getSelectionModel().getSelectedItem().songName);
+        }
+    }
+
     private void cambiarSeleccion() {
         switch (tab) {
             case PLAYLIST:
@@ -894,11 +987,11 @@ public class reproductorController implements Initializable {
                     String time = durationFormatted(mp3file.getLengthInMilliseconds());
                     if (mp3file.hasId3v2Tag()) {
                         ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-                        title = id3v2Tag.getTitle();
-                        artist = id3v2Tag.getArtist();
-                        album = id3v2Tag.getAlbum();
+                        title = id3v2Tag.getTitle() == null ? "---" : id3v2Tag.getTitle();
+                        artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
+                        album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
                     }
-                    Song s = new Song(title, artist, album, date, time);
+                    Song s = new Song(title, artist, album, date, time, mp3);
                     addEntrie(LIBRARY_TABLE, s);
                 }
                 out.close();
@@ -934,7 +1027,7 @@ public class reproductorController implements Initializable {
         long minutes = (durationMs / 1000) / 60;
         long seconds = (durationMs / 1000) % 60;
         String time = String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
-        
+
         return time;
     }
 
