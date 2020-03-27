@@ -85,169 +85,176 @@ import static proyectomultimedia_1.ProyectoMultimedia_1.preferences;
  */
 public class reproductorController implements Initializable {
 
-    private Label label;
     @FXML
-    private AnchorPane menuSplitPane;
+     AnchorPane menuSplitPane;
     @FXML
-    private AnchorPane favouritesEntrie;
+     AnchorPane favouritesEntrie;
     @FXML
-    private AnchorPane playlistEntrie;
+     AnchorPane playlistEntrie;
     @FXML
-    private AnchorPane settingsEntrie;
+     AnchorPane settingsEntrie;
     @FXML
-    private AnchorPane aboutEntrie;
+     AnchorPane aboutEntrie;
     @FXML
-    private AnchorPane principalSplitPane;
+     AnchorPane principalSplitPane;
     @FXML
-    private AnchorPane playlistPane;
+     AnchorPane playlistPane;
     @FXML
-    private AnchorPane audioPane;
+     AnchorPane audioPane;
     @FXML
-    private AnchorPane metadata;
+     AnchorPane metadata;
     @FXML
-    private Label artist;
+     Label artist;
     @FXML
-    private Label name;
+     Label name;
     @FXML
-    private Slider sliderDuration;
+     Slider sliderDuration;
     @FXML
-    private ImageView fav;
+     ImageView fav;
     @FXML
-    private Label timeCounter;
+     Label timeCounter;
     @FXML
-    private Label duration;
+     Label duration;
     @FXML
-    private AnchorPane controls;
+     AnchorPane controls;
     @FXML
-    private ImageView play;
+     ImageView play;
     @FXML
-    private ImageView next;
+     ImageView next;
     @FXML
-    private ImageView previous;
+     ImageView previous;
     @FXML
-    private ImageView shuffle;
+     ImageView shuffle;
     @FXML
-    private ImageView repeat;
+     ImageView repeat;
     @FXML
-    private AnchorPane volume;
+     AnchorPane volume;
     @FXML
-    private ImageView sound;
+     ImageView sound;
     @FXML
-    private Slider sliderVolume;
+     Slider sliderVolume;
     @FXML
-    private AnchorPane playlistSplit1;
+     AnchorPane playlistSplit1;
     @FXML
     ListView<String> playlistList;
     @FXML
-    private AnchorPane playlistSplit2;
+     AnchorPane playlistSplit2;
     @FXML
-    private TableColumn<Song, String> songColumnPl;
+     TableColumn<Song, String> songColumnPl;
     @FXML
-    private TableColumn<Song, String> artistColumnPl;
+     TableColumn<Song, String> artistColumnPl;
     @FXML
-    private TableColumn<Song, String> albumColumnPl;
+     TableColumn<Song, String> albumColumnPl;
     @FXML
-    private TableColumn<Song, LocalDate> dateColumnPl;
+     TableColumn<Song, LocalDate> dateColumnPl;
     @FXML
-    private TableColumn<Song, String> durationColumnPl;
+     TableColumn<Song, String> durationColumnPl;
     @FXML
-    private AnchorPane favouritesPane;
+     AnchorPane favouritesPane;
     @FXML
-    private AnchorPane libraryPane;
+     AnchorPane libraryPane;
     @FXML
-    private AnchorPane settingsPane;
+     AnchorPane settingsPane;
     @FXML
-    private ImageView espanolBtn;
+     ImageView espanolBtn;
     @FXML
-    private ImageView inglesBtn;
+     ImageView inglesBtn;
     @FXML
-    private RadioButton daltonicRadioBtn;
+     RadioButton daltonicRadioBtn;
     @FXML
-    private TextField path;
+     TextField path;
     @FXML
-    private Button pathBtn;
+     Button pathBtn;
     @FXML
-    private VBox menuVBox;
+     VBox menuVBox;
     @FXML
-    private VBox principalVBox;
+     VBox principalVBox;
     @FXML
-    private AnchorPane libraryEntrie;
+     AnchorPane libraryEntrie;
     @FXML
-    private AnchorPane main;
+     AnchorPane main;
     @FXML
-    private AnchorPane playerEntrie;
+     AnchorPane playerEntrie;
     @FXML
-    private AnchorPane ecualizatorEntrie;
+     AnchorPane ecualizatorEntrie;
     @FXML
-    private AnchorPane ecualizatorPane;
+     AnchorPane ecualizatorPane;
     @FXML
-    private AnchorPane aboutPane;
+     AnchorPane aboutPane;
     @FXML
-    private ImageView change;
+     ImageView change;
     @FXML
-    private ImageView musicImage;
+     ImageView musicImage;
     @FXML
-    private MediaView musicVideo;
+     MediaView musicVideo;
     @FXML
-    private ImageView librarySelected;
+     ImageView librarySelected;
     @FXML
-    private ImageView favouritesSelected;
+     ImageView favouritesSelected;
     @FXML
-    private ImageView playlistSelected;
+     ImageView playlistSelected;
     @FXML
-    private ImageView ecualizatorSelected;
+     ImageView ecualizatorSelected;
     @FXML
-    private ImageView settingsSelected;
+     ImageView settingsSelected;
     @FXML
-    private ImageView aboutSelected;
+     ImageView aboutSelected;
     @FXML
-    private ImageView playerSelected;
+     ImageView playerSelected;
     @FXML
-    private Label libraryEntrieLabel;
+     Label libraryEntrieLabel;
     @FXML
-    private Label favouritesEntrieLabel;
+     Label favouritesEntrieLabel;
     @FXML
-    private Label playlistEntrieLabel;
+     Label playlistEntrieLabel;
     @FXML
-    private Label playerEntrieLabel;
+     Label playerEntrieLabel;
     @FXML
-    private Label ecualizatorEntrieLabel;
+     Label ecualizatorEntrieLabel;
     @FXML
-    private Label settingsEntrieLabel;
+     Label settingsEntrieLabel;
     @FXML
-    private Label aboutEntrieLabel;
+     Label aboutEntrieLabel;
     @FXML
-    private AnchorPane playlistSplit1AnchorPane;
+     AnchorPane playlistSplit1AnchorPane;
     @FXML
-    private Label playlistSplit1Label;
+     Label playlistSplit1Label;
     @FXML
-    private TableColumn<Song, String> durationColumnFav;
+     TableColumn<Song, String> durationColumnFav;
     @FXML
-    private TableColumn<Song, String> songColumnFav;
+     TableColumn<Song, String> songColumnFav;
     @FXML
-    private TableColumn<Song, String> artistColumnFav;
+     TableColumn<Song, String> artistColumnFav;
     @FXML
-    private TableColumn<Song, String> albumColumnFav;
+     TableColumn<Song, String> albumColumnFav;
     @FXML
-    private TableColumn<Song, LocalDate> dateColumnFav;
+     TableColumn<Song, LocalDate> dateColumnFav;
     @FXML
-    private Label libraryPaneLabel;
+     Label libraryPaneLabel;
     @FXML
-    private Label favouritesPaneLabel;
+     Label favouritesPaneLabel;
     @FXML
-    private TableColumn<Song, String> songColumnLib;
+     TableColumn<Song, String> songColumnLib;
     @FXML
-    private TableColumn<Song, String> artistColumnLib;
+     TableColumn<Song, String> artistColumnLib;
     @FXML
-    private TableColumn<Song, String> albumColumnLib;
+     TableColumn<Song, String> albumColumnLib;
     @FXML
-    private TableColumn<Song, LocalDate> dateColumnLib;
+     TableColumn<Song, LocalDate> dateColumnLib;
     @FXML
-    private TableColumn<Song, String> durationColumnLib;
+     TableColumn<Song, String> durationColumnLib;
     @FXML
-    private TableView<Song> favouritesTable;
+     TableView<Song> favouritesTable;
     @FXML
-    private TableView<Song> libraryTable;
+     TableView<Song> libraryTable;
+    @FXML
+     AnchorPane ecualizatorEntrie1;
+    @FXML
+     Label ecualizatorEntrieLabel1;
+    @FXML
+     ImageView ecualizatorSelected1;
+    @FXML
+     AnchorPane searchPane;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
