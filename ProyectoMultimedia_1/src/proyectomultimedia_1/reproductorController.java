@@ -32,14 +32,17 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,6 +53,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -60,6 +64,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -247,14 +252,42 @@ public class reproductorController implements Initializable {
     TableView<Song> favouritesTable;
     @FXML
     TableView<Song> libraryTable;
-    @FXML
     AnchorPane ecualizatorEntrie1;
     @FXML
     Label ecualizatorEntrieLabel1;
-    @FXML
     ImageView ecualizatorSelected1;
     @FXML
     AnchorPane searchPane;
+    @FXML
+    private AnchorPane searchEntrie;
+    @FXML
+    private ImageView searchSelected;
+    @FXML
+    private TableView<Song> searchTable;
+    @FXML
+    private TextField searchBar;
+    @FXML
+    private ImageView searchButton;
+    @FXML
+    private RadioButton searchSong;
+    @FXML
+    private RadioButton searchArtist;
+    @FXML
+    private RadioButton searchAlbum;
+    @FXML
+    private ChoiceBox<String> searchChoice;
+    @FXML
+    private ToggleGroup searchGroup;
+    @FXML
+    private TableColumn<Song, String> songColumnSrch;
+    @FXML
+    private TableColumn<Song, String> artistColumnSrch;
+    @FXML
+    private TableColumn<Song, String> albumColumnSrch;
+    @FXML
+    private TableColumn<Song, LocalDate> dateColumnSrch;
+    @FXML
+    private TableColumn<Song, String> durationColumnSrch;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
@@ -296,6 +329,7 @@ public class reproductorController implements Initializable {
     public static final int ECUALIZATOR = 4;
     public static final int ABOUT = 5;
     public static final int SETTINGS = 6;
+    public static final int SEARCH = 7;
     public static final int LIBRARY_TABLE = 0;
     public static final int FAVOURITES_TABLE = 1;
     public static final int PLAYLISTS_TABLE = 2;
@@ -331,7 +365,63 @@ public class reproductorController implements Initializable {
     final public Image playImg = new Image(getClass().getResourceAsStream("/assets/imagenes/play.png"));
 
     @FXML
-    private void volumeSliderMouseDragged(MouseEvent event) {
+    private void searchOnClick(MouseEvent event) {
+        System.out.println("Has pinchado en: BUSCAR");
+        searchPane.toFront();
+        cambiarSeleccion();
+        tab = SEARCH;
+        guardarSeleccion(tab);
+        searchSelected.setVisible(true);
+    }
+
+    @FXML
+    private void searchKeyPressed(KeyEvent event) {
+
+        FilteredList<Song> filteredData = new FilteredList<>(libraryTable.getItems(), p -> true);
+        searchTable.setItems(filteredData);
+
+        searchBar.textProperty().addListener((prop, old, text) -> {
+            filteredData.setPredicate(song -> {
+                if (text == null || text.isEmpty()) {
+                    return true;
+                }
+                //Para obtener los metadatos
+                Mp3File mp3file = null;
+                try {
+                    mp3file = new Mp3File(song.getFile().getAbsoluteFile());
+                } catch (IOException ex) {
+                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnsupportedTagException ex) {
+                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvalidDataException ex) {
+                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                ID3v2 tag;
+                if (mp3file.hasId3v2Tag()) {
+                    tag = mp3file.getId3v2Tag();
+                } else {
+                    // mp3 does not have an ID3v2 tag, let's create one..
+                    tag = new ID3v24Tag();
+                    mp3file.setId3v2Tag(tag);
+                }
+                 String name = "";
+                 
+                switch (searchGroup.getSelectedToggle().toString().split("'")[1]) {
+                    case "Song":
+                    case "Canción":
+                        name = tag.getTitle() == null ? song.getFile().getName().toLowerCase() : tag.getTitle().toLowerCase();
+                        break;
+                    case "Artist":
+                    case "Artista":
+                        name = tag.getAlbumArtist().toLowerCase();
+                        break;
+                    case "Album":
+                        name = tag.getAlbum().toLowerCase();
+                        break;
+                }
+                return name.contains(text.toLowerCase());
+            });
+        });
     }
 
     public class Song {
@@ -431,7 +521,21 @@ public class reproductorController implements Initializable {
         daltonismFunc(persistentDaltonims);
         video = false;
 
-        ObservableList<String> data = FXCollections.observableArrayList("cancion1", "cancion2", "...");
+        System.out.println("idIdioma" + preferences.getInt("idIdioma", 0));
+        System.out.println("idIdioma" + preferences.getInt("idIdioma", 0));
+
+        if (preferences.getInt("idIdioma", 0) == 0) {
+            ObservableList<String> options = FXCollections.observableArrayList("Local", "Internet", "Biblioteca", "Favoritos");
+            searchChoice.setItems(options);
+            System.out.println("español_____");
+        } else {
+            ObservableList<String> options = FXCollections.observableArrayList("Local", "Internet", "Library", "Favourites");
+            searchChoice.setItems(options);
+            System.out.println("inglés----------------");
+        }
+
+        //TODO cargar playlists
+        ObservableList<String> data = FXCollections.observableArrayList("playlist 1");
         playlistList.setItems(data);
         playlistSelected.setVisible(false);
 
@@ -442,6 +546,7 @@ public class reproductorController implements Initializable {
         ecualizatorSelected.setVisible(false);
         aboutSelected.setVisible(false);
         settingsSelected.setVisible(false);
+        searchSelected.setVisible(false);
         
         //desactivamos botones
         play.setDisable(true);
@@ -580,6 +685,7 @@ public class reproductorController implements Initializable {
         Parent root = null;
         main.getChildren().remove(0);
         int es_EN = 0;
+        escribeCambioIdioma(es_EN);
 
         try {
             Locale.setDefault(new Locale("es_es"));
@@ -592,8 +698,6 @@ public class reproductorController implements Initializable {
             System.out.println("Recurso no encontrado");
         }
 
-        escribeCambioIdioma(es_EN);
-
         main.getChildren().add(root);
     }
 
@@ -603,6 +707,7 @@ public class reproductorController implements Initializable {
         Parent root = null;
         main.getChildren().remove(0);
         int es_EN = 1;
+        escribeCambioIdioma(es_EN);
 
         try {
             Locale.setDefault(Locale.ENGLISH);
@@ -615,13 +720,12 @@ public class reproductorController implements Initializable {
             System.out.println("Recurso no encontrado");
         }
 
-        escribeCambioIdioma(es_EN);
-
         main.getChildren().add(root);
     }
 
     private void escribeCambioIdioma(int idIdioma) {
         preferences.putInt("idIdioma", idIdioma);
+
     }
 
     @FXML
@@ -814,17 +918,6 @@ public class reproductorController implements Initializable {
         }
     }
 
-    private void volumeSliderMouseReleased(MouseEvent event) {
-        //sliderVolume.getValue();
-        System.out.println("volumen ajustado a: " + sliderVolume.getValue()/100);
-        player.setVolume((float) sliderVolume.getValue());
-        if (sliderVolume.getValue() == 0) {
-            sound.setImage(muteImg);
-        } else {
-            sound.setImage(soundImg);
-        }
-    }
-
     @FXML
     private void libraryTableOnClick(MouseEvent event) throws IOException, UnsupportedTagException, InvalidDataException {
         if (event.getButton().equals(MouseButton.SECONDARY) && (libraryTable.getSelectionModel().getSelectedItem() != null)) {
@@ -931,6 +1024,9 @@ public class reproductorController implements Initializable {
             case SETTINGS:
                 settingsSelected.setVisible(false);
                 break;
+            case SEARCH:
+                searchSelected.setVisible(false);
+                break;
 
         }
     }
@@ -964,6 +1060,10 @@ public class reproductorController implements Initializable {
             case SETTINGS:
                 settingsPane.toFront();
                 settingsSelected.setVisible(true);
+                break;
+            case SEARCH:
+                searchPane.toFront();
+                searchSelected.setVisible(true);
                 break;
 
         }
