@@ -8,6 +8,7 @@ package proyectomultimedia_1;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
@@ -307,6 +308,7 @@ public class reproductorController implements Initializable {
     int tab;
     String tiempo;
     DecimalFormat df = new DecimalFormat("##.##");
+    File loadedSong;
 
     //IMAGENES//
     final private Image favRedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
@@ -410,7 +412,6 @@ public class reproductorController implements Initializable {
         public void setFav(boolean fav) {
             this.fav = fav;
         }
-        
 
     }
 
@@ -804,7 +805,7 @@ public class reproductorController implements Initializable {
     }
 
     @FXML
-    private void libraryTableOnClick(MouseEvent event) {
+    private void libraryTableOnClick(MouseEvent event) throws IOException, UnsupportedTagException, InvalidDataException {
         if (event.getButton().equals(MouseButton.SECONDARY) && (libraryTable.getSelectionModel().getSelectedItem() != null)) {
             System.out.println(libraryTable.getSelectionModel().getSelectedItem().file);
             //Creamos menu contextual del click derecho
@@ -869,7 +870,19 @@ public class reproductorController implements Initializable {
             //Añadimos el gestor de eventos del raton para la seleccion del menú
 
         } else if (event.getButton().equals(MouseButton.PRIMARY) && (event.getClickCount() == 2) && (libraryTable.getSelectionModel().getSelectedItem() != null)) {
-            System.out.println(libraryTable.getSelectionModel().getSelectedItem().songName);
+            loadedSong = libraryTable.getSelectionModel().getSelectedItem().file;
+            audioPane.toFront();
+            Mp3File mp3file = new Mp3File(loadedSong.getAbsoluteFile());
+            ID3v2 tag;
+            if (mp3file.hasId3v2Tag()) {
+                tag = mp3file.getId3v2Tag();
+            } else {
+                // mp3 does not have an ID3v2 tag, let's create one..
+                tag = new ID3v24Tag();
+                mp3file.setId3v2Tag(tag);
+            }
+            name.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
+            artist.setText(tag.getTitle() == null ? "---" : tag.getArtist());
         }
     }
 
