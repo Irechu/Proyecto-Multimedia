@@ -5,10 +5,10 @@
  */
 package proyectomultimedia_1;
 
-import animatefx.animation.FadeIn;
+/*import animatefx.animation.FadeIn;
 import animatefx.animation.FadeInUp;
 import animatefx.animation.FadeOutDown;
-import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXButton;*/
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -24,8 +24,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-import org.json.JSONArray;
-import org.json.JSONObject;
+/*import org.json.JSONArray;
+import org.json.JSONObject;*/
 
 import javax.imageio.ImageIO;
 import java.io.*;
@@ -46,7 +46,6 @@ public class Player {
     String source;
     double totalCurr;
 
-
     boolean isPlaying = false;
     boolean isActive = false;
 
@@ -60,147 +59,117 @@ public class Player {
 
     String youtubeExecName = "youtube-dl.exe";
 
-
-    public Player()
-    {
+    public Player() {
         isPlaying = false;
         isActive = false;
     }
 
     boolean isUnix;
+    boolean playList;
 
-    public Player(String inputPlaylistName, int inputIndex, boolean isUnix, reproductorController d)
-    {
+    public Player(String inputPlaylistName, int inputIndex, boolean isUnix, reproductorController d, boolean pl) {
         reproductor = d;
+        this.playList = pl;
         this.isUnix = isUnix;
         this.currentPlaylistName = inputPlaylistName;
 
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             reproductor.previous.setDisable(false);
             reproductor.next.setDisable(false);
             reproductor.shuffle.setDisable(false);
             reproductor.repeat.setDisable(false);
         });
 
-
-        reproductor.play.setOnMouseClicked(event -> {
-            pauseResume();
-        });
-
-        reproductor.next.setOnMouseClicked(event -> {
-            playNext();
-        });
-
-        reproductor.previous.setOnMouseClicked(event -> {
-            playPrevious();
-        });
-
-        playSong(inputIndex);
+        //playSong(inputIndex);
     }
 
-    private void playSong(int index)
-    {
+    public void playSong(int index) {
         x = new Thread(new Task<Void>() {
             @Override
-           protected Void call(){
-                try
-                {
- 
+            protected Void call() {
+                try {
 
                     //HashMap<String,Object> songDetails = reproductor.cachedPlaylist.get(currentPlaylistName).get(index);
-
-                    songIndex = reproductor.loadedSong;
+                    //songIndex = reproductor.loadedSong;
+                    File song = reproductor.loadedSong;
 
                     isActive = true;
+                    if (playList) {
+                        /*while (true) {
+                            try {
+                                for (Node eachNode : dash.playlistListView.getItems()) {
+                                    HBox x = (HBox) eachNode;
 
-                    while(true)
-                    {
-                        try
-                        {
-                            for(Node eachNode : dash.playlistListView.getItems())
-                            {
-                                HBox x = (HBox) eachNode;
-
-                                if(x.getChildren().get(0).getId().equals(songIndex+""))
-                                {
-                                    Platform.runLater(()->dash.playlistListView.getSelectionModel().select(x));
-                                    break;
+                                    if (x.getChildren().get(0).getId().equals(songIndex + "")) {
+                                        Platform.runLater(() -> dash.playlistListView.getSelectionModel().select(x));
+                                        break;
+                                    }
                                 }
+                                break;
+                            } catch (ConcurrentModificationException e) {
+                                System.out.println("concurrent exception, retrying ...");
                             }
-                            break;
-                        }
-                        catch (ConcurrentModificationException e)
-                        {
-                            System.out.println("concurrent exception, retrying ...");
-                        }
+                        }*/
+                    }else{
                     }
-
-                    if(songDetails.get("location").toString().equals("local"))
-                    {
-                        source = "file:"+songDetails.get("source").toString();
-
-                        Platform.runLater(()->{
-                            dash.songNameLabel.setText(songDetails.get("title").toString());
-                            dash.artistLabel.setText(songDetails.get("artist").toString());
-                            if(songDetails.containsKey("album_art"))
-                            {
+                    
+                    if (true) { //TODO cambiar a local
+                        java.net.URI uri = song.toURI();
+                        source = uri.toString();
+                        //TODO foto del album
+                        /*Platform.runLater(() -> {
+                            if (songDetails.containsKey("album_art")) {
                                 try {
-                                    Image x = SwingFXUtils.toFXImage(ImageIO.read(new ByteArrayInputStream((byte[]) songDetails.get("album_art"))),null);
+                                    Image x = SwingFXUtils.toFXImage(ImageIO.read(new ByteArrayInputStream((byte[]) songDetails.get("album_art"))), null);
                                     dash.albumArtImgView.setImage(x);
                                 } catch (IOException e) {
                                     dash.albumArtImgView.setImage(dash.defaultAlbumArt);
                                     e.printStackTrace();
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 dash.albumArtImgView.setImage(dash.defaultAlbumArt);
                             }
 
                             show();
-                        });
-                    }
-                    else if(songDetails.get("location").toString().equals("youtube"))
-                    {
+                        });*/
+                    } /*else if (songDetails.get("location").toString().equals("youtube")) {
                         Image x = new Image(songDetails.get("thumbnail").toString());
-                        Platform.runLater(()->{
+                        Platform.runLater(() -> {
                             dash.songNameLabel.setText(songDetails.get("title").toString());
                             dash.artistLabel.setText(songDetails.get("channelTitle").toString());
                             dash.albumArtImgView.setImage(x);
                             show();
                         });
 
-
-                        String videoURL = songDetails.getOrDefault("videoURL","null").toString();
-                        if(videoURL.equals("null"))
-                        {
-                            String youtubeDLQuery = youtubeExecName +" -f 18 -g https://www.youtube.com/watch?v="+songDetails.get("videoID");
+                        String videoURL = songDetails.getOrDefault("videoURL", "null").toString();
+                        if (videoURL.equals("null")) {
+                            String youtubeDLQuery = youtubeExecName + " -f 18 -g https://www.youtube.com/watch?v=" + songDetails.get("videoID");
                             Process p = Runtime.getRuntime().exec(youtubeDLQuery);
                             InputStream i = p.getInputStream();
                             InputStream e = p.getErrorStream();
 
                             String result = "";
-                            while(true)
-                            {
+                            while (true) {
                                 int c = i.read();
-                                if(c == -1) break;
-                                result+= (char) c;
+                                if (c == -1) {
+                                    break;
+                                }
+                                result += (char) c;
                             }
 
-                            if(result.length() == 0)
-                            {
+                            if (result.length() == 0) {
                                 //get errors
                                 String errResult = "";
-                                while(true)
-                                {
+                                while (true) {
                                     int c = e.read();
-                                    if(c == -1) break;
-                                    errResult+= (char) c;
+                                    if (c == -1) {
+                                        break;
+                                    }
+                                    errResult += (char) c;
                                 }
 
-
                                 e.close();
-                                dash.showErrorAlert("Uh OH!","Unable to play, probably because Age Restricted/Live Video. If not, check connection and try again!\n\n"+errResult);
+                                dash.showErrorAlert("Uh OH!", "Unable to play, probably because Age Restricted/Live Video. If not, check connection and try again!\n\n" + errResult);
                                 stop();
                                 hide();
                                 return null;
@@ -209,18 +178,16 @@ public class Player {
                             i.close();
                             e.close();
 
-                            videoURL = result.substring(0,result.length()-1);
-                            songDetails.put("videoURL",videoURL);
-                            dash.cachedPlaylist.get(currentPlaylistName).get(songIndex).put("videoURL",videoURL);
+                            videoURL = result.substring(0, result.length() - 1);
+                            songDetails.put("videoURL", videoURL);
+                            dash.cachedPlaylist.get(currentPlaylistName).get(songIndex).put("videoURL", videoURL);
                         }
-
 
                         source = videoURL;
 
-                    }
+                    }*/
 
-                    if(!isActive || index!=songIndex)
-                    {
+                    if (!isActive || index != songIndex) {
                         System.out.println("Skipping because video no longer required ...");
                         return null;
                     }
@@ -231,26 +198,26 @@ public class Player {
 
                     mediaPlayer = new MediaPlayer(media);
 
-                    media.setOnError(()-> {
+                    media.setOnError(() -> {
                         stop();
                         media.getError().printStackTrace();
                     });
 
-                    mediaPlayer.setOnReady(()->{
+                    mediaPlayer.setOnReady(() -> {
 
-                        io.log("Start Playing ...");
+                        System.out.println("Start Playing ...");
 
                         totalCurr = media.getDuration().toSeconds();
 
-                        Platform.runLater(()->{
-                            dash.songSeek.setDisable(false);
-                            dash.musicPlayerButtonBar.setDisable(false);
-                            dash.musicPaneSpinner.setVisible(false);
-                            dash.albumArtImgView.setOpacity(1.0);
-                            dash.totalDurLabel.setText(dash.getSecondsToSimpleString(media.getDuration().toSeconds()));
-                            dash.totalDurLabel.setVisible(true);
-                            dash.nowDurLabel.setVisible(true);
-                            dash.musicPanePlayPauseButtonImageView.setImage(dash.pauseIcon);
+                        Platform.runLater(() -> {
+                            reproductor.sliderDuration.setDisable(false);
+                            reproductor.controls.setDisable(false);
+                            reproductor.musicImage.setOpacity(1.0);
+                            reproductor.duration.setText(reproductor.durationFormatted((long) media.getDuration().toMillis()));
+                            reproductor.duration.setVisible(true);
+                            reproductor.timeCounter.setVisible(true);
+                            reproductor.playActive = false;
+                            reproductor.play.setImage(reproductor.pauseImg);
                         });
 
                         mediaPlayer.play();
@@ -259,13 +226,16 @@ public class Player {
                         startUpdating();
                     });
 
-                    mediaPlayer.setOnEndOfMedia(()->{
-                        onEndOfMediaTrigger();
+                    mediaPlayer.setOnEndOfMedia(() -> {
+                        if(playList){
+                            onEndOfMediaTrigger();
+                        }else{
+                            stop();
+                            hide();
+                        }
                     });
 
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return null;
@@ -277,86 +247,71 @@ public class Player {
 
     Thread x;
 
-    public void onEndOfMediaTrigger()
-    {
-        if(dash.isShuffle)
+    public void onEndOfMediaTrigger() {
+        /*if (dash.isShuffle) {
             playNextRandom();
-        else
-        {
-            if(dash.isRepeat) setPos(0);
-            else
-            {
-                if(songIndex==(dash.cachedPlaylist.get(currentPlaylistName).size()-1))
-                {
+        } else {
+            if (dash.isRepeat) {
+                setPos(0);
+            } else {
+                if (songIndex == (dash.cachedPlaylist.get(currentPlaylistName).size() - 1)) {
                     stop();
                     hide();
-                }
-                else
-                {
+                } else {
                     playNext();
                 }
             }
-        }
+        }*/
     }
 
-    public void playNext()
-    {
-        if(songIndex<(dash.cachedPlaylist.get(currentPlaylistName).size()-1))
-        {
-            if(isPlaying)
-            {
+    public void playNext() {
+        /*if (songIndex < (dash.cachedPlaylist.get(currentPlaylistName).size() - 1)) {
+            if (isPlaying) {
                 mediaPlayer.stop();
                 mediaPlayer.dispose();
             }
-            playSong((songIndex+1));
-        }
+            playSong((songIndex + 1));
+        }*/
     }
 
-    private void playNextRandom()
-    {
-        if(dash.isRepeat) setPos(0);
-        else
-        {
-            if(isPlaying)
-            {
+    private void playNextRandom() {
+        /*if (dash.isRepeat) {
+            setPos(0);
+        } else {
+            if (isPlaying) {
                 mediaPlayer.stop();
                 mediaPlayer.dispose();
             }
             mediaPlayer.dispose();
             playSong((new Random().nextInt(dash.cachedPlaylist.get(currentPlaylistName).size())));
-        }
+        }*/
     }
 
-    public void playPrevious()
-    {
-        if(songIndex>0)
-        {
+    public void playPrevious() {
+        if (songIndex > 0) {
             mediaPlayer.stop();
             mediaPlayer.dispose();
-            playSong((songIndex-1));
+            playSong((songIndex - 1));
         }
     }
 
-    public void setPos(double newDurSecs)
-    {
-        mediaPlayer.seek(new Duration(newDurSecs*1000));
+    public void setPos(double newDurSecs) {
+        mediaPlayer.seek(new Duration(newDurSecs * 1000));
     }
 
-    public void pauseResume()
-    {
-        new Thread(new Task<>() {
+    public void pauseResume() {
+        new Thread(new Task() {
             @Override
             protected Object call() throws Exception {
-                if(mediaPlayer.getStatus().equals(MediaPlayer.Status.PAUSED))
-                {
+                if (mediaPlayer.getStatus().equals(MediaPlayer.Status.PAUSED)) {
                     isPlaying = true;
-                    dash.musicPanePlayPauseButtonImageView.setImage(dash.pauseIcon);
+                    reproductor.playActive = false;
+                    reproductor.play.setImage(reproductor.pauseImg);
                     mediaPlayer.play();
-                }
-                else if(mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING))
-                {
+                } else if (mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
                     isPlaying = false;
-                    dash.musicPanePlayPauseButtonImageView.setImage(dash.playIcon);
+                    reproductor.playActive = true;
+                    reproductor.play.setImage(reproductor.playImg);
                     mediaPlayer.pause();
                 }
                 return null;
@@ -364,66 +319,44 @@ public class Player {
         }).start();
     }
 
-    public void stop()
-    {
-        if(isPlaying)
-        {
+    public void stop() {
+        if (isPlaying) {
             isPlaying = false;
-            try
-            {
+            try {
                 mediaPlayer.stop();
                 mediaPlayer.dispose();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 System.out.println("disposing ...");
             }
         }
         isActive = false;
     }
 
-    public void hide()
-    {
-        new FadeOutDown(dash.musicPaneSongInfo).play();
-        new FadeOutDown(dash.musicPaneControls).play();
-        new FadeOutDown(dash.albumArtStackPane).play();
-        FadeOutDown x = new FadeOutDown(dash.musicPaneMiscControls);
-        x.setOnFinished(event -> Platform.runLater(()->{
-            dash.songNameLabel.setText("");
-            dash.artistLabel.setText("");
-            dash.albumArtImgView.setImage(dash.defaultAlbumArt);
-        }));
-        x.play();
+    public void hide() {
+        
     }
 
-    private void startUpdating()
-    {
+    private void startUpdating() {
         updaterThread = new Thread(new Task<Void>() {
             @Override
-            protected Void call(){
-                try
-                {
-                    while(isActive)
-                    {
-                        if(mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING))
-                        {
+            protected Void call() {
+                try {
+                    while (isActive) {
+                        if (mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
                             double currSec = mediaPlayer.getCurrentTime().toSeconds();
-                            String currentSimpleTimeStamp = dash.getSecondsToSimpleString(currSec);
-                            Platform.runLater(()->dash.nowDurLabel.setText(currentSimpleTimeStamp));
+                            String currentSimpleTimeStamp = reproductor.durationFormatted((long) currSec);
+                            Platform.runLater(() -> reproductor.timeCounter.setText(currentSimpleTimeStamp));
 
-                            double currentProgress = (currSec/totalCurr)*100;
-                            if(!dash.songSeek.isValueChanging())
-                            {
-                                dash.songSeek.setValue(currentProgress);
+                            double currentProgress = (currSec / totalCurr) * 100;
+                            if (!reproductor.sliderDuration.isValueChanging()) {
+                                reproductor.sliderDuration.setValue(currentProgress);
                                 //dash.refreshSlider(dash.songSeek);
                                 currentP = currentProgress;
                             }
                         }
                         Thread.sleep(500);
                     }
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return null;
@@ -433,4 +366,6 @@ public class Player {
     }
 
     double currentP = 0.0;
+    
+    
 }

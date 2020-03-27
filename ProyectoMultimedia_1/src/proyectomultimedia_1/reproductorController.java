@@ -316,6 +316,7 @@ public class reproductorController implements Initializable {
     String tiempo;
     DecimalFormat df = new DecimalFormat("##.##");
     File loadedSong;
+    Player player;
 
     //IMAGENES//
     final private Image favRedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
@@ -331,8 +332,8 @@ public class reproductorController implements Initializable {
     final private Image repeatSelectedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/repeatSelected.png"));
     final private Image repeatSelectedDaltImg = new Image(getClass().getResourceAsStream("/assets/imagenes/repeatSelectedDalt.png"));
     final private Image repeatNotSelectedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/repeat.png"));
-    final private Image pauseImg = new Image(getClass().getResourceAsStream("/assets/imagenes/pause.png"));
-    final private Image playImg = new Image(getClass().getResourceAsStream("/assets/imagenes/play.png"));
+    final public Image pauseImg = new Image(getClass().getResourceAsStream("/assets/imagenes/pause.png"));
+    final public Image playImg = new Image(getClass().getResourceAsStream("/assets/imagenes/play.png"));
 
     public class Song {
 
@@ -457,6 +458,7 @@ public class reproductorController implements Initializable {
 
         sliderVolume.setValue(50);
         sliderDuration.setValue(0);
+        player = new Player("", 0, false, this, false);
     }
 
     @FXML
@@ -483,16 +485,19 @@ public class reproductorController implements Initializable {
         } else {
             play.setImage(playImg);
         }
+        player.pauseResume();
     }
 
     @FXML
     private void nextOnClick(MouseEvent event) {
         System.out.println("Has pinchado en: SIGUIENTE CANCION");
+        player.playNext();
     }
 
     @FXML
     private void previousOnClick(MouseEvent event) {
         System.out.println("Has pinchado en: CANCION ANTERIOR");
+        player.playPrevious();
     }
 
     @FXML
@@ -890,6 +895,7 @@ public class reproductorController implements Initializable {
             }
             name.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
             artist.setText(tag.getTitle() == null ? "---" : tag.getArtist());
+            player.playSong(0);
         }
     }
 
@@ -1055,7 +1061,7 @@ public class reproductorController implements Initializable {
         return date;
     }
 
-    private String durationFormatted(long durationMs) {
+    public String durationFormatted(long durationMs) {
         long minutes = (durationMs / 1000) / 60;
         long seconds = (durationMs / 1000) % 60;
         String time = String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
