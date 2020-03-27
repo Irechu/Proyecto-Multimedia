@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,8 +24,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -81,24 +85,40 @@ public class EdtarArchivoController implements Initializable {
             tag = new ID3v24Tag();
             mp3file.setId3v2Tag(tag);
         }
-        tag.setTitle(editViewTitle.getText());
-        tag.setArtist(editViewArtist.getText());
-        tag.setAlbum(editViewAlbum.getText());
-        tag.setCopyright(editViewCopyright.getText());
-        if (editViewRating.getText().isEmpty()) {
-            tag.setWmpRating(-1);
-        } else {
-            tag.setWmpRating(Integer.parseInt(editViewRating.getText()));
-        }
-        String ruta = file.getAbsolutePath();
-        file.delete();
-        try {
-            mp3file.save(ruta);
-        } catch (NotSupportedException ex) {
-            Logger.getLogger(EdtarArchivoController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        if (!editViewRating.getText().isEmpty() && (Integer.parseInt(editViewRating.getText()) < -1 || Integer.parseInt(editViewRating.getText()) > 5)) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error en el Rating"); //TODO Internacionalizar
+            alert.setHeaderText("El rating debe de ser entre 0 y 5. Para ponerlo por defecto introduzca -1 o dejelo en blanco");
 
-        dialogStage.close();
+            alert.showAndWait();
+        } else {
+            if (editViewRating.getText().isEmpty()) {
+                tag.setWmpRating(-1);
+            }else{
+                tag.setWmpRating(Integer.parseInt(editViewRating.getText()));
+            }
+            tag.setTitle(editViewTitle.getText());
+            tag.setArtist(editViewArtist.getText());
+            tag.setAlbum(editViewAlbum.getText());
+            tag.setCopyright(editViewCopyright.getText());
+            
+            //La biblioteca mp3agic no deja renombrar ficheros por lo que
+            String nombre = file.getName();
+            File aux = new File(file.getParent(), nombre + "a"); //Lo crearemos con el mismo nombre pero una A al final
+            String ruta = aux.getAbsolutePath();
+            try {
+                mp3file.save(ruta);//Guardamos el que tiene una a al final para que no nos diga que ya existe
+                file.delete();//Borramos el que habia
+                String cadena = aux.getName();
+                cadena = cadena.substring(0, cadena.length() - 1); //Quitamos la a del final
+                File aux2 = new File(aux.getParent(), cadena);
+                aux.renameTo(aux2);//Renombramos para que se quede como estaba el original.
+            } catch (NotSupportedException ex) {
+                System.out.println("NO SE PUDO GUARDAR EL FICHERO");
+            }
+
+            dialogStage.close();
+        }
     }
 
     public void fillWindow(File file) throws IOException, UnsupportedTagException, InvalidDataException {

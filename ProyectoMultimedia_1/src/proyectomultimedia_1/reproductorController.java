@@ -333,14 +333,16 @@ public class reproductorController implements Initializable {
         private LocalDate date;
         private String duration;
         private File file;
+        private boolean fav;
 
-        public Song(String songName, String artist, String album, LocalDate date, String duration, File file) {
+        public Song(String songName, String artist, String album, LocalDate date, String duration, File file, boolean fav) {
             this.songName = songName;
             this.artist = artist;
             this.album = album;
             this.date = date;
             this.duration = duration;
             this.file = file;
+            this.fav = fav;
         }
 
         public Song() {
@@ -350,6 +352,7 @@ public class reproductorController implements Initializable {
             this.date = LocalDate.now();
             this.duration = "0:0";
             this.file = null;
+            this.fav = false;
         }
 
         public String getSongName() {
@@ -399,6 +402,15 @@ public class reproductorController implements Initializable {
         public void setFile(File file) {
             this.file = file;
         }
+
+        public boolean isFav() {
+            return fav;
+        }
+
+        public void setFav(boolean fav) {
+            this.fav = fav;
+        }
+        
 
     }
 
@@ -987,11 +999,11 @@ public class reproductorController implements Initializable {
                     String time = durationFormatted(mp3file.getLengthInMilliseconds());
                     if (mp3file.hasId3v2Tag()) {
                         ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-                        title = id3v2Tag.getTitle() == null ? "---" : id3v2Tag.getTitle();
+                        title = id3v2Tag.getTitle() == null ? mp3.getName() : id3v2Tag.getTitle();
                         artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
                         album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
                     }
-                    Song s = new Song(title, artist, album, date, time, mp3);
+                    Song s = new Song(title, artist, album, date, time, mp3, false);
                     addEntrie(LIBRARY_TABLE, s);
                 }
                 out.close();

@@ -6,8 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="491.0" prefWidth="602.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="proyectomultimedia_1.EdtarArchivoController">
+<AnchorPane id="AnchorPane" prefHeight="491.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectomultimedia_1.EdtarArchivoController">
    <children>
       <AnchorPane layoutX="31.0" layoutY="55.0" prefHeight="333.0" prefWidth="546.0">
          <children>
