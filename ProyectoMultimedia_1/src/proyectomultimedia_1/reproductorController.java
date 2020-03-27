@@ -8,6 +8,7 @@ package proyectomultimedia_1;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
@@ -31,14 +32,17 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,6 +53,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -59,6 +64,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -85,175 +91,203 @@ import static proyectomultimedia_1.ProyectoMultimedia_1.preferences;
 public class reproductorController implements Initializable {
 
     @FXML
-     AnchorPane menuSplitPane;
+    AnchorPane menuSplitPane;
     @FXML
-     AnchorPane favouritesEntrie;
+    AnchorPane favouritesEntrie;
     @FXML
-     AnchorPane playlistEntrie;
+    AnchorPane playlistEntrie;
     @FXML
-     AnchorPane settingsEntrie;
+    AnchorPane settingsEntrie;
     @FXML
-     AnchorPane aboutEntrie;
+    AnchorPane aboutEntrie;
     @FXML
-     AnchorPane principalSplitPane;
+    AnchorPane principalSplitPane;
     @FXML
-     AnchorPane playlistPane;
+    AnchorPane playlistPane;
     @FXML
-     AnchorPane audioPane;
+    AnchorPane audioPane;
     @FXML
-     AnchorPane metadata;
+    AnchorPane metadata;
     @FXML
-     Label artist;
+    Label artist;
     @FXML
-     Label name;
+    Label name;
     @FXML
-     Slider sliderDuration;
+    Slider sliderDuration;
     @FXML
-     ImageView fav;
+    ImageView fav;
     @FXML
-     Label timeCounter;
+    Label timeCounter;
     @FXML
-     Label duration;
+    Label duration;
     @FXML
-     AnchorPane controls;
+    AnchorPane controls;
     @FXML
-     ImageView play;
+    ImageView play;
     @FXML
-     ImageView next;
+    ImageView next;
     @FXML
-     ImageView previous;
+    ImageView previous;
     @FXML
-     ImageView shuffle;
+    ImageView shuffle;
     @FXML
-     ImageView repeat;
+    ImageView repeat;
     @FXML
-     AnchorPane volume;
+    AnchorPane volume;
     @FXML
-     ImageView sound;
+    ImageView sound;
     @FXML
-     Slider sliderVolume;
+    Slider sliderVolume;
     @FXML
-     AnchorPane playlistSplit1;
+    AnchorPane playlistSplit1;
     @FXML
     ListView<String> playlistList;
     @FXML
-     AnchorPane playlistSplit2;
+    AnchorPane playlistSplit2;
     @FXML
-     TableColumn<Song, String> songColumnPl;
+    TableColumn<Song, String> songColumnPl;
     @FXML
-     TableColumn<Song, String> artistColumnPl;
+    TableColumn<Song, String> artistColumnPl;
     @FXML
-     TableColumn<Song, String> albumColumnPl;
+    TableColumn<Song, String> albumColumnPl;
     @FXML
-     TableColumn<Song, LocalDate> dateColumnPl;
+    TableColumn<Song, LocalDate> dateColumnPl;
     @FXML
-     TableColumn<Song, String> durationColumnPl;
+    TableColumn<Song, String> durationColumnPl;
     @FXML
-     AnchorPane favouritesPane;
+    AnchorPane favouritesPane;
     @FXML
-     AnchorPane libraryPane;
+    AnchorPane libraryPane;
     @FXML
-     AnchorPane settingsPane;
+    AnchorPane settingsPane;
     @FXML
-     ImageView espanolBtn;
+    ImageView espanolBtn;
     @FXML
-     ImageView inglesBtn;
+    ImageView inglesBtn;
     @FXML
-     RadioButton daltonicRadioBtn;
+    RadioButton daltonicRadioBtn;
     @FXML
-     TextField path;
+    TextField path;
     @FXML
-     Button pathBtn;
+    Button pathBtn;
     @FXML
-     VBox menuVBox;
+    VBox menuVBox;
     @FXML
-     VBox principalVBox;
+    VBox principalVBox;
     @FXML
-     AnchorPane libraryEntrie;
+    AnchorPane libraryEntrie;
     @FXML
-     AnchorPane main;
+    AnchorPane main;
     @FXML
-     AnchorPane playerEntrie;
+    AnchorPane playerEntrie;
     @FXML
-     AnchorPane ecualizatorEntrie;
+    AnchorPane ecualizatorEntrie;
     @FXML
-     AnchorPane ecualizatorPane;
+    AnchorPane ecualizatorPane;
     @FXML
-     AnchorPane aboutPane;
+    AnchorPane aboutPane;
     @FXML
-     ImageView change;
+    ImageView change;
     @FXML
-     ImageView musicImage;
+    ImageView musicImage;
     @FXML
-     MediaView musicVideo;
+    MediaView musicVideo;
     @FXML
-     ImageView librarySelected;
+    ImageView librarySelected;
     @FXML
-     ImageView favouritesSelected;
+    ImageView favouritesSelected;
     @FXML
-     ImageView playlistSelected;
+    ImageView playlistSelected;
     @FXML
-     ImageView ecualizatorSelected;
+    ImageView ecualizatorSelected;
     @FXML
-     ImageView settingsSelected;
+    ImageView settingsSelected;
     @FXML
-     ImageView aboutSelected;
+    ImageView aboutSelected;
     @FXML
-     ImageView playerSelected;
+    ImageView playerSelected;
     @FXML
-     Label libraryEntrieLabel;
+    Label libraryEntrieLabel;
     @FXML
-     Label favouritesEntrieLabel;
+    Label favouritesEntrieLabel;
     @FXML
-     Label playlistEntrieLabel;
+    Label playlistEntrieLabel;
     @FXML
-     Label playerEntrieLabel;
+    Label playerEntrieLabel;
     @FXML
-     Label ecualizatorEntrieLabel;
+    Label ecualizatorEntrieLabel;
     @FXML
-     Label settingsEntrieLabel;
+    Label settingsEntrieLabel;
     @FXML
-     Label aboutEntrieLabel;
+    Label aboutEntrieLabel;
     @FXML
-     AnchorPane playlistSplit1AnchorPane;
+    AnchorPane playlistSplit1AnchorPane;
     @FXML
-     Label playlistSplit1Label;
+    Label playlistSplit1Label;
     @FXML
-     TableColumn<Song, String> durationColumnFav;
+    TableColumn<Song, String> durationColumnFav;
     @FXML
-     TableColumn<Song, String> songColumnFav;
+    TableColumn<Song, String> songColumnFav;
     @FXML
-     TableColumn<Song, String> artistColumnFav;
+    TableColumn<Song, String> artistColumnFav;
     @FXML
-     TableColumn<Song, String> albumColumnFav;
+    TableColumn<Song, String> albumColumnFav;
     @FXML
-     TableColumn<Song, LocalDate> dateColumnFav;
+    TableColumn<Song, LocalDate> dateColumnFav;
     @FXML
-     Label libraryPaneLabel;
+    Label libraryPaneLabel;
     @FXML
-     Label favouritesPaneLabel;
+    Label favouritesPaneLabel;
     @FXML
-     TableColumn<Song, String> songColumnLib;
+    TableColumn<Song, String> songColumnLib;
     @FXML
-     TableColumn<Song, String> artistColumnLib;
+    TableColumn<Song, String> artistColumnLib;
     @FXML
-     TableColumn<Song, String> albumColumnLib;
+    TableColumn<Song, String> albumColumnLib;
     @FXML
-     TableColumn<Song, LocalDate> dateColumnLib;
+    TableColumn<Song, LocalDate> dateColumnLib;
     @FXML
-     TableColumn<Song, String> durationColumnLib;
+    TableColumn<Song, String> durationColumnLib;
     @FXML
-     TableView<Song> favouritesTable;
+    TableView<Song> favouritesTable;
     @FXML
-     TableView<Song> libraryTable;
+    TableView<Song> libraryTable;
+    AnchorPane ecualizatorEntrie1;
     @FXML
-     AnchorPane ecualizatorEntrie1;
+    Label ecualizatorEntrieLabel1;
+    ImageView ecualizatorSelected1;
     @FXML
-     Label ecualizatorEntrieLabel1;
+    AnchorPane searchPane;
     @FXML
-     ImageView ecualizatorSelected1;
+    private AnchorPane searchEntrie;
     @FXML
-     AnchorPane searchPane;
+    private ImageView searchSelected;
+    @FXML
+    private TableView<Song> searchTable;
+    @FXML
+    private TextField searchBar;
+    @FXML
+    private ImageView searchButton;
+    @FXML
+    private RadioButton searchSong;
+    @FXML
+    private RadioButton searchArtist;
+    @FXML
+    private RadioButton searchAlbum;
+    @FXML
+    private ChoiceBox<String> searchChoice;
+    @FXML
+    private ToggleGroup searchGroup;
+    @FXML
+    private TableColumn<Song, String> songColumnSrch;
+    @FXML
+    private TableColumn<Song, String> artistColumnSrch;
+    @FXML
+    private TableColumn<Song, String> albumColumnSrch;
+    @FXML
+    private TableColumn<Song, LocalDate> dateColumnSrch;
+    @FXML
+    private TableColumn<Song, String> durationColumnSrch;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
@@ -300,6 +334,7 @@ public class reproductorController implements Initializable {
     public static final int ECUALIZATOR = 4;
     public static final int ABOUT = 5;
     public static final int SETTINGS = 6;
+    public static final int SEARCH = 7;
     public static final int LIBRARY_TABLE = 0;
     public static final int FAVOURITES_TABLE = 1;
     public static final int PLAYLISTS_TABLE = 2;
@@ -314,6 +349,8 @@ public class reproductorController implements Initializable {
     int tab;
     String tiempo;
     DecimalFormat df = new DecimalFormat("##.##");
+    File loadedSong;
+    Player player;
 
     //IMAGENES//
     final private Image favRedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
@@ -329,8 +366,68 @@ public class reproductorController implements Initializable {
     final private Image repeatSelectedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/repeatSelected.png"));
     final private Image repeatSelectedDaltImg = new Image(getClass().getResourceAsStream("/assets/imagenes/repeatSelectedDalt.png"));
     final private Image repeatNotSelectedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/repeat.png"));
-    final private Image pauseImg = new Image(getClass().getResourceAsStream("/assets/imagenes/pause.png"));
-    final private Image playImg = new Image(getClass().getResourceAsStream("/assets/imagenes/play.png"));
+    final public Image pauseImg = new Image(getClass().getResourceAsStream("/assets/imagenes/pause.png"));
+    final public Image playImg = new Image(getClass().getResourceAsStream("/assets/imagenes/play.png"));
+
+    @FXML
+    private void searchOnClick(MouseEvent event) {
+        System.out.println("Has pinchado en: BUSCAR");
+        searchPane.toFront();
+        cambiarSeleccion();
+        tab = SEARCH;
+        guardarSeleccion(tab);
+        searchSelected.setVisible(true);
+    }
+
+    @FXML
+    private void searchKeyPressed(KeyEvent event) {
+
+        FilteredList<Song> filteredData = new FilteredList<>(libraryTable.getItems(), p -> true);
+        searchTable.setItems(filteredData);
+
+        searchBar.textProperty().addListener((prop, old, text) -> {
+            filteredData.setPredicate(song -> {
+                if (text == null || text.isEmpty()) {
+                    return true;
+                }
+                //Para obtener los metadatos
+                Mp3File mp3file = null;
+                try {
+                    mp3file = new Mp3File(song.getFile().getAbsoluteFile());
+                } catch (IOException ex) {
+                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnsupportedTagException ex) {
+                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvalidDataException ex) {
+                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                ID3v2 tag;
+                if (mp3file.hasId3v2Tag()) {
+                    tag = mp3file.getId3v2Tag();
+                } else {
+                    // mp3 does not have an ID3v2 tag, let's create one..
+                    tag = new ID3v24Tag();
+                    mp3file.setId3v2Tag(tag);
+                }
+                 String name = "";
+                 
+                switch (searchGroup.getSelectedToggle().toString().split("'")[1]) {
+                    case "Song":
+                    case "Canción":
+                        name = tag.getTitle() == null ? song.getFile().getName().toLowerCase() : tag.getTitle().toLowerCase();
+                        break;
+                    case "Artist":
+                    case "Artista":
+                        name = tag.getAlbumArtist().toLowerCase();
+                        break;
+                    case "Album":
+                        name = tag.getAlbum().toLowerCase();
+                        break;
+                }
+                return name.contains(text.toLowerCase());
+            });
+        });
+    }
 
     public class Song {
 
@@ -417,7 +514,6 @@ public class reproductorController implements Initializable {
         public void setFav(boolean fav) {
             this.fav = fav;
         }
-        
 
     }
 
@@ -430,7 +526,21 @@ public class reproductorController implements Initializable {
         daltonismFunc(persistentDaltonims);
         video = false;
 
-        ObservableList<String> data = FXCollections.observableArrayList("cancion1", "cancion2", "...");
+        System.out.println("idIdioma" + preferences.getInt("idIdioma", 0));
+        System.out.println("idIdioma" + preferences.getInt("idIdioma", 0));
+
+        if (preferences.getInt("idIdioma", 0) == 0) {
+            ObservableList<String> options = FXCollections.observableArrayList("Local", "Internet", "Biblioteca", "Favoritos");
+            searchChoice.setItems(options);
+            System.out.println("español_____");
+        } else {
+            ObservableList<String> options = FXCollections.observableArrayList("Local", "Internet", "Library", "Favourites");
+            searchChoice.setItems(options);
+            System.out.println("inglés----------------");
+        }
+
+        //TODO cargar playlists
+        ObservableList<String> data = FXCollections.observableArrayList("playlist 1");
         playlistList.setItems(data);
         playlistSelected.setVisible(false);
 
@@ -441,6 +551,7 @@ public class reproductorController implements Initializable {
         ecualizatorSelected.setVisible(false);
         aboutSelected.setVisible(false);
         settingsSelected.setVisible(false);
+        searchSelected.setVisible(false);
 
         tab = preferences.getInt("tab", PLAYER);
         activaSeleccion();
@@ -456,6 +567,7 @@ public class reproductorController implements Initializable {
 
         sliderVolume.setValue(50);
         sliderDuration.setValue(0);
+        player = new Player("", 0, false, this, false);
     }
 
     @FXML
@@ -482,16 +594,19 @@ public class reproductorController implements Initializable {
         } else {
             play.setImage(playImg);
         }
+        player.pauseResume();
     }
 
     @FXML
     private void nextOnClick(MouseEvent event) {
         System.out.println("Has pinchado en: SIGUIENTE CANCION");
+        player.playNext();
     }
 
     @FXML
     private void previousOnClick(MouseEvent event) {
         System.out.println("Has pinchado en: CANCION ANTERIOR");
+        player.playPrevious();
     }
 
     @FXML
@@ -565,6 +680,7 @@ public class reproductorController implements Initializable {
         Parent root = null;
         main.getChildren().remove(0);
         int es_EN = 0;
+        escribeCambioIdioma(es_EN);
 
         try {
             Locale.setDefault(new Locale("es_es"));
@@ -577,8 +693,6 @@ public class reproductorController implements Initializable {
             System.out.println("Recurso no encontrado");
         }
 
-        escribeCambioIdioma(es_EN);
-
         main.getChildren().add(root);
     }
 
@@ -588,6 +702,7 @@ public class reproductorController implements Initializable {
         Parent root = null;
         main.getChildren().remove(0);
         int es_EN = 1;
+        escribeCambioIdioma(es_EN);
 
         try {
             Locale.setDefault(Locale.ENGLISH);
@@ -600,13 +715,12 @@ public class reproductorController implements Initializable {
             System.out.println("Recurso no encontrado");
         }
 
-        escribeCambioIdioma(es_EN);
-
         main.getChildren().add(root);
     }
 
     private void escribeCambioIdioma(int idIdioma) {
         preferences.putInt("idIdioma", idIdioma);
+
     }
 
     @FXML
@@ -811,7 +925,7 @@ public class reproductorController implements Initializable {
     }
 
     @FXML
-    private void libraryTableOnClick(MouseEvent event) {
+    private void libraryTableOnClick(MouseEvent event) throws IOException, UnsupportedTagException, InvalidDataException {
         if (event.getButton().equals(MouseButton.SECONDARY) && (libraryTable.getSelectionModel().getSelectedItem() != null)) {
             System.out.println(libraryTable.getSelectionModel().getSelectedItem().file);
             //Creamos menu contextual del click derecho
@@ -876,7 +990,20 @@ public class reproductorController implements Initializable {
             //Añadimos el gestor de eventos del raton para la seleccion del menú
 
         } else if (event.getButton().equals(MouseButton.PRIMARY) && (event.getClickCount() == 2) && (libraryTable.getSelectionModel().getSelectedItem() != null)) {
-            System.out.println(libraryTable.getSelectionModel().getSelectedItem().songName);
+            loadedSong = libraryTable.getSelectionModel().getSelectedItem().file;
+            audioPane.toFront();
+            Mp3File mp3file = new Mp3File(loadedSong.getAbsoluteFile());
+            ID3v2 tag;
+            if (mp3file.hasId3v2Tag()) {
+                tag = mp3file.getId3v2Tag();
+            } else {
+                // mp3 does not have an ID3v2 tag, let's create one..
+                tag = new ID3v24Tag();
+                mp3file.setId3v2Tag(tag);
+            }
+            name.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
+            artist.setText(tag.getTitle() == null ? "---" : tag.getArtist());
+            player.playSong(0);
         }
     }
 
@@ -902,6 +1029,9 @@ public class reproductorController implements Initializable {
                 break;
             case SETTINGS:
                 settingsSelected.setVisible(false);
+                break;
+            case SEARCH:
+                searchSelected.setVisible(false);
                 break;
 
         }
@@ -936,6 +1066,10 @@ public class reproductorController implements Initializable {
             case SETTINGS:
                 settingsPane.toFront();
                 settingsSelected.setVisible(true);
+                break;
+            case SEARCH:
+                searchPane.toFront();
+                searchSelected.setVisible(true);
                 break;
 
         }
@@ -1042,7 +1176,7 @@ public class reproductorController implements Initializable {
         return date;
     }
 
-    private String durationFormatted(long durationMs) {
+    public String durationFormatted(long durationMs) {
         long minutes = (durationMs / 1000) / 60;
         long seconds = (durationMs / 1000) % 60;
         String time = String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
