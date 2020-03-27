@@ -452,7 +452,7 @@
                   </AnchorPane>
                   <AnchorPane fx:id="libraryPane" layoutX="10.0" layoutY="10.0" prefHeight="795.0" prefWidth="1077.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <TableView fx:id="libraryTable" opacity="0.94" prefHeight="724.0" prefWidth="654.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="libraryTable" onMouseClicked="#libraryTableOnClick" opacity="0.94" prefHeight="724.0" prefWidth="654.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <columns>
                               <TableColumn fx:id="songColumnLib" minWidth="25.0" prefWidth="320.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18; -fx-font-color: #393d42;" text="%name" />
                               <TableColumn fx:id="artistColumnLib" prefWidth="222.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%artist" />

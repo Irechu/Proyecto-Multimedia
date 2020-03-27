@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="491.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectomultimedia_1.EdtarArchivoController">
+   <children>
+      <AnchorPane layoutX="31.0" layoutY="55.0" prefHeight="333.0" prefWidth="546.0">
+         <children>
+            <Label prefHeight="48.0" prefWidth="278.0" text="%title">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="37.0" />
+               </font>
+            </Label>
+            <Label layoutY="215.0" prefHeight="48.0" prefWidth="278.0" text="%copyright">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="37.0" />
+               </font>
+            </Label>
+            <Label layoutY="104.0" prefHeight="48.0" prefWidth="278.0" text="%album">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="37.0" />
+               </font>
+            </Label>
+            <Label layoutY="48.0" prefHeight="48.0" prefWidth="271.0" text="%artist">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="37.0" />
+               </font>
+            </Label>
+            <Label layoutY="271.0" prefHeight="48.0" prefWidth="278.0" text="%rating">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="37.0" />
+               </font>
+            </Label>
+            <TextField fx:id="editViewTitle" layoutX="247.0" layoutY="5.0" prefHeight="37.0" prefWidth="261.0" promptText="%title...">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="editViewArtist" layoutX="247.0" layoutY="53.0" prefHeight="37.0" prefWidth="261.0" promptText="%artist...">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="editViewAlbum" layoutX="247.0" layoutY="109.0" prefHeight="37.0" prefWidth="261.0" promptText="%album...">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="editViewRating" layoutX="247.0" layoutY="276.0" prefHeight="39.0" prefWidth="131.0" promptText="%rating...">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="editViewCopyright" layoutX="247.0" layoutY="220.0" prefHeight="37.0" prefWidth="261.0" promptText="%copyright...">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TextField>
+            <Label layoutX="389.0" layoutY="277.0" text="/5">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="32.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <Button fx:id="editViewCancelButton" layoutX="321.0" layoutY="410.0" mnemonicParsing="false" onMouseClicked="#cancelViewOnClick" text="%cancel">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="editViewSaveButon" layoutX="440.0" layoutY="410.0" mnemonicParsing="false" onMouseClicked="#saveViewOnClick" text="%save">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
