@@ -86,211 +86,206 @@ import static proyectomultimedia_1.ProyectoMultimedia_1.preferences;
 public class reproductorController implements Initializable {
 
     @FXML
-     AnchorPane menuSplitPane;
+    AnchorPane menuSplitPane;
     @FXML
-     AnchorPane favouritesEntrie;
+    AnchorPane favouritesEntrie;
     @FXML
-     AnchorPane playlistEntrie;
+    AnchorPane playlistEntrie;
     @FXML
-     AnchorPane settingsEntrie;
+    AnchorPane settingsEntrie;
     @FXML
-     AnchorPane aboutEntrie;
+    AnchorPane aboutEntrie;
     @FXML
-     AnchorPane principalSplitPane;
+    AnchorPane principalSplitPane;
     @FXML
-     AnchorPane playlistPane;
+    AnchorPane playlistPane;
     @FXML
-     AnchorPane audioPane;
+    AnchorPane audioPane;
     @FXML
-     AnchorPane metadata;
+    AnchorPane metadata;
     @FXML
-     Label artist;
+    Label artist;
     @FXML
-     Label name;
+    Label name;
     @FXML
-     Slider sliderDuration;
+    Slider sliderDuration;
     @FXML
-     ImageView fav;
+    ImageView fav;
     @FXML
-     Label timeCounter;
+    Label timeCounter;
     @FXML
-     Label duration;
+    Label duration;
     @FXML
-     AnchorPane controls;
+    AnchorPane controls;
     @FXML
-     ImageView play;
+    ImageView play;
     @FXML
-     ImageView next;
+    ImageView next;
     @FXML
-     ImageView previous;
+    ImageView previous;
     @FXML
-     ImageView shuffle;
+    ImageView shuffle;
     @FXML
-     ImageView repeat;
+    ImageView repeat;
     @FXML
-     AnchorPane volume;
+    AnchorPane volume;
     @FXML
-     ImageView sound;
+    ImageView sound;
     @FXML
-     Slider sliderVolume;
+    Slider sliderVolume;
     @FXML
-     AnchorPane playlistSplit1;
+    AnchorPane playlistSplit1;
     @FXML
     ListView<String> playlistList;
     @FXML
-     AnchorPane playlistSplit2;
+    AnchorPane playlistSplit2;
     @FXML
-     TableColumn<Song, String> songColumnPl;
+    TableColumn<Song, String> songColumnPl;
     @FXML
-     TableColumn<Song, String> artistColumnPl;
+    TableColumn<Song, String> artistColumnPl;
     @FXML
-     TableColumn<Song, String> albumColumnPl;
+    TableColumn<Song, String> albumColumnPl;
     @FXML
-     TableColumn<Song, LocalDate> dateColumnPl;
+    TableColumn<Song, LocalDate> dateColumnPl;
     @FXML
-     TableColumn<Song, String> durationColumnPl;
+    TableColumn<Song, String> durationColumnPl;
     @FXML
-     AnchorPane favouritesPane;
+    AnchorPane favouritesPane;
     @FXML
-     AnchorPane libraryPane;
+    AnchorPane libraryPane;
     @FXML
-     AnchorPane settingsPane;
+    AnchorPane settingsPane;
     @FXML
-     ImageView espanolBtn;
+    ImageView espanolBtn;
     @FXML
-     ImageView inglesBtn;
+    ImageView inglesBtn;
     @FXML
-     RadioButton daltonicRadioBtn;
+    RadioButton daltonicRadioBtn;
     @FXML
-     TextField path;
+    TextField path;
     @FXML
-     Button pathBtn;
+    Button pathBtn;
     @FXML
-     VBox menuVBox;
+    VBox menuVBox;
     @FXML
-     VBox principalVBox;
+    VBox principalVBox;
     @FXML
-     AnchorPane libraryEntrie;
+    AnchorPane libraryEntrie;
     @FXML
-     AnchorPane main;
+    AnchorPane main;
     @FXML
-     AnchorPane playerEntrie;
+    AnchorPane playerEntrie;
     @FXML
-     AnchorPane ecualizatorEntrie;
+    AnchorPane ecualizatorEntrie;
     @FXML
-     AnchorPane ecualizatorPane;
+    AnchorPane ecualizatorPane;
     @FXML
-     AnchorPane aboutPane;
+    AnchorPane aboutPane;
     @FXML
-     ImageView change;
+    ImageView change;
     @FXML
-     ImageView musicImage;
+    ImageView musicImage;
     @FXML
-     MediaView musicVideo;
+    MediaView musicVideo;
     @FXML
-     ImageView librarySelected;
+    ImageView librarySelected;
     @FXML
-     ImageView favouritesSelected;
+    ImageView favouritesSelected;
     @FXML
-     ImageView playlistSelected;
+    ImageView playlistSelected;
     @FXML
-     ImageView ecualizatorSelected;
+    ImageView ecualizatorSelected;
     @FXML
-     ImageView settingsSelected;
+    ImageView settingsSelected;
     @FXML
-     ImageView aboutSelected;
+    ImageView aboutSelected;
     @FXML
-     ImageView playerSelected;
+    ImageView playerSelected;
     @FXML
-     Label libraryEntrieLabel;
+    Label libraryEntrieLabel;
     @FXML
-     Label favouritesEntrieLabel;
+    Label favouritesEntrieLabel;
     @FXML
-     Label playlistEntrieLabel;
+    Label playlistEntrieLabel;
     @FXML
-     Label playerEntrieLabel;
+    Label playerEntrieLabel;
     @FXML
-     Label ecualizatorEntrieLabel;
+    Label ecualizatorEntrieLabel;
     @FXML
-     Label settingsEntrieLabel;
+    Label settingsEntrieLabel;
     @FXML
-     Label aboutEntrieLabel;
+    Label aboutEntrieLabel;
     @FXML
-     AnchorPane playlistSplit1AnchorPane;
+    AnchorPane playlistSplit1AnchorPane;
     @FXML
-     Label playlistSplit1Label;
+    Label playlistSplit1Label;
     @FXML
-     TableColumn<Song, String> durationColumnFav;
+    TableColumn<Song, String> durationColumnFav;
     @FXML
-     TableColumn<Song, String> songColumnFav;
+    TableColumn<Song, String> songColumnFav;
     @FXML
-     TableColumn<Song, String> artistColumnFav;
+    TableColumn<Song, String> artistColumnFav;
     @FXML
-     TableColumn<Song, String> albumColumnFav;
+    TableColumn<Song, String> albumColumnFav;
     @FXML
-     TableColumn<Song, LocalDate> dateColumnFav;
+    TableColumn<Song, LocalDate> dateColumnFav;
     @FXML
-     Label libraryPaneLabel;
+    Label libraryPaneLabel;
     @FXML
-     Label favouritesPaneLabel;
+    Label favouritesPaneLabel;
     @FXML
-     TableColumn<Song, String> songColumnLib;
+    TableColumn<Song, String> songColumnLib;
     @FXML
-     TableColumn<Song, String> artistColumnLib;
+    TableColumn<Song, String> artistColumnLib;
     @FXML
-     TableColumn<Song, String> albumColumnLib;
+    TableColumn<Song, String> albumColumnLib;
     @FXML
-     TableColumn<Song, LocalDate> dateColumnLib;
+    TableColumn<Song, LocalDate> dateColumnLib;
     @FXML
-     TableColumn<Song, String> durationColumnLib;
+    TableColumn<Song, String> durationColumnLib;
     @FXML
-     TableView<Song> favouritesTable;
+    TableView<Song> favouritesTable;
     @FXML
-     TableView<Song> libraryTable;
+    TableView<Song> libraryTable;
     @FXML
-     AnchorPane ecualizatorEntrie1;
+    AnchorPane ecualizatorEntrie1;
     @FXML
-     Label ecualizatorEntrieLabel1;
+    Label ecualizatorEntrieLabel1;
     @FXML
-     ImageView ecualizatorSelected1;
+    ImageView ecualizatorSelected1;
     @FXML
-     AnchorPane searchPane;
+    AnchorPane searchPane;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
         double valor = sliderDuration.getValue();
         System.out.println("valor: " + valor);
+        valor = valor/60;
+        int minutos = (int) valor;
         String[] arr = String.valueOf(valor).split("\\.");
-        int minutos = Integer.parseInt(arr[0]);
-        int segundos = Integer.parseInt(arr[1].substring(0, 1));
+        int segundos = Integer.parseInt(arr[1].substring(0, 2));
+        segundos = (segundos * 60) / 100;
         System.out.println("minutos: " + minutos + " segundos: " + segundos);
         tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
         timeCounter.setText(tiempo);
-    }
-
-    private void sliderDurationOnScroll(ScrollEvent event) {
-        double valor = sliderDuration.getValue();
-        System.out.println("valor: " + valor);
-        String[] arr = String.valueOf(valor).split("\\.");
-
-        int minutos = Integer.parseInt(arr[0]);
-        int segundos = Integer.parseInt(arr[1].substring(0, 1));
-        System.out.println("minutos: " + minutos + " segundos: " + segundos);
-        tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
-        timeCounter.setText(tiempo);
+        
+        player.setPos(valor*60);
     }
 
     @FXML
     private void sliderDurationOnDragged(MouseEvent event) {
         double valor = sliderDuration.getValue();
         System.out.println("valor: " + valor);
+        valor = valor/60;
+        int minutos = (int) valor;
         String[] arr = String.valueOf(valor).split("\\.");
-
-        int minutos = Integer.parseInt(arr[0]);
-        int segundos = Integer.parseInt(arr[1].substring(0, 1));
+        int segundos = Integer.parseInt(arr[1].substring(0, 2));
+        segundos = (segundos * 60) / 100;
         System.out.println("minutos: " + minutos + " segundos: " + segundos);
         tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
         timeCounter.setText(tiempo);
+        
+        player.setPos(valor*60);
     }
 
     //Variables
@@ -334,6 +329,10 @@ public class reproductorController implements Initializable {
     final private Image repeatNotSelectedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/repeat.png"));
     final public Image pauseImg = new Image(getClass().getResourceAsStream("/assets/imagenes/pause.png"));
     final public Image playImg = new Image(getClass().getResourceAsStream("/assets/imagenes/play.png"));
+
+    @FXML
+    private void volumeSliderMouseDragged(MouseEvent event) {
+    }
 
     public class Song {
 
@@ -443,6 +442,15 @@ public class reproductorController implements Initializable {
         ecualizatorSelected.setVisible(false);
         aboutSelected.setVisible(false);
         settingsSelected.setVisible(false);
+        
+        //desactivamos botones
+        play.setDisable(true);
+        previous.setDisable(true);
+        next.setDisable(true);
+        shuffle.setDisable(true);
+        repeat.setDisable(true);
+        sliderDuration.setDisable(true);
+        fav.setDisable(true);
 
         tab = preferences.getInt("tab", PLAYER);
         activaSeleccion();
@@ -458,7 +466,8 @@ public class reproductorController implements Initializable {
 
         sliderVolume.setValue(50);
         sliderDuration.setValue(0);
-        player = new Player("", 0, false, this, false);
+        
+        player = new Player(this, false);
     }
 
     @FXML
@@ -805,10 +814,10 @@ public class reproductorController implements Initializable {
         }
     }
 
-    @FXML
     private void volumeSliderMouseReleased(MouseEvent event) {
         //sliderVolume.getValue();
-        System.out.println("volumen ajustado a: " + sliderVolume.getValue());
+        System.out.println("volumen ajustado a: " + sliderVolume.getValue()/100);
+        player.setVolume((float) sliderVolume.getValue());
         if (sliderVolume.getValue() == 0) {
             sound.setImage(muteImg);
         } else {

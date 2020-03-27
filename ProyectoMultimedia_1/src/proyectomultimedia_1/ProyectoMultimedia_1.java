@@ -37,7 +37,7 @@ public class ProyectoMultimedia_1 extends Application {
         preferences.putInt("tab", PLAYER);
         preferences.put("library", "");
          */
-        int idIdioma = preferences.getInt("idIdioma", PLAYER);
+        int idIdioma = preferences.getInt("idIdioma", 0);
         ResourceBundle resources = null;
         if (idIdioma == 0) {
             resources = ResourceBundle.getBundle("languages.text_es");

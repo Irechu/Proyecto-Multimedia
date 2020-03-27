@@ -51,11 +51,11 @@ public class Player {
 
     private Thread updaterThread;
 
-    int songIndex;
+    //int songIndex;
 
     reproductorController reproductor;
 
-    String currentPlaylistName = "";
+    //String currentPlaylistName = "";
 
     String youtubeExecName = "youtube-dl.exe";
 
@@ -63,34 +63,37 @@ public class Player {
         isPlaying = false;
         isActive = false;
     }
-
-    boolean isUnix;
+    
     boolean playList;
 
-    public Player(String inputPlaylistName, int inputIndex, boolean isUnix, reproductorController d, boolean pl) {
+    public Player(reproductorController d, boolean pl) {
         reproductor = d;
         this.playList = pl;
-        this.isUnix = isUnix;
-        this.currentPlaylistName = inputPlaylistName;
 
+        //playSong(inputIndex);
+    }
+
+    public void setVolume(float volume){
+        if(isActive)
+            mediaPlayer.setVolume(volume/100);
+    }
+    
+    public void playSong(int index) {
         Platform.runLater(() -> {
             reproductor.previous.setDisable(false);
             reproductor.next.setDisable(false);
             reproductor.shuffle.setDisable(false);
             reproductor.repeat.setDisable(false);
+            reproductor.play.setDisable(false);
+            reproductor.fav.setDisable(false);
         });
-
-        //playSong(inputIndex);
-    }
-
-    public void playSong(int index) {
+        
         x = new Thread(new Task<Void>() {
             @Override
             protected Void call() {
                 try {
 
                     //HashMap<String,Object> songDetails = reproductor.cachedPlaylist.get(currentPlaylistName).get(index);
-                    //songIndex = reproductor.loadedSong;
                     File song = reproductor.loadedSong;
 
                     isActive = true;
@@ -187,10 +190,10 @@ public class Player {
 
                     }*/
 
-                    if (!isActive || index != songIndex) {
+                    /*if (!isActive || index != songIndex) {
                         System.out.println("Skipping because video no longer required ...");
                         return null;
-                    }
+                    }*/
 
                     System.out.println("starting ...");
 
@@ -211,6 +214,8 @@ public class Player {
 
                         Platform.runLater(() -> {
                             reproductor.sliderDuration.setDisable(false);
+                            reproductor.sliderDuration.setMin(0);
+                            reproductor.sliderDuration.setMax(totalCurr);
                             reproductor.controls.setDisable(false);
                             reproductor.musicImage.setOpacity(1.0);
                             reproductor.duration.setText(reproductor.durationFormatted((long) media.getDuration().toMillis()));
@@ -262,6 +267,8 @@ public class Player {
                 }
             }
         }*/
+        reproductor.playActive = false;
+        reproductor.play.setImage(reproductor.playImg);
     }
 
     public void playNext() {
@@ -288,15 +295,15 @@ public class Player {
     }
 
     public void playPrevious() {
-        if (songIndex > 0) {
+        /*if (songIndex > 0) {
             mediaPlayer.stop();
             mediaPlayer.dispose();
             playSong((songIndex - 1));
-        }
+        }*/
     }
 
     public void setPos(double newDurSecs) {
-        mediaPlayer.seek(new Duration(newDurSecs * 1000));
+        mediaPlayer.seek(Duration.seconds(newDurSecs));
     }
 
     public void pauseResume() {
@@ -343,11 +350,11 @@ public class Player {
                 try {
                     while (isActive) {
                         if (mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
-                            double currSec = mediaPlayer.getCurrentTime().toSeconds();
+                            double currSec = mediaPlayer.getCurrentTime().toMillis();
                             String currentSimpleTimeStamp = reproductor.durationFormatted((long) currSec);
                             Platform.runLater(() -> reproductor.timeCounter.setText(currentSimpleTimeStamp));
 
-                            double currentProgress = (currSec / totalCurr) * 100;
+                            double currentProgress = currSec/1000;
                             if (!reproductor.sliderDuration.isValueChanging()) {
                                 reproductor.sliderDuration.setValue(currentProgress);
                                 //dash.refreshSlider(dash.songSeek);
