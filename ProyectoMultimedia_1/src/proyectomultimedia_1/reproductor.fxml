@@ -387,6 +387,60 @@
                         </Label>
                      </children>
                   </AnchorPane>
+                  <AnchorPane fx:id="searchPane" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <TableView fx:id="searchTable" layoutY="59.0" onMouseClicked="#libraryTableOnClick" opacity="0.94" prefHeight="736.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="59.0">
+                           <columns>
+                              <TableColumn fx:id="songColumnSrch" minWidth="25.0" prefWidth="320.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18; -fx-font-color: #393d42;" text="%name" />
+                              <TableColumn fx:id="artistColumnSrch" prefWidth="222.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%artist" />
+                              <TableColumn fx:id="albumColumnSrch" prefWidth="172.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%album" />
+                              <TableColumn fx:id="dateColumnSrch" prefWidth="163.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%date" />
+                              <TableColumn fx:id="durationColumnSrch" prefWidth="199.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%duration" />
+                           </columns>
+                        </TableView>
+                        <AnchorPane layoutX="42.0" layoutY="14.0" prefHeight="30.0" prefWidth="1004.0">
+                           <children>
+                              <TextField fx:id="searchBar" layoutX="761.0" layoutY="6.0" onKeyPressed="#searchKeyPressed" prefHeight="25.0" prefWidth="158.0" />
+                              <ImageView fx:id="searchButton" fitHeight="30.0" fitWidth="30.0" layoutX="940.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/imagenes/buscar.png" />
+                                 </image>
+                              </ImageView>
+                              <RadioButton fx:id="searchSong" layoutX="377.0" layoutY="6.0" mnemonicParsing="false" selected="true" text="%name" textFill="#9b9b9b">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="18.0" />
+                                 </font>
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="searchGroup" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton fx:id="searchArtist" layoutX="501.0" layoutY="8.0" mnemonicParsing="false" text="%artist" textFill="#9b9b9b" toggleGroup="$searchGroup">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="18.0" />
+                                 </font>
+                              </RadioButton>
+                              <RadioButton fx:id="searchAlbum" layoutX="626.0" layoutY="8.0" mnemonicParsing="false" text="%album" textFill="#9b9b9b" toggleGroup="$searchGroup">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="18.0" />
+                                 </font>
+                              </RadioButton>
+                              <Label layoutX="7.0" layoutY="8.0" text="%where" textFill="#9b9b9b">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="324.0" layoutY="8.0" text="%what" textFill="#9b9b9b">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <ChoiceBox fx:id="searchChoice" layoutX="120.0" layoutY="6.0" prefWidth="150.0" />
+                              <Separator layoutX="290.0" orientation="VERTICAL" prefHeight="36.0" prefWidth="14.0" />
+                              <Separator layoutX="729.0" layoutY="2.0" orientation="VERTICAL" prefHeight="36.0" prefWidth="14.0" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
                   <AnchorPane fx:id="audioPane" onKeyPressed="#sliderDurationKeyPressed" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <AnchorPane fx:id="metadata" layoutX="211.0" layoutY="47.0" prefHeight="514.0" prefWidth="340.0">
@@ -398,12 +452,12 @@
                               </ImageView>
                               <AnchorPane layoutX="12.0" layoutY="284.0" maxHeight="148.0" maxWidth="350.0" prefHeight="148.0" prefWidth="350.0">
                                  <children>
-                                    <Label fx:id="artist" layoutY="57.0" text="%artist" textFill="#ababab" wrapText="true">
+                                    <Label fx:id="artist" layoutY="57.0" prefHeight="32.0" prefWidth="247.0" text="%artist" textFill="#ababab" wrapText="true">
                                        <font>
                                           <Font name="Arial Rounded MT Bold" size="27.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="name" layoutY="88.0" text="%name" textFill="#4a0707" wrapText="true">
+                                    <Label fx:id="name" layoutY="88.0" prefHeight="60.0" prefWidth="350.0" text="%name" textFill="#4a0707" wrapText="true">
                                        <font>
                                           <Font name="Arial Rounded MT Bold" size="51.0" />
                                        </font>
@@ -489,60 +543,6 @@
                                  </image>
                               </ImageView>
                               <Slider fx:id="sliderVolume" layoutX="17.0" layoutY="-4.0" onMouseDragged="#volumeSliderMouseDragged" orientation="VERTICAL" AnchorPane.bottomAnchor="58.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="10.0" />
-                           </children>
-                        </AnchorPane>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane fx:id="searchPane" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <TableView fx:id="searchTable" layoutY="59.0" onMouseClicked="#libraryTableOnClick" opacity="0.94" prefHeight="736.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="59.0">
-                           <columns>
-                              <TableColumn fx:id="songColumnSrch" minWidth="25.0" prefWidth="320.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18; -fx-font-color: #393d42;" text="%name" />
-                              <TableColumn fx:id="artistColumnSrch" prefWidth="222.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%artist" />
-                              <TableColumn fx:id="albumColumnSrch" prefWidth="172.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%album" />
-                              <TableColumn fx:id="dateColumnSrch" prefWidth="163.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%date" />
-                              <TableColumn fx:id="durationColumnSrch" prefWidth="199.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%duration" />
-                           </columns>
-                        </TableView>
-                        <AnchorPane layoutX="42.0" layoutY="14.0" prefHeight="30.0" prefWidth="1004.0">
-                           <children>
-                              <TextField fx:id="searchBar" layoutX="761.0" layoutY="6.0" onKeyPressed="#searchKeyPressed" prefHeight="25.0" prefWidth="158.0" />
-                              <ImageView fx:id="searchButton" fitHeight="30.0" fitWidth="30.0" layoutX="940.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../assets/imagenes/buscar.png" />
-                                 </image>
-                              </ImageView>
-                              <RadioButton fx:id="searchSong" layoutX="377.0" layoutY="6.0" mnemonicParsing="false" selected="true" text="%name" textFill="#9b9b9b">
-                                 <font>
-                                    <Font name="Arial Rounded MT Bold" size="18.0" />
-                                 </font>
-                                 <toggleGroup>
-                                    <ToggleGroup fx:id="searchGroup" />
-                                 </toggleGroup>
-                              </RadioButton>
-                              <RadioButton fx:id="searchArtist" layoutX="501.0" layoutY="8.0" mnemonicParsing="false" text="%artist" textFill="#9b9b9b" toggleGroup="$searchGroup">
-                                 <font>
-                                    <Font name="Arial Rounded MT Bold" size="18.0" />
-                                 </font>
-                              </RadioButton>
-                              <RadioButton fx:id="searchAlbum" layoutX="626.0" layoutY="8.0" mnemonicParsing="false" text="%album" textFill="#9b9b9b" toggleGroup="$searchGroup">
-                                 <font>
-                                    <Font name="Arial Rounded MT Bold" size="18.0" />
-                                 </font>
-                              </RadioButton>
-                              <Label layoutX="7.0" layoutY="8.0" text="%where" textFill="#9b9b9b">
-                                 <font>
-                                    <Font name="Arial Rounded MT Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <Label layoutX="324.0" layoutY="8.0" text="%what" textFill="#9b9b9b">
-                                 <font>
-                                    <Font name="Arial Rounded MT Bold" size="18.0" />
-                                 </font>
-                              </Label>
-                              <ChoiceBox fx:id="searchChoice" layoutX="120.0" layoutY="6.0" prefWidth="150.0" />
-                              <Separator layoutX="290.0" orientation="VERTICAL" prefHeight="36.0" prefWidth="14.0" />
-                              <Separator layoutX="729.0" layoutY="2.0" orientation="VERTICAL" prefHeight="36.0" prefWidth="14.0" />
                            </children>
                         </AnchorPane>
                      </children>
