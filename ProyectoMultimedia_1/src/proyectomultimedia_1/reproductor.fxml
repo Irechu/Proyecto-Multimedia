@@ -350,7 +350,7 @@
                   </AnchorPane>
                   <AnchorPane fx:id="favouritesPane" layoutX="10.0" layoutY="10.0" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <TableView fx:id="favouritesTable" opacity="0.94" prefHeight="730.0" prefWidth="838.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="favouritesTable" onMouseClicked="#tableOnClick" opacity="0.94" prefHeight="730.0" prefWidth="838.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <columns>
                               <TableColumn fx:id="durationColumnFav" prefWidth="143.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%duration" />
                               <TableColumn fx:id="songColumnFav" minWidth="25.0" prefWidth="146.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18; -fx-font-color: #393d42;" text="%name" />
@@ -363,24 +363,6 @@
                            </columnResizePolicy>
                         </TableView>
                         <Label fx:id="favouritesPaneLabel" alignment="CENTER" layoutX="402.0" layoutY="230.0" mouseTransparent="true" opacity="0.35" prefHeight="795.0" prefWidth="1077.0" text="%favourites" textFill="#4a0707" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <font>
-                              <Font name="Arial Rounded MT Bold" size="60.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane fx:id="libraryPane" layoutX="10.0" layoutY="10.0" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" styleClass="scroll_pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <TableView fx:id="libraryTable" onMouseClicked="#libraryTableOnClick" opacity="0.94" prefHeight="724.0" prefWidth="654.0" style="-fx-background-color: #393d42;" styleClass="scroll_pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <columns>
-                              <TableColumn fx:id="songColumnLib" minWidth="25.0" prefWidth="320.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18; -fx-font-color: #393d42;" text="%name" />
-                              <TableColumn fx:id="artistColumnLib" prefWidth="222.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%artist" />
-                              <TableColumn fx:id="albumColumnLib" prefWidth="172.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%album" />
-                              <TableColumn fx:id="dateColumnLib" prefWidth="163.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%date" />
-                              <TableColumn fx:id="durationColumnLib" prefWidth="199.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%duration" />
-                           </columns>
-                        </TableView>
-                        <Label fx:id="libraryPaneLabel" alignment="CENTER" mouseTransparent="true" opacity="0.35" prefHeight="795.0" prefWidth="1077.0" text="%library" textFill="#4a0707" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="60.0" />
                            </font>
@@ -493,9 +475,27 @@
                         </AnchorPane>
                      </children>
                   </AnchorPane>
+                  <AnchorPane fx:id="libraryPane" layoutX="10.0" layoutY="10.0" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" styleClass="scroll_pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <TableView fx:id="libraryTable" onMouseClicked="#tableOnClick" opacity="0.94" prefHeight="724.0" prefWidth="654.0" style="-fx-background-color: #393d42;" styleClass="scroll_pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <columns>
+                              <TableColumn fx:id="songColumnLib" minWidth="25.0" prefWidth="320.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18; -fx-font-color: #393d42;" text="%name" />
+                              <TableColumn fx:id="artistColumnLib" prefWidth="222.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%artist" />
+                              <TableColumn fx:id="albumColumnLib" prefWidth="172.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%album" />
+                              <TableColumn fx:id="dateColumnLib" prefWidth="163.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%date" />
+                              <TableColumn fx:id="durationColumnLib" prefWidth="199.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%duration" />
+                           </columns>
+                        </TableView>
+                        <Label fx:id="libraryPaneLabel" alignment="CENTER" mouseTransparent="true" opacity="0.35" prefHeight="795.0" prefWidth="1077.0" text="%library" textFill="#4a0707" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font name="Arial Rounded MT Bold" size="60.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
                   <AnchorPane fx:id="searchPane" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <TableView fx:id="searchTable" layoutY="59.0" onMouseClicked="#libraryTableOnClick" opacity="0.94" prefHeight="736.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="59.0">
+                        <TableView fx:id="searchTable" layoutY="59.0" onMouseClicked="#tableOnClick" prefHeight="736.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="59.0">
                            <columns>
                               <TableColumn fx:id="songColumnSrch" minWidth="25.0" prefWidth="320.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18; -fx-font-color: #393d42;" text="%name" />
                               <TableColumn fx:id="artistColumnSrch" prefWidth="222.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%artist" />
@@ -507,11 +507,6 @@
                         <AnchorPane layoutX="42.0" layoutY="14.0" prefHeight="30.0" prefWidth="1004.0">
                            <children>
                               <TextField fx:id="searchBar" layoutX="761.0" layoutY="6.0" onKeyPressed="#searchKeyPressed" prefHeight="25.0" prefWidth="158.0" />
-                              <ImageView fx:id="searchButton" fitHeight="30.0" fitWidth="30.0" layoutX="940.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../assets/imagenes/buscar.png" />
-                                 </image>
-                              </ImageView>
                               <RadioButton fx:id="searchSong" layoutX="377.0" layoutY="6.0" mnemonicParsing="false" selected="true" text="%name" textFill="#9b9b9b">
                                  <font>
                                     <Font name="Arial Rounded MT Bold" size="18.0" />
@@ -547,6 +542,11 @@
                         </AnchorPane>
                      </children>
                   </AnchorPane>
+                  <Label fx:id="searchLabel" alignment="CENTER" layoutX="10.0" layoutY="10.0" mouseTransparent="true" opacity="0.54" prefHeight="795.0" prefWidth="1059.0" textFill="#4a0707" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font name="Arial Rounded MT Bold" size="60.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
          </children>
