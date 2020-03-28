@@ -253,7 +253,6 @@ public class reproductorController implements Initializable {
     @FXML
     TableView<Song> libraryTable;
     AnchorPane ecualizatorEntrie1;
-    @FXML
     Label ecualizatorEntrieLabel1;
     ImageView ecualizatorSelected1;
     @FXML
@@ -286,14 +285,17 @@ public class reproductorController implements Initializable {
     private TableColumn<Song, LocalDate> dateColumnSrch;
     @FXML
     private TableColumn<Song, String> durationColumnSrch;
-    @FXML
     private Label searchLabel;
+    @FXML
+    private ImageView searchButton;
+    @FXML
+    private Label searchEntrieLabel;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
         double valor = sliderDuration.getValue();
         System.out.println("valor: " + valor);
-        valor = valor/60;
+        valor = valor / 60;
         int minutos = (int) valor;
         String[] arr = String.valueOf(valor).split("\\.");
         int segundos = Integer.parseInt(arr[1].substring(0, 2));
@@ -301,15 +303,15 @@ public class reproductorController implements Initializable {
         System.out.println("minutos: " + minutos + " segundos: " + segundos);
         tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
         timeCounter.setText(tiempo);
-        
-        player.setPos(valor*60);
+
+        player.setPos(valor * 60);
     }
 
     @FXML
     private void sliderDurationOnDragged(MouseEvent event) {
         double valor = sliderDuration.getValue();
         System.out.println("valor: " + valor);
-        valor = valor/60;
+        valor = valor / 60;
         int minutos = (int) valor;
         String[] arr = String.valueOf(valor).split("\\.");
         int segundos = Integer.parseInt(arr[1].substring(0, 2));
@@ -317,8 +319,8 @@ public class reproductorController implements Initializable {
         System.out.println("minutos: " + minutos + " segundos: " + segundos);
         tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
         timeCounter.setText(tiempo);
-        
-        player.setPos(valor*60);
+
+        player.setPos(valor * 60);
     }
 
     //Variables
@@ -395,7 +397,7 @@ public class reproductorController implements Initializable {
                 break;
 
         }
-        FilteredList<Song> filteredData = new FilteredList<>(table.getItems(), p -> true);
+        FilteredList<Song> filteredData = new FilteredList<Song>(table.getItems(), p -> true);
         searchTable.setItems(filteredData);
 
         searchBar.textProperty().addListener((prop, old, text) -> {
@@ -418,9 +420,22 @@ public class reproductorController implements Initializable {
                         cancion = song.getAlbum().toLowerCase();
                         break;
                 }
+
                 return cancion.contains(text.toLowerCase());
             });
         });
+    }
+
+    @FXML
+    private void volumeSliderMouseDragged(MouseEvent event) {
+        //sliderVolume.getValue();
+        System.out.println("volumen ajustado a: " + sliderVolume.getValue() / 100);
+        player.setVolume((float) sliderVolume.getValue());
+        if (sliderVolume.getValue() == 0) {
+            sound.setImage(muteImg);
+        } else {
+            sound.setImage(soundImg);
+        }
     }
 
     public class Song {
@@ -537,6 +552,13 @@ public class reproductorController implements Initializable {
         playlistList.setItems(data);
         playlistSelected.setVisible(false);
 
+        //
+        songColumnSrch.setCellValueFactory(new PropertyValueFactory<Song, String>("songName"));
+        artistColumnSrch.setCellValueFactory(new PropertyValueFactory<Song, String>("artist"));
+        albumColumnSrch.setCellValueFactory(new PropertyValueFactory<Song, String>("album"));
+        durationColumnSrch.setCellValueFactory(new PropertyValueFactory<Song, String>("duration"));
+        dateColumnSrch.setCellValueFactory(new PropertyValueFactory<Song, LocalDate>("date"));
+
         //Quitamos todos los seleccionados
         librarySelected.setVisible(false);
         playerSelected.setVisible(false);
@@ -545,7 +567,7 @@ public class reproductorController implements Initializable {
         aboutSelected.setVisible(false);
         settingsSelected.setVisible(false);
         searchSelected.setVisible(false);
-        
+
         //desactivamos botones
         play.setDisable(true);
         previous.setDisable(true);
@@ -569,7 +591,7 @@ public class reproductorController implements Initializable {
 
         sliderVolume.setValue(50);
         sliderDuration.setValue(0);
-        
+
         player = new Player(this, false);
     }
 
@@ -741,7 +763,9 @@ public class reproductorController implements Initializable {
             playlistEntrieLabel.setStyle("-fx-text-fill:#000000");
             playerEntrieLabel.setStyle("-fx-text-fill:#000000");
             ecualizatorEntrieLabel.setStyle("-fx-text-fill:#000000");
+            searchEntrieLabel.setStyle("-fx-text-fill:#000000");
             playlistSplit1Label.setStyle("-fx-text-fill:#000000");
+
             playlistSplit1AnchorPane.setStyle("-fx-background-color:#ff9500");
             libraryPaneLabel.setStyle("-fx-text-fill:#ff9500");
             favouritesPaneLabel.setStyle("-fx-text-fill:#ff9500");
@@ -758,6 +782,8 @@ public class reproductorController implements Initializable {
             playerEntrieLabel.setStyle("-fx-text-fill:#ababab");
             ecualizatorEntrieLabel.setStyle("-fx-text-fill:#ababab");
             playlistSplit1Label.setStyle("-fx-text-fill:#ababab");
+            searchEntrieLabel.setStyle("-fx-text-fill:#ababab");
+
             playlistSplit1AnchorPane.setStyle("-fx-background-color:#4a0707");
             libraryPaneLabel.setStyle("-fx-text-fill:#4a0707");
             favouritesPaneLabel.setStyle("-fx-text-fill:#4a0707");
@@ -781,6 +807,7 @@ public class reproductorController implements Initializable {
             playerEntrieLabel.setStyle("-fx-text-fill:#000000");
             ecualizatorEntrieLabel.setStyle("-fx-text-fill:#000000");
             playlistSplit1Label.setStyle("-fx-text-fill:#000000");
+            searchEntrieLabel.setStyle("-fx-text-fill:#000000");
             playlistSplit1AnchorPane.setStyle("-fx-background-color:#ff9500");
             libraryPaneLabel.setStyle("-fx-text-fill:#ff9500");
             favouritesPaneLabel.setStyle("-fx-text-fill:#ff9500");
@@ -797,6 +824,7 @@ public class reproductorController implements Initializable {
             playerEntrieLabel.setStyle("-fx-text-fill:#ababab");
             ecualizatorEntrieLabel.setStyle("-fx-text-fill:#ababab");
             playlistSplit1Label.setStyle("-fx-text-fill:#ababab");
+            searchEntrieLabel.setStyle("-fx-text-fill:#ababab");
             playlistSplit1AnchorPane.setStyle("-fx-background-color:#4a0707");
             libraryPaneLabel.setStyle("-fx-text-fill:#4a0707");
             favouritesPaneLabel.setStyle("-fx-text-fill:#4a0707");
@@ -940,7 +968,7 @@ public class reproductorController implements Initializable {
             play.setOnAction((ActionEvent e) -> {
                 System.out.println("PLAY");
                 try {
-                    playSong();
+                    playSong(table);
                 } catch (IOException ex) {
                     Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (UnsupportedTagException ex) {
@@ -963,7 +991,6 @@ public class reproductorController implements Initializable {
                     loader.setLocation(getClass().getResource("edtarArchivo.fxml"));
                     loader.setResources(resources);
                     AnchorPane page = (AnchorPane) loader.load();
-
                     // Crear el dialogo de la escena
                     Stage dialogStage = new Stage();
                     dialogStage.setTitle("Edit Person");
@@ -1005,12 +1032,12 @@ public class reproductorController implements Initializable {
             //Añadimos el gestor de eventos del raton para la seleccion del menú
 
         } else if (event.getButton().equals(MouseButton.PRIMARY) && (event.getClickCount() == 2) && (table.getSelectionModel().getSelectedItem() != null)) {
-            playSong();
+            playSong(table);
         }
     }
 
-    private void playSong() throws IOException, UnsupportedTagException, InvalidDataException {
-        loadedSong = libraryTable.getSelectionModel().getSelectedItem().file;
+    private void playSong(TableView<Song> table) throws IOException, UnsupportedTagException, InvalidDataException {
+        loadedSong = table.getSelectionModel().getSelectedItem().file;
         audioPane.toFront();
         Mp3File mp3file = new Mp3File(loadedSong.getAbsoluteFile());
         ID3v2 tag;
