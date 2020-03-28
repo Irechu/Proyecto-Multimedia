@@ -1,3 +1,2 @@
-G:\Proyecto-Multimedia\ProyectoMultimedia_1\src\assets\audio\Bohemian Rhapsody.mp3
-G:\Proyecto-Multimedia\ProyectoMultimedia_1\src\assets\audio\Queen Bohemian Rhapsody.mp3
-G:\Proyecto-Multimedia\ProyectoMultimedia_1\src\assets\audio\tusa.mp3
+C:\Users\impm0\OneDrive\Escritorio\Proyecto-Multimedia\ProyectoMultimedia_1\src\assets\audio\Queen Bohemian Rhapsody.mp3
+C:\Users\impm0\OneDrive\Escritorio\Proyecto-Multimedia\ProyectoMultimedia_1\src\assets\audio\tusa.mp3

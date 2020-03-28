@@ -267,8 +267,6 @@ public class reproductorController implements Initializable {
     @FXML
     private TextField searchBar;
     @FXML
-    private ImageView searchButton;
-    @FXML
     private RadioButton searchSong;
     @FXML
     private RadioButton searchArtist;
@@ -288,6 +286,8 @@ public class reproductorController implements Initializable {
     private TableColumn<Song, LocalDate> dateColumnSrch;
     @FXML
     private TableColumn<Song, String> durationColumnSrch;
+    @FXML
+    private Label searchLabel;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
@@ -377,7 +377,25 @@ public class reproductorController implements Initializable {
     @FXML
     private void searchKeyPressed(KeyEvent event) {
 
-        FilteredList<Song> filteredData = new FilteredList<>(libraryTable.getItems(), p -> true);
+        TableView<Song> table = null;
+        switch (searchChoice.getValue()) {
+            case "Library":
+            case "Biblioteca":
+                System.out.println("biblioteca");
+                table = libraryTable;
+                break;
+            case "Favourites":
+            case "Favoritos":
+                System.out.println("fav");
+                table = favouritesTable;
+                break;
+            case "Internet":
+                //TODO
+                searchLabel.setText("Buscando en internet...");
+                break;
+
+        }
+        FilteredList<Song> filteredData = new FilteredList<>(table.getItems(), p -> true);
         searchTable.setItems(filteredData);
 
         searchBar.textProperty().addListener((prop, old, text) -> {
@@ -385,41 +403,22 @@ public class reproductorController implements Initializable {
                 if (text == null || text.isEmpty()) {
                     return true;
                 }
-                //Para obtener los metadatos
-                Mp3File mp3file = null;
-                try {
-                    mp3file = new Mp3File(song.getFile().getAbsoluteFile());
-                } catch (IOException ex) {
-                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (UnsupportedTagException ex) {
-                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvalidDataException ex) {
-                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                ID3v2 tag;
-                if (mp3file.hasId3v2Tag()) {
-                    tag = mp3file.getId3v2Tag();
-                } else {
-                    // mp3 does not have an ID3v2 tag, let's create one..
-                    tag = new ID3v24Tag();
-                    mp3file.setId3v2Tag(tag);
-                }
-                 String name = "";
-                 
+                String cancion = "";
+
                 switch (searchGroup.getSelectedToggle().toString().split("'")[1]) {
                     case "Song":
                     case "Canción":
-                        name = tag.getTitle() == null ? song.getFile().getName().toLowerCase() : tag.getTitle().toLowerCase();
+                        cancion = song.getSongName().toLowerCase();
                         break;
                     case "Artist":
                     case "Artista":
-                        name = tag.getAlbumArtist().toLowerCase();
+                        cancion = song.getArtist().toLowerCase();
                         break;
                     case "Album":
-                        name = tag.getAlbum().toLowerCase();
+                        cancion = song.getAlbum().toLowerCase();
                         break;
                 }
-                return name.contains(text.toLowerCase());
+                return cancion.contains(text.toLowerCase());
             });
         });
     }
@@ -521,17 +520,16 @@ public class reproductorController implements Initializable {
         daltonismFunc(persistentDaltonims);
         video = false;
 
-        System.out.println("idIdioma" + preferences.getInt("idIdioma", 0));
-        System.out.println("idIdioma" + preferences.getInt("idIdioma", 0));
-
         if (preferences.getInt("idIdioma", 0) == 0) {
-            ObservableList<String> options = FXCollections.observableArrayList("Local", "Internet", "Biblioteca", "Favoritos");
+            ObservableList<String> options = FXCollections.observableArrayList("Internet", "Biblioteca", "Favoritos");
             searchChoice.setItems(options);
-            System.out.println("español_____");
+            searchChoice.setValue("Biblioteca");
+
         } else {
-            ObservableList<String> options = FXCollections.observableArrayList("Local", "Internet", "Library", "Favourites");
+            ObservableList<String> options = FXCollections.observableArrayList("Internet", "Library", "Favourites");
             searchChoice.setItems(options);
-            System.out.println("inglés----------------");
+            searchChoice.setValue("Library");
+
         }
 
         //TODO cargar playlists
@@ -919,14 +917,37 @@ public class reproductorController implements Initializable {
     }
 
     @FXML
-    private void libraryTableOnClick(MouseEvent event) throws IOException, UnsupportedTagException, InvalidDataException {
-        if (event.getButton().equals(MouseButton.SECONDARY) && (libraryTable.getSelectionModel().getSelectedItem() != null)) {
-            System.out.println(libraryTable.getSelectionModel().getSelectedItem().file);
+    private void tableOnClick(MouseEvent event) throws IOException, UnsupportedTagException, InvalidDataException {
+        TableView<Song> tabla = null;
+        switch (tab) {
+            case LIBRARY:
+                tabla = libraryTable;
+                break;
+            case FAVOURITES:
+                tabla = favouritesTable;
+                break;
+            case SEARCH:
+                tabla = searchTable;
+                break;
+        }
+        final TableView<Song> table = tabla;
+
+        if (event.getButton().equals(MouseButton.SECONDARY) && (table.getSelectionModel().getSelectedItem() != null)) {
+            System.out.println(table.getSelectionModel().getSelectedItem().file);
             //Creamos menu contextual del click derecho
             ContextMenu context = new ContextMenu();
             MenuItem play = new MenuItem("Reproducir"); //TODO Internacionalizar
             play.setOnAction((ActionEvent e) -> {
                 System.out.println("PLAY");
+                try {
+                    playSong();
+                } catch (IOException ex) {
+                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnsupportedTagException ex) {
+                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InvalidDataException ex) {
+                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             });
             MenuItem edit = new MenuItem("Editar");
             edit.setOnAction((ActionEvent e) -> {
@@ -953,8 +974,8 @@ public class reproductorController implements Initializable {
                     // Pasar el fichero de la cancion en cuestion
                     EdtarArchivoController controller = loader.getController();
                     controller.setDialogStage(dialogStage);
-                    controller.setFile(libraryTable.getSelectionModel().getSelectedItem().file);
-                    controller.fillWindow(libraryTable.getSelectionModel().getSelectedItem().file);
+                    controller.setFile(table.getSelectionModel().getSelectedItem().file);
+                    controller.fillWindow(table.getSelectionModel().getSelectedItem().file);
 
                     // Se muestra y espera
                     dialogStage.showAndWait();
@@ -972,7 +993,7 @@ public class reproductorController implements Initializable {
 
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
-                    libraryTable.getSelectionModel().getSelectedItem().file.delete();
+                    table.getSelectionModel().getSelectedItem().file.delete();
                     fillLibrary();
                 } else {
                     // El usuario cancela y no se hace nada
@@ -980,25 +1001,29 @@ public class reproductorController implements Initializable {
             });
             //Añadimos las opciones con un separador en borrar ya que esto borrara el fichero del disco.
             context.getItems().addAll(play, edit, new SeparatorMenuItem(), delete);
-            libraryTable.setContextMenu(context);
+            table.setContextMenu(context);
             //Añadimos el gestor de eventos del raton para la seleccion del menú
 
-        } else if (event.getButton().equals(MouseButton.PRIMARY) && (event.getClickCount() == 2) && (libraryTable.getSelectionModel().getSelectedItem() != null)) {
-            loadedSong = libraryTable.getSelectionModel().getSelectedItem().file;
-            audioPane.toFront();
-            Mp3File mp3file = new Mp3File(loadedSong.getAbsoluteFile());
-            ID3v2 tag;
-            if (mp3file.hasId3v2Tag()) {
-                tag = mp3file.getId3v2Tag();
-            } else {
-                // mp3 does not have an ID3v2 tag, let's create one..
-                tag = new ID3v24Tag();
-                mp3file.setId3v2Tag(tag);
-            }
-            name.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
-            artist.setText(tag.getTitle() == null ? "---" : tag.getArtist());
-            player.playSong(0);
+        } else if (event.getButton().equals(MouseButton.PRIMARY) && (event.getClickCount() == 2) && (table.getSelectionModel().getSelectedItem() != null)) {
+            playSong();
         }
+    }
+
+    private void playSong() throws IOException, UnsupportedTagException, InvalidDataException {
+        loadedSong = libraryTable.getSelectionModel().getSelectedItem().file;
+        audioPane.toFront();
+        Mp3File mp3file = new Mp3File(loadedSong.getAbsoluteFile());
+        ID3v2 tag;
+        if (mp3file.hasId3v2Tag()) {
+            tag = mp3file.getId3v2Tag();
+        } else {
+            // mp3 does not have an ID3v2 tag, let's create one..
+            tag = new ID3v24Tag();
+            mp3file.setId3v2Tag(tag);
+        }
+        name.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
+        artist.setText(tag.getTitle() == null ? "---" : tag.getArtist());
+        player.playSong(0);
     }
 
     private void cambiarSeleccion() {
