@@ -36,6 +36,7 @@ public class ProyectoMultimedia_1 extends Application {
         preferences.putInt("idIdioma", 0);
         preferences.putInt("tab", PLAYER);
         preferences.put("library", "");
+        preferences.put("favouritePath", "./src/assets/favourites.txt");
          */
         int idIdioma = preferences.getInt("idIdioma", 0);
         ResourceBundle resources = null;
