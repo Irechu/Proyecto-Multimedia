@@ -15,6 +15,7 @@ import com.mpatric.mp3agic.UnsupportedTagException;
 import java.beans.EventHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -43,6 +44,7 @@ import java.util.prefs.Preferences;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -82,6 +84,8 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import static proyectomultimedia_1.ProyectoMultimedia_1.preferences;
 
 /**
@@ -285,6 +289,7 @@ public class reproductorController implements Initializable {
     private TableColumn<Song, LocalDate> dateColumnSrch;
     @FXML
     private TableColumn<Song, String> durationColumnSrch;
+    @FXML
     private Label searchLabel;
     @FXML
     private ImageView searchButton;
@@ -423,7 +428,17 @@ public class reproductorController implements Initializable {
 
                 return cancion.contains(text.toLowerCase());
             });
+            if (searchTable.getItems().size() == 0) {
+                if (preferences.getInt("idIdioma", 0) == 0) {
+                    searchLabel.setText("No hay resulatdos");
+                } else {
+                    searchLabel.setText("No results");
+                }
+            } else {
+                searchLabel.setText("");
+            }
         });
+
     }
 
     @FXML
@@ -436,6 +451,12 @@ public class reproductorController implements Initializable {
         } else {
             sound.setImage(soundImg);
         }
+    }
+
+    @FXML
+    private void searchRadioOnClick(MouseEvent event) {
+        searchBar.setText("");
+        searchTable.getItems().clear();
     }
 
     public class Song {
@@ -768,6 +789,7 @@ public class reproductorController implements Initializable {
 
             playlistSplit1AnchorPane.setStyle("-fx-background-color:#ff9500");
             libraryPaneLabel.setStyle("-fx-text-fill:#ff9500");
+            searchLabel.setStyle("-fx-text-fill:#ff9500");
             favouritesPaneLabel.setStyle("-fx-text-fill:#ff9500");
         } else {
             preferences.putBoolean("daltonism", false);
@@ -786,6 +808,7 @@ public class reproductorController implements Initializable {
 
             playlistSplit1AnchorPane.setStyle("-fx-background-color:#4a0707");
             libraryPaneLabel.setStyle("-fx-text-fill:#4a0707");
+            searchLabel.setStyle("-fx-text-fill:#4a0707");
             favouritesPaneLabel.setStyle("-fx-text-fill:#4a0707");
         }
         shuffleRepeatActive();
@@ -810,6 +833,7 @@ public class reproductorController implements Initializable {
             searchEntrieLabel.setStyle("-fx-text-fill:#000000");
             playlistSplit1AnchorPane.setStyle("-fx-background-color:#ff9500");
             libraryPaneLabel.setStyle("-fx-text-fill:#ff9500");
+            searchLabel.setStyle("-fx-text-fill:#ff9500");
             favouritesPaneLabel.setStyle("-fx-text-fill:#ff9500");
         } else {
             preferences.putBoolean("daltonism", false);
@@ -827,6 +851,7 @@ public class reproductorController implements Initializable {
             searchEntrieLabel.setStyle("-fx-text-fill:#ababab");
             playlistSplit1AnchorPane.setStyle("-fx-background-color:#4a0707");
             libraryPaneLabel.setStyle("-fx-text-fill:#4a0707");
+            searchLabel.setStyle("-fx-text-fill:#4a0707");
             favouritesPaneLabel.setStyle("-fx-text-fill:#4a0707");
         }
         shuffleRepeatActive();
@@ -1050,7 +1075,17 @@ public class reproductorController implements Initializable {
         }
         name.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
         artist.setText(tag.getTitle() == null ? "---" : tag.getArtist());
+        Image caratula = null;
+        if (tag.getAlbumImage() != null) {
+            caratula = SwingFXUtils.toFXImage(ImageIO.read(new ByteArrayInputStream((byte[]) tag.getAlbumImage())), null);
+        } else {
+            caratula = new Image(getClass().getResourceAsStream("/assets/imagenes/disk.png"));
+        }
+        musicImage.setImage(caratula);
         player.playSong(0);
+        cambiarSeleccion();
+        tab = PLAYER;
+        activaSeleccion();
     }
 
     private void cambiarSeleccion() {
