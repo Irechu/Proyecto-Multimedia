@@ -42,6 +42,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -309,6 +311,8 @@ public class reproductorController implements Initializable {
     private TextArea newPlaylistTextField;
     @FXML
     private Label newPlaylistExist;
+    @FXML
+    private TableView<Song> playlistTable;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
@@ -671,6 +675,15 @@ public class reproductorController implements Initializable {
             path.setText(preferences.get("library", ""));
             fillLibrary();
         }
+
+        fillPlaylists();
+        playlistList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                String playlist = (String) newValue;
+                cargaPlaylist(playlist);
+            }
+        });
 
         System.out.println("                                            INICIALIZA");
 
@@ -1049,6 +1062,9 @@ public class reproductorController implements Initializable {
             case SEARCH:
                 tabla = searchTable;
                 break;
+            case PLAYLIST:
+                tabla = playlistTable;
+                break;
         }
         final TableView<Song> table = tabla;
 
@@ -1292,17 +1308,17 @@ public class reproductorController implements Initializable {
                     Song s = null;
                     boolean yaExiste = false;
                     try {
-                        File inputFile = new File(preferences.get("favouritePath", ""));
+                        File inputFile = new File(preferences.get("favouritePath", "")); //Consigo los favoritos para obtener la instancia de la cancion
                         reader = new BufferedReader(new FileReader(inputFile));
                         String favSong;
-                        while ((favSong = reader.readLine()) != null && !yaExiste) {
-                            if (favSong.equals(mp3.getAbsolutePath())) {
+                        while ((favSong = reader.readLine()) != null && !yaExiste) { //Si no la he encontrado ya y quedan mas lineas por leer
+                            if (favSong.equals(mp3.getAbsolutePath())) { //La cancion de la libreria está marcada como favorita
                                 int index = 0;
-                                ObservableList<Song> list = favouritesTable.getItems();
+                                ObservableList<Song> list = favouritesTable.getItems();  //Buscamos el indice de la tabla donde está dicha cancion, pueden estar ordenadas de otra manera
                                 while (!yaExiste) {
                                     if (list.get(index).file.getAbsolutePath().equals(favSong)) {
                                         yaExiste = true;
-                                        s = list.get(index);
+                                        s = list.get(index); //Conseguimos la cancion en cuestion
                                     }
                                     index++;
                                 }
@@ -1444,6 +1460,104 @@ public class reproductorController implements Initializable {
         }
     }
 
+    private void fillPlaylists() {
+        playlistList.getItems().clear(); //Vaciamos
+        File dir = new File(PLAYLIST_PATH); //Conseguimos la carpeta que contiene las playlists
+        File[] listado = dir.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) { //Filtramos a las extensiones y obtenemos la lista
+                return (name.toLowerCase().endsWith(".txt"));
+            }
+        });
+        if (listado == null || listado.length == 0) {
+            System.out.println("No hay elementos dentro de la carpeta actual");
+            return;
+        } else {
+            for (File playlist : listado) {
+                playlistList.getItems().add(playlist.getName().substring(0, playlist.getName().length()-4));
+                playlistList.getItems().sort(null); //Ordena de manera natural los Strings
+            }
+        }
+    }
+    
+    private void cargaPlaylist(String playlist) {
+        playlistTable.getItems().clear();
+        File pl = new File(PLAYLIST_PATH + playlist + ".txt"); //Conseguimos la playlist en cuestion
+        BufferedReader r;
+        BufferedReader reader = null;
+        try {
+            r = new BufferedReader(new FileReader(pl));
+            Song s = null;
+            String ss;
+            try {
+                while ((ss = r.readLine()) != null) { //Para cada cancion de la playlist
+                    File mp3 = new File(ss);
+                    boolean yaExiste = false;
+                    try {
+                        File inputFile = new File(preferences.get("favouritePath", "")); //Consigo los favoritos para obtener la instancia de la cancion
+                        reader = new BufferedReader(new FileReader(inputFile));
+                        String favSong;
+                        while ((favSong = reader.readLine()) != null && !yaExiste) { //Si no la he encontrado ya y quedan mas lineas por leer
+                            if (favSong.equals(mp3.getAbsolutePath())) { //La cancion de la playlist está marcada como favorita
+                                int index = 0;
+                                ObservableList<Song> list = favouritesTable.getItems();  //Buscamos el indice de la tabla donde está dicha cancion, pueden estar ordenadas de otra manera
+                                while (!yaExiste) {
+                                    if (list.get(index).file.getAbsolutePath().equals(favSong)) {
+                                        yaExiste = true;
+                                        s = list.get(index); //Conseguimos la cancion en cuestion
+                                    }
+                                    index++;
+                                }
+                            }
+                        }
+                        reader.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        try {
+                            reader.close();
+                        } catch (IOException ex) {
+                            Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    if (!yaExiste) {
+                        try {
+                            Mp3File mp3file = new Mp3File(mp3.getAbsoluteFile());
+                            //Atributos de la cancion por defecto, por si no hay
+                            String title = "---";
+                            String artist = "---";
+                            String album = "---";
+                            //La fecha de creacion la vamos a tener siempre
+                            LocalDate date = creationDate(mp3.getAbsoluteFile());
+                            //Duracion igual, simpre la vamos a tener
+                            String time = durationFormatted(mp3file.getLengthInMilliseconds());
+                            if (mp3file.hasId3v2Tag()) {
+                                ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                                title = id3v2Tag.getTitle() == null ? mp3.getName() : id3v2Tag.getTitle();
+                                artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
+                                album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
+                            }
+                            s = new Song(title, artist, album, date, time, mp3, false);
+                        } catch (Exception ex) {
+                            Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    addEntrie(PLAYLISTS_TABLE, s);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    r.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("No se pudieron crear los buffered readers al cargar la playlist");
+        }
+    }
+
     private LocalDate creationDate(File file) {
         BasicFileAttributes attrs;
         LocalDate date = null;
@@ -1481,6 +1595,7 @@ public class reproductorController implements Initializable {
                 favouritesTable.getItems().add(s);
                 break;
             case PLAYLISTS_TABLE:
+                playlistTable.getItems().add(s);
                 break;
         }
     }
