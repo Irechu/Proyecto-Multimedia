@@ -35,9 +35,9 @@ public class ProyectoMultimedia_1 extends Application {
         preferences.putBoolean("daltonism", false);
         preferences.putInt("idIdioma", 0);
         preferences.putInt("tab", PLAYER);
+        preferences.put("library", "C:\\Users\\impm0\\OneDrive\\Escritorio\\Proyecto-Multimedia\\ProyectoMultimedia_1\\src\\assets");
         preferences.put("favouritePath", "./src/assets/favourites.txt");
          */
-        preferences.put("library", "C:\\Users\\impm0\\OneDrive\\Escritorio\\Proyecto-Multimedia\\ProyectoMultimedia_1\\src\\assets");
         int idIdioma = preferences.getInt("idIdioma", 0);
         ResourceBundle resources = null;
         if (idIdioma == 0) {

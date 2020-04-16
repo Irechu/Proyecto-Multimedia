@@ -313,6 +313,24 @@ public class reproductorController implements Initializable {
     private Label newPlaylistExist;
     @FXML
     private TableView<Song> playlistTable;
+    @FXML
+    private AnchorPane miniPlayer;
+    @FXML
+    private AnchorPane addSongToPlaylistPane;
+    @FXML
+    private AnchorPane selectPlaylistWindow;
+    @FXML
+    private ImageView crossBtnPl;
+    @FXML
+    private Label okPlBtn;
+    @FXML
+    private ListView<String> selectPlaylistList;
+    @FXML
+    private Button okPlConfirmBtn;
+    @FXML
+    private Button cancelPlConfirmBtn;
+    @FXML
+    private AnchorPane okCancelPlPane;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
@@ -360,20 +378,23 @@ public class reproductorController implements Initializable {
     public static final int PLAYLISTS_TABLE = 2;
     public static final String PLAYLIST_PATH = "./src/assets/playlists/";
 
-    boolean daltonism;
-    boolean persistentDaltonims;
-    boolean video;
-    boolean shuffleActive;
-    boolean repeatActive;
-    boolean playActive;
-    boolean favActive;
-    int tab;
-    String tiempo;
-    DecimalFormat df = new DecimalFormat("##.##");
-    File loadedSong;
-    Song playingSong;
-    Player player;
-    String favouritesPath;
+    public boolean daltonism;
+    public boolean persistentDaltonims;
+    public boolean video;
+    public boolean shuffleActive;
+    public boolean repeatActive;
+    public boolean playActive;
+    public boolean favActive;
+    public int tab;
+    public String tiempo;
+    public DecimalFormat df = new DecimalFormat("##.##");
+    public File loadedSong;
+    public Song playingSong;
+    public Player player;
+    public String favouritesPath;
+    
+    private String selectedPlaylistToAdd;
+    private Song selectedSongToAddToPL;
 
     //IMAGENES//
     final private Image favRedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
@@ -521,6 +542,64 @@ public class reproductorController implements Initializable {
         newPlaylistTextField.setText("");
         newPlaylistPane.toFront();
         //newPlaylistPane.toFront();
+    }
+
+    @FXML
+    private void crossPLOnClick(MouseEvent event) {
+        addSongToPlaylistPane.toBack();
+    }
+
+    @FXML
+    private void okBtnPLOnClick(MouseEvent event) {
+        String playlistPath = PLAYLIST_PATH + selectedPlaylistToAdd + ".txt";
+        boolean presente = songInPlaylist(playlistPath, selectedSongToAddToPL);
+        System.out.println(selectedSongToAddToPL.file.getAbsolutePath() + " -- " + selectedPlaylistToAdd + " --- " + presente);
+        if(presente){
+            okCancelPlPane.toFront();
+        }else{
+            FileWriter fstream = null;
+            try {
+                File playlistFile = new File(playlistPath);
+                fstream = new FileWriter(playlistFile, true); // Escribe al final
+                BufferedWriter out = new BufferedWriter(fstream);
+                System.out.println(selectedSongToAddToPL.file.getAbsolutePath());
+                out.write(selectedSongToAddToPL.file.getAbsolutePath()); // Escribimos la cancion al final
+            } catch (IOException ex) {
+                Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    fstream.close();
+                } catch (IOException ex) {
+                }
+            }
+            addSongToPlaylistPane.toBack();
+        }
+    }
+
+    @FXML
+    private void okPlConfirmBtnOnClick(ActionEvent event) {
+        FileWriter fstream = null;
+        try {
+            String playlistPath = PLAYLIST_PATH + selectedPlaylistToAdd + ".txt";
+            File playlistFile = new File(playlistPath);
+            fstream = new FileWriter(playlistFile, true); // Escribe al final
+            BufferedWriter out = new BufferedWriter(fstream);
+            
+            out.write(selectedSongToAddToPL.file.getAbsolutePath()); // Escribimos la cancion al final
+        } catch (IOException ex) {
+            Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fstream.close();
+            } catch (IOException ex) {
+            }
+        }
+        addSongToPlaylistPane.toBack();
+    }
+
+    @FXML
+    private void cancelPlConfirmBtnOnClick(ActionEvent event) {
+        okCancelPlPane.toBack();
     }
 
     public class Song {
@@ -682,6 +761,12 @@ public class reproductorController implements Initializable {
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 String playlist = (String) newValue;
                 cargaPlaylist(playlist);
+            }
+        });
+        selectPlaylistList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                selectedPlaylistToAdd = (String) newValue;
             }
         });
 
@@ -1119,6 +1204,33 @@ public class reproductorController implements Initializable {
                     System.out.println("ALGO FUE MAL AL EDITAR");
                 }
             });
+            MenuItem addPl = new MenuItem("Añadir a Playlist");
+            addPl.setOnAction((ActionEvent e) -> {
+                // Guardamos qué cancion se quiere añadir
+                selectedSongToAddToPL = table.getSelectionModel().getSelectedItem();
+                
+                // Rellenamos la lista
+                selectPlaylistList.getItems().clear(); //Vaciamos
+                File dir = new File(PLAYLIST_PATH); //Conseguimos la carpeta que contiene las playlists
+                File[] listado = dir.listFiles(new FilenameFilter() {
+                    public boolean accept(File dir, String name) { //Filtramos a las extensiones y obtenemos la lista
+                        return (name.toLowerCase().endsWith(".txt"));
+                    }
+                });
+                if (listado == null || listado.length == 0) {
+                    System.out.println("No hay elementos dentro de la playlist seleccionada");
+                    return;
+                } else {
+                    for (File playlist : listado) {
+                        selectPlaylistList.getItems().add(playlist.getName().substring(0, playlist.getName().length() - 4));
+                    }
+                }
+                playlistList.getItems().sort(null); //Ordena de manera natural los Strings
+
+                //Traemos el planel al frente
+                selectPlaylistWindow.toFront();
+                addSongToPlaylistPane.toFront();
+            });
             MenuItem delete = new MenuItem("Borrar*");
             delete.setOnAction((ActionEvent e) -> {
                 Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -1135,7 +1247,7 @@ public class reproductorController implements Initializable {
                 }
             });
             //Añadimos las opciones con un separador en borrar ya que esto borrara el fichero del disco.
-            context.getItems().addAll(play, edit, new SeparatorMenuItem(), delete);
+            context.getItems().addAll(play, edit, addPl, new SeparatorMenuItem(), delete);
             table.setContextMenu(context);
             //Añadimos el gestor de eventos del raton para la seleccion del menú
 
@@ -1599,5 +1711,28 @@ public class reproductorController implements Initializable {
                 break;
         }
     }
-
+    
+    private boolean songInPlaylist(String playlistPath, Song song){
+        boolean presente = false;
+        File pl = new File(playlistPath);
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(pl));
+            String s;
+            while((s = reader.readLine()) != null && !presente){
+                if(s.equals(song.file.getAbsolutePath())){
+                    presente = true;
+                }
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                reader.close();
+            } catch (IOException ex) {
+            }
+        }
+        
+        return presente;
+    }
 }
