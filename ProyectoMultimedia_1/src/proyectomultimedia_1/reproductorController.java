@@ -5,6 +5,7 @@
  */
 package proyectomultimedia_1;
 
+import com.mpatric.mp3agic.EncodedText;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.ID3v2;
@@ -65,6 +66,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -295,6 +297,18 @@ public class reproductorController implements Initializable {
     private ImageView searchButton;
     @FXML
     private Label searchEntrieLabel;
+    @FXML
+    private AnchorPane newPlaylistPane;
+    @FXML
+    private AnchorPane newPlayListWindow;
+    @FXML
+    private ImageView crossBtn;
+    @FXML
+    private Label okBtn;
+    @FXML
+    private TextArea newPlaylistTextField;
+    @FXML
+    private Label newPlaylistExist;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
@@ -340,6 +354,7 @@ public class reproductorController implements Initializable {
     public static final int LIBRARY_TABLE = 0;
     public static final int FAVOURITES_TABLE = 1;
     public static final int PLAYLISTS_TABLE = 2;
+    public static final String PLAYLIST_PATH = "./src/assets/playlists/";
 
     boolean daltonism;
     boolean persistentDaltonims;
@@ -455,10 +470,53 @@ public class reproductorController implements Initializable {
         }
     }
 
-    @FXML
     private void searchRadioOnClick(MouseEvent event) {
         searchBar.setText("");
         searchTable.getItems().clear();
+    }
+
+    @FXML
+    private void crossOnClick(MouseEvent event) {
+        playlistPane.toFront();
+    }
+
+    @FXML
+    private void okBtnOnClick(MouseEvent event) throws IOException {
+        boolean existe = false;
+        //Primero comprobamos si ya existe
+        File dir = new File(PLAYLIST_PATH);
+        File[] listado = dir.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) { //Filtramos a las extensiones y obtenemos la lista
+                return (name.toLowerCase().endsWith(".txt"));
+            }
+        });
+        for (int i = 0; i < listado.length && existe == false; i++) {
+            File file = listado[i];
+            if (file.getName().equals(newPlaylistTextField.getText() + ".txt")) {
+                existe = true;
+            }
+        }
+        if (!existe) {
+            File file = new File(PLAYLIST_PATH + newPlaylistTextField.getText() + ".txt");
+            FileWriter fstream = new FileWriter(file, false);
+            BufferedWriter out = new BufferedWriter(fstream);
+            out.write(""); //Vamos escribiendo las rutas
+            playlistPane.toFront();
+        } else {
+            if (preferences.getInt("idIdioma", 0) == 0) {
+                newPlaylistExist.setText("Ya existe!");
+            } else {
+                newPlaylistExist.setText("It already exists");
+            }
+        }
+    }
+
+    @FXML
+    private void newPlaylistOnClick(MouseEvent event) {
+        newPlaylistExist.setText("");
+        newPlaylistTextField.setText("");
+        newPlaylistPane.toFront();
+        //newPlaylistPane.toFront();
     }
 
     public class Song {
