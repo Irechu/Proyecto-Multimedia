@@ -322,7 +322,7 @@ public class reproductorController implements Initializable {
     @FXML
     private ImageView crossBtnPl;
     @FXML
-    private Label okPlBtn;
+    private Button okPlBtn;
     @FXML
     private ListView<String> selectPlaylistList;
     @FXML
@@ -331,6 +331,10 @@ public class reproductorController implements Initializable {
     private Button cancelPlConfirmBtn;
     @FXML
     private AnchorPane okCancelPlPane;
+    @FXML
+    private ImageView play1;
+    @FXML
+    private AnchorPane tapa;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
@@ -392,7 +396,7 @@ public class reproductorController implements Initializable {
     public Song playingSong;
     public Player player;
     public String favouritesPath;
-    
+
     private String selectedPlaylistToAdd;
     private Song selectedSongToAddToPL;
 
@@ -550,13 +554,13 @@ public class reproductorController implements Initializable {
     }
 
     @FXML
-    private void okBtnPLOnClick(MouseEvent event) {
+    private void okBtnPLOnClick(ActionEvent event) {
         String playlistPath = PLAYLIST_PATH + selectedPlaylistToAdd + ".txt";
         boolean presente = songInPlaylist(playlistPath, selectedSongToAddToPL);
         System.out.println(selectedSongToAddToPL.file.getAbsolutePath() + " -- " + selectedPlaylistToAdd + " --- " + presente);
-        if(presente){
+        if (presente) {
             okCancelPlPane.toFront();
-        }else{
+        } else {
             FileWriter fstream = null;
             try {
                 File playlistFile = new File(playlistPath);
@@ -584,7 +588,7 @@ public class reproductorController implements Initializable {
             File playlistFile = new File(playlistPath);
             fstream = new FileWriter(playlistFile, true); // Escribe al final
             BufferedWriter out = new BufferedWriter(fstream);
-            
+
             out.write(selectedSongToAddToPL.file.getAbsolutePath()); // Escribimos la cancion al final
         } catch (IOException ex) {
             Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
@@ -1208,7 +1212,7 @@ public class reproductorController implements Initializable {
             addPl.setOnAction((ActionEvent e) -> {
                 // Guardamos qué cancion se quiere añadir
                 selectedSongToAddToPL = table.getSelectionModel().getSelectedItem();
-                
+
                 // Rellenamos la lista
                 selectPlaylistList.getItems().clear(); //Vaciamos
                 File dir = new File(PLAYLIST_PATH); //Conseguimos la carpeta que contiene las playlists
@@ -1319,7 +1323,6 @@ public class reproductorController implements Initializable {
             case SEARCH:
                 searchSelected.setVisible(false);
                 break;
-
         }
     }
 
@@ -1357,12 +1360,16 @@ public class reproductorController implements Initializable {
                 searchPane.toFront();
                 searchSelected.setVisible(true);
                 break;
-
         }
     }
 
     private void guardarSeleccion(int tab) {
         preferences.putInt("tab", tab);
+        if(tab == PLAYER){
+            tapa.toFront();
+        }else{
+            miniPlayer.toFront();
+        }
     }
 
     private void initializeTables() {
@@ -1585,12 +1592,12 @@ public class reproductorController implements Initializable {
             return;
         } else {
             for (File playlist : listado) {
-                playlistList.getItems().add(playlist.getName().substring(0, playlist.getName().length()-4));
+                playlistList.getItems().add(playlist.getName().substring(0, playlist.getName().length() - 4));
                 playlistList.getItems().sort(null); //Ordena de manera natural los Strings
             }
         }
     }
-    
+
     private void cargaPlaylist(String playlist) {
         playlistTable.getItems().clear();
         File pl = new File(PLAYLIST_PATH + playlist + ".txt"); //Conseguimos la playlist en cuestion
@@ -1711,28 +1718,28 @@ public class reproductorController implements Initializable {
                 break;
         }
     }
-    
-    private boolean songInPlaylist(String playlistPath, Song song){
+
+    private boolean songInPlaylist(String playlistPath, Song song) {
         boolean presente = false;
         File pl = new File(playlistPath);
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(pl));
             String s;
-            while((s = reader.readLine()) != null && !presente){
-                if(s.equals(song.file.getAbsolutePath())){
+            while ((s = reader.readLine()) != null && !presente) {
+                if (s.equals(song.file.getAbsolutePath())) {
                     presente = true;
                 }
             }
         } catch (IOException ex) {
             Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
+        } finally {
             try {
                 reader.close();
             } catch (IOException ex) {
             }
         }
-        
+
         return presente;
     }
 }
