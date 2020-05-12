@@ -41,6 +41,8 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
 import proyectomultimedia_1.reproductorController.Song;
 
 public class Player {
@@ -264,6 +266,44 @@ public class Player {
                             reproductor.playActive = false;
                             reproductor.play1.setImage(reproductor.pauseImg);
                             /* }*/
+                            if(song.getName().toLowerCase().endsWith(".mp4")){ // Es un video-clip
+                                reproductor.musicVideo.setMediaPlayer(mediaPlayer);
+                                reproductor.musicVideo1.setMediaPlayer(mediaPlayer);
+                                /*reproductor.musicVideo.setFitHeight(300);
+                                reproductor.musicVideo.setFitWidth(400);
+                                reproductor.musicVideo.setPreserveRatio(false);
+                                
+                                
+                                reproductor.musicVideo1.setFitHeight(100);
+                                reproductor.musicVideo1.setFitWidth(150);
+                                reproductor.musicVideo1.setPreserveRatio(false);*/
+                                
+                                reproductor.change.setImage(reproductor.changeMusicImg);
+                                reproductor.change1.setImage(reproductor.changeMusicImg);
+
+                                reproductor.video = true;
+                                reproductor.musicVideo.toFront();
+                                reproductor.musicVideo1.toFront();
+
+                                reproductor.musicVideo.setVisible(true);
+                                reproductor.musicVideo1.setVisible(true);
+
+                                reproductor.musicImage.setVisible(false);
+                                reproductor.musicImage1.setVisible(false);
+                            }else{
+                                reproductor.change.setImage(reproductor.changeVideoImg);
+                                reproductor.change1.setImage(reproductor.changeVideoImg);
+
+                                reproductor.video = false;
+                                reproductor.musicImage.toFront();
+                                reproductor.musicImage1.toFront();
+
+                                reproductor.musicVideo.setVisible(false);
+                                reproductor.musicVideo1.setVisible(false);
+
+                                reproductor.musicImage.setVisible(true);
+                                reproductor.musicImage1.setVisible(true);
+                            }
 
                         });
 

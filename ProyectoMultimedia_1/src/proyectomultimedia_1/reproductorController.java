@@ -27,12 +27,14 @@ import java.io.RandomAccessFile;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.List;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
@@ -82,6 +84,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
@@ -456,8 +459,8 @@ public class reproductorController implements Initializable {
     final private Image favRedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
     final private Image favImg = new Image(getClass().getResourceAsStream("/assets/imagenes/fav.png"));
     final private Image favDaltImg = new Image(getClass().getResourceAsStream("/assets/imagenes/favDalt.png"));
-    final private Image changeMusicImg = new Image(getClass().getResourceAsStream("/assets/imagenes/music.png"));
-    final private Image changeVideoImg = new Image(getClass().getResourceAsStream("/assets/imagenes/video.png"));
+    final public Image changeMusicImg = new Image(getClass().getResourceAsStream("/assets/imagenes/music.png"));
+    final public Image changeVideoImg = new Image(getClass().getResourceAsStream("/assets/imagenes/video.png"));
     final private Image muteImg = new Image(getClass().getResourceAsStream("/assets/imagenes/mute.png"));
     final private Image soundImg = new Image(getClass().getResourceAsStream("/assets/imagenes/sound.png"));
     final private Image shuffleSelectedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/shuffleSelected.png"));
@@ -1464,6 +1467,51 @@ public class reproductorController implements Initializable {
             playSong(table);
         }
     }
+    
+    @FXML
+    private void listOnClick(MouseEvent event) {
+        ListView<String> listaPlaylist = playlistList;
+
+        if (event.getButton().equals(MouseButton.SECONDARY) && (listaPlaylist.getSelectionModel().getSelectedItem() != null)) {
+            System.out.println(listaPlaylist.getSelectionModel().getSelectedItem());
+            //Creamos menu contextual del click derecho
+            ContextMenu context = new ContextMenu();
+            MenuItem play = new MenuItem("Reproducir"); //TODO Internacionalizar
+            play.setOnAction((ActionEvent e) -> {
+                System.out.println("PLAY playlist");
+                try {
+                    cargaPlaylist(listaPlaylist.getSelectionModel().getSelectedItem());
+                    if(!playlistTable.getItems().isEmpty()){
+                        playlistTable.getSelectionModel().selectFirst();
+                        playSong(playlistTable);
+                    }
+                } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
+                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            MenuItem delete;
+            delete = new MenuItem("Borrar*");
+            delete.setOnAction((ActionEvent e) -> {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("¿Está Seguro?"); //TODO Internacionalizar
+                alert.setHeaderText("La playlist será borrada del disco por completo.");
+                alert.setContentText("¿Está seguro de querer realizar esto?");
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    File pl = new File(PLAYLIST_PATH + listaPlaylist.getSelectionModel().getSelectedItem() + ".txt");
+                    pl.delete();
+                    fillPlaylists();
+                } else {
+                    // El usuario cancela y no se hace nada
+                }
+            });
+            //Añadimos las opciones con un separador en borrar ya que esto borrara el fichero del disco.
+            context.getItems().addAll(play, new SeparatorMenuItem(), delete);
+            listaPlaylist.setContextMenu(context);
+            //Añadimos el gestor de eventos del raton para la seleccion del men
+        }
+    }
 
     private void playSong(TableView<Song> table) throws IOException, UnsupportedTagException, InvalidDataException {
         player.stop();
@@ -1483,28 +1531,39 @@ public class reproductorController implements Initializable {
     }
     
     public void ponerActualizarMetaDatos() throws IOException, UnsupportedTagException, InvalidDataException{
-        Mp3File mp3file = new Mp3File(loadedSong.getAbsoluteFile());
-        ID3v2 tag;
-        if (mp3file.hasId3v2Tag()) {
-            tag = mp3file.getId3v2Tag();
-        } else {
-            // mp3 does not have an ID3v2 tag, let's create one..
-            tag = new ID3v24Tag();
-            mp3file.setId3v2Tag(tag);
+        if(loadedSong.getName().toLowerCase().endsWith(".mp3")){
+            Mp3File mp3file = new Mp3File(loadedSong.getAbsoluteFile());
+            ID3v2 tag;
+            if (mp3file.hasId3v2Tag()) {
+                tag = mp3file.getId3v2Tag();
+            } else {
+                // mp3 does not have an ID3v2 tag, let's create one..
+                tag = new ID3v24Tag();
+                mp3file.setId3v2Tag(tag);
+            }
+            name.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
+            name1.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
+            artist.setText(tag.getTitle() == null ? "---" : tag.getArtist());
+            artist1.setText(tag.getTitle() == null ? "---" : tag.getArtist());
+            
+            Image caratula = null;
+            if (tag.getAlbumImage() != null) {
+                caratula = SwingFXUtils.toFXImage(ImageIO.read(new ByteArrayInputStream((byte[]) tag.getAlbumImage())), null);
+            } else {
+                caratula = new Image(getClass().getResourceAsStream("/assets/imagenes/disk.png"));
+            }
+            musicImage.setImage(caratula);
+            musicImage1.setImage(caratula);
+        }else{
+            name.setText(playingSong.songName);
+            name1.setText(playingSong.songName);
+            artist.setText(playingSong.artist);
+            artist1.setText(playingSong.artist);
+            
+            Image caratula = new Image(getClass().getResourceAsStream("/assets/imagenes/disk.png"));
+            musicImage.setImage(caratula);
+            musicImage1.setImage(caratula);
         }
-        name.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
-        name1.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
-        artist.setText(tag.getTitle() == null ? "---" : tag.getArtist());
-        artist1.setText(tag.getTitle() == null ? "---" : tag.getArtist());
-
-        Image caratula = null;
-        if (tag.getAlbumImage() != null) {
-            caratula = SwingFXUtils.toFXImage(ImageIO.read(new ByteArrayInputStream((byte[]) tag.getAlbumImage())), null);
-        } else {
-            caratula = new Image(getClass().getResourceAsStream("/assets/imagenes/disk.png"));
-        }
-        musicImage.setImage(caratula);
-        musicImage1.setImage(caratula);
 
         if (playingSong.fav) {
             if (daltonism) {
@@ -1637,8 +1696,7 @@ public class reproductorController implements Initializable {
         File dir = new File(path.getText()); //Conseguimos la carpeta que quiere usar el usuario como biblioteca
         File[] listado = dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) { //Filtramos a las extensiones y obtenemos la lista
-                //TODO ampliar quizas
-                return (name.toLowerCase().endsWith(".mp3") || name.toLowerCase().endsWith(".avi"));
+                return (name.toLowerCase().endsWith(".mp3") || name.toLowerCase().endsWith(".mp4"));
             }
         });
         if (listado == null || listado.length == 0) {
@@ -1664,12 +1722,14 @@ public class reproductorController implements Initializable {
                             if (favSong.equals(mp3.getAbsolutePath())) { //La cancion de la libreria está marcada como favorita
                                 int index = 0;
                                 ObservableList<Song> list = favouritesTable.getItems();  //Buscamos el indice de la tabla donde está dicha cancion, pueden estar ordenadas de otra manera
-                                while (!yaExiste) {
-                                    if (list.get(index).file.getAbsolutePath().equals(favSong)) {
-                                        yaExiste = true;
-                                        s = list.get(index); //Conseguimos la cancion en cuestion
+                                if(!list.isEmpty()){
+                                    while (!yaExiste) {
+                                        if (list.get(index).file.getAbsolutePath().equals(favSong)) {
+                                            yaExiste = true;
+                                            s = list.get(index); //Conseguimos la cancion en cuestion
+                                        }
+                                        index++;
                                     }
-                                    index++;
                                 }
                             }
                         }
@@ -1684,22 +1744,28 @@ public class reproductorController implements Initializable {
                         }
                     }
                     if (!yaExiste) {
-                        Mp3File mp3file = new Mp3File(mp3.getAbsoluteFile());
-                        //Atributos de la cancion por defecto, por si no hay
-                        String title = "---";
-                        String artist = "---";
-                        String album = "---";
-                        //La fecha de creacion la vamos a tener siempre
-                        LocalDate date = creationDate(mp3.getAbsoluteFile());
-                        //Duracion igual, simpre la vamos a tener
-                        String time = durationFormatted(mp3file.getLengthInMilliseconds());
-                        if (mp3file.hasId3v2Tag()) {
-                            ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-                            title = id3v2Tag.getTitle() == null ? mp3.getName() : id3v2Tag.getTitle();
-                            artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
-                            album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
+                        if(mp3.getName().toLowerCase().endsWith(".mp3")){
+                            Mp3File mp3file = new Mp3File(mp3.getAbsoluteFile());
+                            //Atributos de la cancion por defecto, por si no hay
+                            String title = "---";
+                            String artist = "---";
+                            String album = "---";
+                            //La fecha de creacion la vamos a tener siempre
+                            LocalDate date = creationDate(mp3.getAbsoluteFile());
+                            //Duracion igual, simpre la vamos a tener
+                            String time = durationFormatted(mp3file.getLengthInMilliseconds());
+                            if (mp3file.hasId3v2Tag()) {
+                                ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                                title = id3v2Tag.getTitle() == null ? mp3.getName() : id3v2Tag.getTitle();
+                                artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
+                                album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
+                            }
+                            s = new Song(title, artist, album, date, time, mp3, false);
+                        }else{
+                            LocalDate fecha = creationDate(mp3);
+                            Media media = new Media(mp3.toURI().toString());
+                            s = new Song(mp3.getName(), "---", "---", fecha, durationFormatted((long) media.getDuration().toMillis()), mp3, false);
                         }
-                        s = new Song(title, artist, album, date, time, mp3, false);
                     }
                     addEntrie(LIBRARY_TABLE, s);
                 }
@@ -1722,28 +1788,36 @@ public class reproductorController implements Initializable {
             while ((archivo = b.readLine()) != null) {
                 File file = new File(archivo);
                 if (file.exists()) {
-                    Mp3File mp3file = new Mp3File(file.getAbsoluteFile());
-                    //Atributos de la cancion por defecto, por si no hay
-                    String title = "---";
-                    String artist = "---";
-                    String album = "---";
-                    //La fecha de creacion la vamos a tener siempre
-                    LocalDate date = creationDate(file.getAbsoluteFile());
-                    //Duracion igual, simpre la vamos a tener
-                    String time = durationFormatted(mp3file.getLengthInMilliseconds());
-                    if (mp3file.hasId3v2Tag()) {
-                        ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-                        title = id3v2Tag.getTitle() == null ? file.getName() : id3v2Tag.getTitle();
-                        artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
-                        album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
+                    Song s;
+                    if(archivo.toLowerCase().endsWith(".mp3")){
+                        Mp3File mp3file = new Mp3File(file.getAbsoluteFile());
+                        //Atributos de la cancion por defecto, por si no hay
+                        String title = "---";
+                        String artist = "---";
+                        String album = "---";
+                        //La fecha de creacion la vamos a tener siempre
+                        LocalDate date = creationDate(file.getAbsoluteFile());
+                        //Duracion igual, simpre la vamos a tener
+                        String time = durationFormatted(mp3file.getLengthInMilliseconds());
+                        if (mp3file.hasId3v2Tag()) {
+                            ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                            title = id3v2Tag.getTitle() == null ? file.getName() : id3v2Tag.getTitle();
+                            artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
+                            album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
+                        }
+                        s = new Song(title, artist, album, date, time, file, true);
+                    }else{
+                        LocalDate fecha = creationDate(file);
+                        Media media = new Media(file.toURI().toString());
+                        s = new Song(file.getName(), "---", "---", fecha, durationFormatted((long) media.getDuration().toMillis()), file, false);
                     }
-                    Song s = new Song(title, artist, album, date, time, file, true);
                     addEntrie(FAVOURITES_TABLE, s);
                 }
             }
             b.close();
         } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
             System.out.println("ERROR AL CARGAR LA LISTA DE FAVORITOS");
+            System.out.println(ex);
         } finally {
             try {
                 f.close();
@@ -1875,25 +1949,32 @@ public class reproductorController implements Initializable {
                         }
                         if (!yaExiste) {
                             try {
-                                Mp3File mp3file = new Mp3File(mp3.getAbsoluteFile());
-                                //Atributos de la cancion por defecto, por si no hay
-                                String title = "---";
-                                String artist = "---";
-                                String album = "---";
-                                //La fecha de creacion la vamos a tener siempre
-                                LocalDate date = creationDate(mp3.getAbsoluteFile());
-                                //Duracion igual, simpre la vamos a tener
-                                String time = durationFormatted(mp3file.getLengthInMilliseconds());
-                                if (mp3file.hasId3v2Tag()) {
-                                    ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-                                    title = id3v2Tag.getTitle() == null ? mp3.getName() : id3v2Tag.getTitle();
-                                    artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
-                                    album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
+                                if(mp3.getName().toLowerCase().endsWith(".mp3")){
+                                    Mp3File mp3file = new Mp3File(mp3.getAbsoluteFile());
+                                    //Atributos de la cancion por defecto, por si no hay
+                                    String title = "---";
+                                    String artist = "---";
+                                    String album = "---";
+                                    //La fecha de creacion la vamos a tener siempre
+                                    LocalDate date = creationDate(mp3.getAbsoluteFile());
+                                    //Duracion igual, simpre la vamos a tener
+                                    String time = durationFormatted(mp3file.getLengthInMilliseconds());
+                                    if (mp3file.hasId3v2Tag()) {
+                                        ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                                        title = id3v2Tag.getTitle() == null ? mp3.getName() : id3v2Tag.getTitle();
+                                        artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
+                                        album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
+                                    }
+                                    s = new Song(title, artist, album, date, time, mp3, false);
+                                }else{
+                                    LocalDate fecha = creationDate(mp3);
+                                    Media media = new Media(mp3.toURI().toString());
+                                    s = new Song(mp3.getName(), "---", "---", fecha, durationFormatted((long) media.getDuration().toMillis()), mp3, false);
                                 }
-                                s = new Song(title, artist, album, date, time, mp3, false);
                             } catch (Exception ex) {
                                 Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                            
                         }
                         addEntrie(PLAYLISTS_TABLE, s);
                     }

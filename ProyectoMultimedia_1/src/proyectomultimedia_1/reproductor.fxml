@@ -237,7 +237,7 @@
                               <Image url="@../assets/imagenes/disk.png" />
                            </image>
                         </ImageView>
-                        <MediaView fx:id="musicVideo1" fitHeight="100.0" fitWidth="100.0" layoutX="90.0" layoutY="46.0" />
+                        <MediaView fx:id="musicVideo1" fitHeight="100.0" fitWidth="150.0" layoutX="65.0" layoutY="45.0" />
                         <Slider fx:id="sliderDuration1" blockIncrement="1.0" layoutX="43.0" layoutY="185.0" max="25.0" onKeyPressed="#sliderDurationKeyPressed1" onMouseDragged="#sliderDurationOnDragged1" prefHeight="39.0" prefWidth="206.0" style="-fx-background-color: transparent;" value="20.0" />
                         <Label fx:id="timeCounter1" layoutX="49.0" layoutY="227.0" text="00:00" textFill="WHITE">
                            <font>
@@ -496,60 +496,6 @@
                         </Label>
                      </children>
                   </AnchorPane>
-                  <AnchorPane fx:id="playlistPane" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <AnchorPane fx:id="playlistSplit1" minHeight="0.0" minWidth="0.0" prefHeight="753.0" prefWidth="261.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="817.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <ListView fx:id="playlistList" editable="true" focusTraversable="false" layoutY="160.0" prefHeight="635.0" prefWidth="247.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="160.0" />
-                              <AnchorPane fx:id="playlistSplit1AnchorPane" layoutX="33.0" layoutY="41.0" prefHeight="160.0" prefWidth="242.0" style="-fx-background-color: #4a0702; -fx-region-border: 3; -fx-border-color: #ffffff;" AnchorPane.bottomAnchor="635.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="0.0">
-                                 <children>
-                                    <Button layoutX="177.0" layoutY="100.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="45.0" style="-fx-background-color: #4a0702;">
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                       <effect>
-                                          <DropShadow color="#00000071" />
-                                       </effect>
-                                    </Button>
-                                    <Label fx:id="playlistSplit1Label" layoutX="22.0" layoutY="25.0" prefHeight="160.0" prefWidth="191.0" text="%playlistList" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="29.0" AnchorPane.topAnchor="0.0">
-                                       <font>
-                                          <Font name="Arial Rounded MT Bold" size="25.0" />
-                                       </font>
-                                    </Label>
-                                    <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="182.0" layoutY="106.0" onMouseClicked="#newPlaylistOnClick" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../assets/imagenes/playlist+.png" />
-                                       </image>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </ImageView>
-                                 </children>
-                              </AnchorPane>
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane fx:id="playlistSplit2" layoutX="242.0" minHeight="0.0" minWidth="0.0" prefHeight="795.0" prefWidth="817.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="242.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <AnchorPane prefHeight="795.0" prefWidth="798.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <children>
-                                    <TableView fx:id="playlistTable" onMouseClicked="#tableOnClick" opacity="0.94" prefHeight="795.0" prefWidth="817.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                       <columns>
-                                          <TableColumn fx:id="songColumnPl" minWidth="25.0" prefWidth="208.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18; -fx-font-color: #393d42;" text="%name" />
-                                          <TableColumn fx:id="artistColumnPl" prefWidth="220.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%artist" />
-                                          <TableColumn fx:id="albumColumnPl" minWidth="0.0" prefWidth="115.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%album" />
-                                          <TableColumn fx:id="dateColumnPl" minWidth="0.0" prefWidth="132.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%date" />
-                                          <TableColumn fx:id="durationColumnPl" minWidth="0.0" prefWidth="142.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%duration" />
-                                       </columns>
-                                       <columnResizePolicy>
-                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                       </columnResizePolicy>
-                                    </TableView>
-                                 </children>
-                              </AnchorPane>
-                           </children>
-                        </AnchorPane>
-                     </children>
-                  </AnchorPane>
                   <AnchorPane fx:id="newPlaylistPane" prefHeight="795.0" prefWidth="1059.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <AnchorPane opacity="0.7" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
@@ -655,6 +601,60 @@
                                  </cursor>
                               </ImageView>
                               <ListView fx:id="selectPlaylistList" layoutX="77.0" layoutY="83.0" prefHeight="439.0" prefWidth="437.0" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="playlistPane" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <AnchorPane fx:id="playlistSplit1" minHeight="0.0" minWidth="0.0" prefHeight="753.0" prefWidth="261.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="817.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <ListView fx:id="playlistList" editable="true" focusTraversable="false" layoutY="160.0" onMouseClicked="#listOnClick" prefHeight="635.0" prefWidth="247.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="160.0" />
+                              <AnchorPane fx:id="playlistSplit1AnchorPane" layoutX="33.0" layoutY="41.0" prefHeight="160.0" prefWidth="242.0" style="-fx-background-color: #4a0702; -fx-region-border: 3; -fx-border-color: #ffffff;" AnchorPane.bottomAnchor="635.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Button layoutX="177.0" layoutY="100.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="45.0" style="-fx-background-color: #4a0702;">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <effect>
+                                          <DropShadow color="#00000071" />
+                                       </effect>
+                                    </Button>
+                                    <Label fx:id="playlistSplit1Label" layoutX="22.0" layoutY="25.0" prefHeight="160.0" prefWidth="191.0" text="%playlistList" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="29.0" AnchorPane.topAnchor="0.0">
+                                       <font>
+                                          <Font name="Arial Rounded MT Bold" size="25.0" />
+                                       </font>
+                                    </Label>
+                                    <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="182.0" layoutY="106.0" onMouseClicked="#newPlaylistOnClick" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../assets/imagenes/playlist+.png" />
+                                       </image>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </ImageView>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="playlistSplit2" layoutX="242.0" minHeight="0.0" minWidth="0.0" prefHeight="795.0" prefWidth="817.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="242.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane prefHeight="795.0" prefWidth="798.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <TableView fx:id="playlistTable" onMouseClicked="#tableOnClick" opacity="0.94" prefHeight="795.0" prefWidth="817.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <columns>
+                                          <TableColumn fx:id="songColumnPl" minWidth="25.0" prefWidth="208.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18; -fx-font-color: #393d42;" text="%name" />
+                                          <TableColumn fx:id="artistColumnPl" prefWidth="220.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%artist" />
+                                          <TableColumn fx:id="albumColumnPl" minWidth="0.0" prefWidth="115.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%album" />
+                                          <TableColumn fx:id="dateColumnPl" minWidth="0.0" prefWidth="132.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%date" />
+                                          <TableColumn fx:id="durationColumnPl" minWidth="0.0" prefWidth="142.0" style="-fx-font-family: &quot;Arial Rounded MT Bold&quot;; -fx-font-size: 18;" text="%duration" />
+                                       </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
                            </children>
                         </AnchorPane>
                      </children>

@@ -1,6 +1,3 @@
-C:\Users\impm0\OneDrive\Escritorio\Proyecto-Multimedia\ProyectoMultimedia_1\src\assets\audio\Queen Bohemian Rhapsody.mp3
-C:\Users\impm0\OneDrive\Escritorio\Proyecto-Multimedia\ProyectoMultimedia_1\src\assets\audio\tusa - copia.mp3
-C:\Users\impm0\OneDrive\Escritorio\Proyecto-Multimedia\ProyectoMultimedia_1\src\assets\audio\Baila Conmigo - Dayvi, Víctor Cárdenas feat. Kelly Ruiz FitDance Life (Coreografía Oficial).mp3
-C:\Users\Amy\Documents\NetBeansProjects\Proyecto Multimedia\ProyectoMultimedia_1\src\assets\audio\PPK - Resurrection (full version).mp4 (320  kbps).mp3
-C:\Users\Amy\Documents\NetBeansProjects\Proyecto Multimedia\ProyectoMultimedia_1\src\assets\audio\Coolio - Gangsters Paradise (Official On Screen).mp3
-C:\Users\Amy\Documents\NetBeansProjects\Proyecto Multimedia\ProyectoMultimedia_1\src\assets\audio\Baila Conmigo - Dayvi, Víctor Cárdenas feat. Kelly Ruiz FitDance Life (Coreografía Oficial).mp3
+C:\Users\Amy\Documents\NetBeansProjects\Proyecto Multimedia\ProyectoMultimedia_1\src\assets\audio\ximo.mp4
+C:\Users\Amy\Documents\NetBeansProjects\Proyecto Multimedia\ProyectoMultimedia_1\src\assets\audio\Queen Bohemian Rhapsody.mp3
+C:\Users\Amy\Documents\NetBeansProjects\Proyecto Multimedia\ProyectoMultimedia_1\src\assets\audio\tusa - copia.mp3
