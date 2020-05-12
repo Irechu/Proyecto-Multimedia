@@ -1633,6 +1633,7 @@ public class reproductorController implements Initializable {
                     }
                 }*/
         libraryTable.getItems().clear(); //Vaciamos por haber cambiado de directorio
+        fillFavourites();
         File dir = new File(path.getText()); //Conseguimos la carpeta que quiere usar el usuario como biblioteca
         File[] listado = dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) { //Filtramos a las extensiones y obtenemos la lista

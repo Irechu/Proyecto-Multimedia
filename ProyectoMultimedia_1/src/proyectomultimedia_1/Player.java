@@ -107,6 +107,7 @@ public class Player {
             reproductor.sliderDuration1.setDisable(false);
             
             reproductor.loadedSong = table.get(songIndex).getFile();
+            reproductor.playingSong = table.get(songIndex);
             try {
                 reproductor.ponerActualizarMetaDatos();
             } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
