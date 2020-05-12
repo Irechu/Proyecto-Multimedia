@@ -544,6 +544,7 @@ public class reproductorController implements Initializable {
         //sliderVolume.getValue();
         System.out.println("volumen ajustado a: " + sliderVolume.getValue() / 100);
         player.setVolume((float) sliderVolume.getValue());
+        preferences.putFloat("preferedVolume", (float) sliderVolume.getValue());
         if (sliderVolume.getValue() == 0) {
             sound.setImage(muteImg);
         } else {
@@ -879,11 +880,11 @@ public class reproductorController implements Initializable {
 
         System.out.println("                                            INICIALIZA");
 
-        sliderVolume.setValue(50);
+        sliderVolume.setValue(preferences.getFloat("preferedVolume", 50));
         sliderDuration.setValue(0);
         sliderDuration1.setValue(0);
 
-        player = new Player(this, false);
+        player = new Player(this, true);
     }
 
     @FXML
@@ -1466,9 +1467,22 @@ public class reproductorController implements Initializable {
 
     private void playSong(TableView<Song> table) throws IOException, UnsupportedTagException, InvalidDataException {
         player.stop();
+        //TODO quizas hacer algo con thread tambien player.x
+        
         loadedSong = table.getSelectionModel().getSelectedItem().file;
         playingSong = table.getSelectionModel().getSelectedItem();
         audioPane.toFront();
+        
+        ponerActualizarMetaDatos();
+        
+        //TODO mirar que tiene la table si viene de una playlist
+        player.playSong(table.getItems(), table.getItems().indexOf(table.getSelectionModel().getSelectedItem()));
+        cambiarSeleccion();
+        tab = PLAYER;
+        activaSeleccion();
+    }
+    
+    public void ponerActualizarMetaDatos() throws IOException, UnsupportedTagException, InvalidDataException{
         Mp3File mp3file = new Mp3File(loadedSong.getAbsoluteFile());
         ID3v2 tag;
         if (mp3file.hasId3v2Tag()) {
@@ -1507,10 +1521,6 @@ public class reproductorController implements Initializable {
             fav1.setImage(favImg);
 
         }
-        player.playSong(0);
-        cambiarSeleccion();
-        tab = PLAYER;
-        activaSeleccion();
     }
 
     private void cambiarSeleccion() {

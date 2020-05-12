@@ -31,6 +31,7 @@ public class ProyectoMultimedia_1 extends Application {
         preferences.putInt("tab", PLAYER);
         preferences.put("library", "C:\\Users\\impm0\\OneDrive\\Escritorio\\Proyecto-Multimedia\\ProyectoMultimedia_1\\src\\assets");
         preferences.put("favouritePath", "./src/assets/favourites.txt");
+        preferences.put("preferedVolume", "50");
          */
 
         int idIdioma = preferences.getInt("idIdioma", 0);
