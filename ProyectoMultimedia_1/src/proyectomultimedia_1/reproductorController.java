@@ -322,7 +322,7 @@ public class reproductorController implements Initializable {
     @FXML
     private ImageView crossBtnPl;
     @FXML
-    private Button okPlBtn;
+    private Label okPlBtn;
     @FXML
     private ListView<String> selectPlaylistList;
     @FXML
@@ -335,6 +335,34 @@ public class reproductorController implements Initializable {
     private ImageView play1;
     @FXML
     private AnchorPane tapa;
+    @FXML
+    private Label artist1;
+    @FXML
+    private Label name1;
+    @FXML
+    private ImageView fav1;
+    @FXML
+    private ImageView musicImage1;
+    @FXML
+    private MediaView musicVideo1;
+    @FXML
+    private Slider sliderDuration1;
+    @FXML
+    private Label timeCounter1;
+    @FXML
+    private Label duration1;
+    @FXML
+    private ImageView change1;
+    @FXML
+    private AnchorPane controls1;
+    @FXML
+    private ImageView next1;
+    @FXML
+    private ImageView previous1;
+    @FXML
+    private ImageView shuffle1;
+    @FXML
+    private ImageView repeat1;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
@@ -492,6 +520,7 @@ public class reproductorController implements Initializable {
         //sliderVolume.getValue();
         System.out.println("volumen ajustado a: " + sliderVolume.getValue() / 100);
         player.setVolume((float) sliderVolume.getValue());
+        preferences.putFloat("preferedVolume", (float) sliderVolume.getValue());
         if (sliderVolume.getValue() == 0) {
             sound.setImage(muteImg);
         } else {
@@ -553,7 +582,6 @@ public class reproductorController implements Initializable {
         addSongToPlaylistPane.toBack();
     }
 
-    @FXML
     private void okBtnPLOnClick(ActionEvent event) {
         String playlistPath = PLAYLIST_PATH + selectedPlaylistToAdd + ".txt";
         boolean presente = songInPlaylist(playlistPath, selectedSongToAddToPL);
@@ -608,6 +636,10 @@ public class reproductorController implements Initializable {
     @FXML
     private void cancelPlConfirmBtnOnClick(ActionEvent event) {
         okCancelPlPane.toBack();
+    }
+
+    @FXML
+    private void okBtnPLOnClick(MouseEvent event) {
     }
 
     public class Song {
@@ -786,10 +818,10 @@ public class reproductorController implements Initializable {
 
         System.out.println("                                            INICIALIZA");
 
-        sliderVolume.setValue(50);
+        sliderVolume.setValue(preferences.getFloat("preferedVolume", 50));
         sliderDuration.setValue(0);
 
-        player = new Player(this, false);
+        player = new Player(this, true);
     }
 
     @FXML
@@ -1341,9 +1373,23 @@ public class reproductorController implements Initializable {
     }
 
     private void playSong(TableView<Song> table) throws IOException, UnsupportedTagException, InvalidDataException {
+        player.stop();
+        //TODO quizas hacer algo con thread tambien player.x
+        
         loadedSong = table.getSelectionModel().getSelectedItem().file;
         playingSong = table.getSelectionModel().getSelectedItem();
         audioPane.toFront();
+        
+        ponerActualizarMetaDatos();
+        
+        //TODO mirar que tiene la table si viene de una playlist
+        player.playSong(table.getItems(), table.getItems().indexOf(table.getSelectionModel().getSelectedItem()));
+        cambiarSeleccion();
+        tab = PLAYER;
+        activaSeleccion();
+    }
+    
+    public void ponerActualizarMetaDatos() throws IOException, UnsupportedTagException, InvalidDataException{
         Mp3File mp3file = new Mp3File(loadedSong.getAbsoluteFile());
         ID3v2 tag;
         if (mp3file.hasId3v2Tag()) {
@@ -1371,10 +1417,6 @@ public class reproductorController implements Initializable {
         } else {
             fav.setImage(favImg);
         }
-        player.playSong(0);
-        cambiarSeleccion();
-        tab = PLAYER;
-        activaSeleccion();
     }
 
     private void cambiarSeleccion() {

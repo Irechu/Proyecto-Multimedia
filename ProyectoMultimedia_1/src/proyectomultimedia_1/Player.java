@@ -9,6 +9,8 @@ package proyectomultimedia_1;
 import animatefx.animation.FadeInUp;
 import animatefx.animation.FadeOutDown;
 import com.jfoenix.controls.JFXButton;*/
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -37,6 +39,9 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import proyectomultimedia_1.reproductorController.Song;
 
 public class Player {
 
@@ -51,7 +56,9 @@ public class Player {
 
     private Thread updaterThread;
 
-    //int songIndex;
+    int songIndex;
+    private ObservableList<Song> table;
+    private float volumen;
 
     reproductorController reproductor;
 
@@ -69,16 +76,21 @@ public class Player {
     public Player(reproductorController d, boolean pl) {
         reproductor = d;
         this.playList = pl;
+        
+        volumen = (float) reproductor.sliderVolume.getValue();
 
         //playSong(inputIndex);
     }
 
     public void setVolume(float volume){
+        volumen = volume;
         if(isActive)
-            mediaPlayer.setVolume(volume/100);
+            mediaPlayer.setVolume(volumen/100);
     }
     
-    public void playSong(int index) {
+    public void playSong(ObservableList<Song> table, int index) {
+        this.table = table;
+        this.songIndex = index;
         Platform.runLater(() -> {
             reproductor.previous.setDisable(false);
             reproductor.next.setDisable(false);
@@ -86,6 +98,13 @@ public class Player {
             reproductor.repeat.setDisable(false);
             reproductor.play.setDisable(false);
             reproductor.fav.setDisable(false);
+            
+            reproductor.loadedSong = table.get(songIndex).getFile();
+            try {
+                reproductor.ponerActualizarMetaDatos();
+            } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
+                Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         
         x = new Thread(new Task<Void>() {
@@ -94,7 +113,7 @@ public class Player {
                 try {
 
                     //HashMap<String,Object> songDetails = reproductor.cachedPlaylist.get(currentPlaylistName).get(index);
-                    File song = reproductor.loadedSong;
+                    File song = table.get(songIndex).getFile();
 
                     isActive = true;
                     if (playList) {
@@ -209,7 +228,9 @@ public class Player {
                     mediaPlayer.setOnReady(() -> {
 
                         System.out.println("Start Playing ...");
-
+                        
+                        setVolume(volumen);
+                        
                         totalCurr = media.getDuration().toSeconds();
 
                         Platform.runLater(() -> {
@@ -253,36 +274,37 @@ public class Player {
     Thread x;
 
     public void onEndOfMediaTrigger() {
-        /*if (dash.isShuffle) {
+        if (reproductor.shuffleActive) {
             playNextRandom();
         } else {
-            if (dash.isRepeat) {
+            if (reproductor.repeatActive) {
                 setPos(0);
             } else {
-                if (songIndex == (dash.cachedPlaylist.get(currentPlaylistName).size() - 1)) {
+                if (songIndex == (table.size() - 1)) {
+                    reproductor.playActive = false;
+                    reproductor.play.setImage(reproductor.playImg);
                     stop();
                     hide();
                 } else {
                     playNext();
                 }
             }
-        }*/
-        reproductor.playActive = false;
-        reproductor.play.setImage(reproductor.playImg);
+        }
+        
     }
 
     public void playNext() {
-        /*if (songIndex < (dash.cachedPlaylist.get(currentPlaylistName).size() - 1)) {
+        if (songIndex < (table.size() - 1)) {
             if (isPlaying) {
                 mediaPlayer.stop();
                 mediaPlayer.dispose();
             }
-            playSong((songIndex + 1));
-        }*/
+            playSong(table, songIndex + 1);
+        }
     }
 
     private void playNextRandom() {
-        /*if (dash.isRepeat) {
+        if (reproductor.repeatActive) {
             setPos(0);
         } else {
             if (isPlaying) {
@@ -290,16 +312,18 @@ public class Player {
                 mediaPlayer.dispose();
             }
             mediaPlayer.dispose();
-            playSong((new Random().nextInt(dash.cachedPlaylist.get(currentPlaylistName).size())));
-        }*/
+            playSong(table, (new Random().nextInt(table.size())));
+        }
     }
 
     public void playPrevious() {
-        /*if (songIndex > 0) {
+        if(mediaPlayer.getCurrentTime().toSeconds() > 3){ //Si han pasado 3 segundos reinicia la cancion, si no pasa a la anterior
+            setPos(0);
+        }else if (songIndex > 0) {
             mediaPlayer.stop();
             mediaPlayer.dispose();
-            playSong((songIndex - 1));
-        }*/
+            playSong(table, songIndex - 1);
+        }
     }
 
     public void setPos(double newDurSecs) {

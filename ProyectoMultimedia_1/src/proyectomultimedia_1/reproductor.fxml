@@ -581,66 +581,6 @@
                         </Label>
                      </children>
                   </AnchorPane>
-                  <AnchorPane fx:id="addSongToPlaylistPane" layoutX="10.0" layoutY="10.0" prefHeight="795.0" prefWidth="1059.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <AnchorPane opacity="0.7" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                        <AnchorPane fx:id="okCancelPlPane" prefHeight="795.0" prefWidth="1059.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <AnchorPane layoutX="234.0" layoutY="390.0" prefHeight="280.0" prefWidth="591.0" style="-fx-background-color: #ababab;" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="234.0" AnchorPane.rightAnchor="234.0" AnchorPane.topAnchor="390.0">
-                                 <effect>
-                                    <InnerShadow blurType="ONE_PASS_BOX" color="#0000000a">
-                                       <input>
-                                          <InnerShadow />
-                                       </input>
-                                    </InnerShadow>
-                                 </effect>
-                                 <children>
-                                    <Label layoutX="13.0" layoutY="14.0" prefHeight="140.0" prefWidth="566.0" text="%alreadyExists" textAlignment="CENTER" wrapText="true">
-                                       <font>
-                                          <Font name="Arial Rounded MT Bold" size="39.0" />
-                                       </font>
-                                    </Label>
-                                    <Button fx:id="okPlConfirmBtn" layoutX="398.0" layoutY="166.0" mnemonicParsing="false" onAction="#okPlConfirmBtnOnClick" prefHeight="68.0" prefWidth="129.0" text="%ok" />
-                                    <Button fx:id="cancelPlConfirmBtn" layoutX="84.0" layoutY="166.0" mnemonicParsing="false" onAction="#cancelPlConfirmBtnOnClick" prefHeight="68.0" prefWidth="129.0" text="%cancel" />
-                                 </children>
-                              </AnchorPane>
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane fx:id="selectPlaylistWindow" prefHeight="605.0" prefWidth="591.0" style="-fx-background-color: #ababab;" AnchorPane.bottomAnchor="122.0" AnchorPane.leftAnchor="234.0" AnchorPane.rightAnchor="234.0" AnchorPane.topAnchor="68.0">
-                           <effect>
-                              <InnerShadow blurType="ONE_PASS_BOX" color="#0000000a">
-                                 <input>
-                                    <InnerShadow />
-                                 </input>
-                              </InnerShadow>
-                           </effect>
-                           <children>
-                              <Label layoutX="54.0" layoutY="44.0" prefHeight="38.0" prefWidth="400.0" text="%selectPl">
-                                 <font>
-                                    <Font name="Arial Rounded MT Bold" size="32.0" />
-                                 </font>
-                              </Label>
-                              <ImageView fx:id="crossBtnPl" fitHeight="30.0" fitWidth="30.0" layoutX="530.0" layoutY="21.0" onMouseClicked="#crossPLOnClick" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="197.0" AnchorPane.leftAnchor="530.0" AnchorPane.rightAnchor="31.0" AnchorPane.topAnchor="21.0">
-                                 <image>
-                                    <Image url="@../assets/imagenes/cross.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                              <Label fx:id="okPlBtn" layoutX="273.0" layoutY="549.0" onMouseClicked="#okBtnPLOnClick" prefWidth="45.0" text="%ok">
-                                 <font>
-                                    <Font name="Arial Rounded MT Bold" size="29.0" />
-                                 </font>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </Label>
-                              <ListView fx:id="selectPlaylistList" layoutX="77.0" layoutY="83.0" prefHeight="439.0" prefWidth="437.0" />
-                           </children>
-                        </AnchorPane>
-                     </children>
-                  </AnchorPane>
                   <AnchorPane fx:id="playlistPane" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <AnchorPane fx:id="playlistSplit1" minHeight="0.0" minWidth="0.0" prefHeight="753.0" prefWidth="261.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="817.0" AnchorPane.topAnchor="0.0">
@@ -782,10 +722,6 @@
                               </InnerShadow>
                            </effect>
                            <children>
-                              <Button fx:id="okPlBtn" layoutX="260.0" layoutY="534.0" mnemonicParsing="false" onAction="#okBtnPLOnClick" prefHeight="39.0" prefWidth="72.0" text="%ok" AnchorPane.leftAnchor="260.0" AnchorPane.rightAnchor="259.0">
-                                 <font>
-                                    <Font name="Arial Rounded MT Bold" size="20.0" />
-                                 </font></Button>
                               <Label layoutX="54.0" layoutY="44.0" prefHeight="38.0" prefWidth="400.0" text="%selectPl">
                                  <font>
                                     <Font name="Arial Rounded MT Bold" size="32.0" />
@@ -929,6 +865,66 @@
                               <Font name="Arial Rounded MT Bold" size="60.0" />
                            </font>
                         </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="addSongToPlaylistPane" layoutX="10.0" layoutY="10.0" prefHeight="795.0" prefWidth="1059.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <AnchorPane opacity="0.7" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <AnchorPane fx:id="okCancelPlPane" prefHeight="795.0" prefWidth="1059.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane layoutX="234.0" layoutY="390.0" prefHeight="280.0" prefWidth="591.0" style="-fx-background-color: #ababab;" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="234.0" AnchorPane.rightAnchor="234.0" AnchorPane.topAnchor="390.0">
+                                 <effect>
+                                    <InnerShadow blurType="ONE_PASS_BOX" color="#0000000a">
+                                       <input>
+                                          <InnerShadow />
+                                       </input>
+                                    </InnerShadow>
+                                 </effect>
+                                 <children>
+                                    <Label layoutX="13.0" layoutY="14.0" prefHeight="140.0" prefWidth="566.0" text="%alreadyExists" textAlignment="CENTER" wrapText="true">
+                                       <font>
+                                          <Font name="Arial Rounded MT Bold" size="39.0" />
+                                       </font>
+                                    </Label>
+                                    <Button fx:id="okPlConfirmBtn" layoutX="398.0" layoutY="166.0" mnemonicParsing="false" onAction="#okPlConfirmBtnOnClick" prefHeight="68.0" prefWidth="129.0" text="%ok" />
+                                    <Button fx:id="cancelPlConfirmBtn" layoutX="84.0" layoutY="166.0" mnemonicParsing="false" onAction="#cancelPlConfirmBtnOnClick" prefHeight="68.0" prefWidth="129.0" text="%cancel" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="selectPlaylistWindow" prefHeight="655.0" prefWidth="591.0" style="-fx-background-color: #ababab;" AnchorPane.bottomAnchor="72.0" AnchorPane.leftAnchor="234.0" AnchorPane.rightAnchor="234.0" AnchorPane.topAnchor="68.0">
+                           <effect>
+                              <InnerShadow blurType="ONE_PASS_BOX" color="#0000000a">
+                                 <input>
+                                    <InnerShadow />
+                                 </input>
+                              </InnerShadow>
+                           </effect>
+                           <children>
+                              <Label layoutX="54.0" layoutY="44.0" prefHeight="38.0" prefWidth="400.0" text="%selectPl">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="32.0" />
+                                 </font>
+                              </Label>
+                              <ImageView fx:id="crossBtnPl" fitHeight="30.0" fitWidth="30.0" layoutX="530.0" layoutY="21.0" onMouseClicked="#crossPLOnClick" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="197.0" AnchorPane.leftAnchor="530.0" AnchorPane.rightAnchor="31.0" AnchorPane.topAnchor="21.0">
+                                 <image>
+                                    <Image url="@../assets/imagenes/cross.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                              <Label fx:id="okPlBtn" layoutX="273.0" layoutY="549.0" onMouseClicked="#okBtnPLOnClick" prefWidth="45.0" text="%ok" textAlignment="CENTER" AnchorPane.leftAnchor="273.0" AnchorPane.rightAnchor="273.0">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="29.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <ListView fx:id="selectPlaylistList" layoutX="77.0" layoutY="83.0" prefHeight="439.0" prefWidth="437.0" />
+                           </children>
+                        </AnchorPane>
                      </children>
                   </AnchorPane>
                </children>
