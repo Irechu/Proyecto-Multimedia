@@ -13,6 +13,7 @@ import com.mpatric.mp3agic.ID3v24Tag;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import java.awt.Rectangle;
 import java.beans.EventHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -80,6 +81,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaView;
@@ -363,6 +365,34 @@ public class reproductorController implements Initializable {
     ImageView shuffle1;
     @FXML
     ImageView repeat1;
+    @FXML
+    private AnchorPane rectangleContainer;
+    @FXML
+    Button importBtn;
+    @FXML
+    Button pause;
+    @FXML
+    Slider slider1;
+    @FXML
+    Slider slider2;
+    @FXML
+    Slider slider3;
+    @FXML
+    Slider slider4;
+    @FXML
+    Slider slider5;
+    @FXML
+    Slider slider6;
+    @FXML
+    Slider slider7;
+    @FXML
+    Slider slider8;
+    @FXML
+    Slider slider9;
+    @FXML
+    Slider slider10;
+    @FXML
+    Slider volumeSlider;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
@@ -381,7 +411,7 @@ public class reproductorController implements Initializable {
         timeCounter.setText(tiempo);
         timeCounter1.setText(tiempo);
 
-            player.setPos(valor * 60);
+        player.setPos(valor * 60);
     }
 
     @FXML
@@ -401,8 +431,7 @@ public class reproductorController implements Initializable {
         timeCounter.setText(tiempo);
         timeCounter1.setText(tiempo);
 
-
-            player.setPos(valor * 60);
+        player.setPos(valor * 60);
         /*double valor = sliderDuration.getValue();
         double valor1 = sliderDuration1.getValue();
         System.out.println("valor: " + valor);
@@ -572,23 +601,33 @@ public class reproductorController implements Initializable {
                 return (name.toLowerCase().endsWith(".txt"));
             }
         });
-        for (int i = 0; i < listado.length && existe == false; i++) {
-            File file = listado[i];
-            if (file.getName().equals(newPlaylistTextField.getText() + ".txt")) {
-                existe = true;
-            }
-        }
-        if (!existe) {
-            File file = new File(PLAYLIST_PATH + newPlaylistTextField.getText() + ".txt");
-            FileWriter fstream = new FileWriter(file, false);
-            BufferedWriter out = new BufferedWriter(fstream);
-            out.write(""); //Vamos escribiendo las rutas
-            playlistPane.toFront();
-        } else {
+        if (newPlaylistTextField.getText().equals("")) {
+            //El textfield está vacío
             if (preferences.getInt("idIdioma", 0) == 0) {
-                newPlaylistExist.setText("Ya existe!");
+                newPlaylistExist.setText("Introduce un nombre!");
             } else {
-                newPlaylistExist.setText("It already exists");
+                newPlaylistExist.setText("Insert a name for the playlist");
+            }
+        } else { //no está vacío
+            for (int i = 0; i < listado.length && existe == false; i++) {
+                File file = listado[i];
+                if (file.getName().equals(newPlaylistTextField.getText() + ".txt")) {
+                    existe = true;
+                }
+            }
+            if (!existe) {
+                File file = new File(PLAYLIST_PATH + newPlaylistTextField.getText() + ".txt");
+                FileWriter fstream = new FileWriter(file, false);
+                BufferedWriter out = new BufferedWriter(fstream);
+                out.write(""); //Vamos escribiendo las rutas
+                playlistPane.toFront();
+                fillPlaylists();
+            } else {
+                if (preferences.getInt("idIdioma", 0) == 0) {
+                    newPlaylistExist.setText("Ya existe!");
+                } else {
+                    newPlaylistExist.setText("It already exists");
+                }
             }
         }
     }
@@ -697,6 +736,18 @@ public class reproductorController implements Initializable {
         player.setPos(valor * 60);
     }
 
+    @FXML
+    private void importFile(ActionEvent event) {
+    }
+
+    @FXML
+    private void playSong(ActionEvent event) {
+    }
+
+    @FXML
+    private void pauseSong(ActionEvent event) {
+    }
+
     public class Song {
 
         private String songName;
@@ -787,6 +838,7 @@ public class reproductorController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         //Inicializamos las variables
         persistentDaltonims = preferences.getBoolean("daltonism", false);
         repeatActive = preferences.getBoolean("repeatActive", false);
@@ -885,6 +937,7 @@ public class reproductorController implements Initializable {
         sliderDuration1.setValue(0);
 
         player = new Player(this, true);
+
     }
 
     @FXML
@@ -1468,21 +1521,21 @@ public class reproductorController implements Initializable {
     private void playSong(TableView<Song> table) throws IOException, UnsupportedTagException, InvalidDataException {
         player.stop();
         //TODO quizas hacer algo con thread tambien player.x
-        
+
         loadedSong = table.getSelectionModel().getSelectedItem().file;
         playingSong = table.getSelectionModel().getSelectedItem();
         audioPane.toFront();
-        
+
         ponerActualizarMetaDatos();
-        
+
         //TODO mirar que tiene la table si viene de una playlist
         player.playSong(table.getItems(), table.getItems().indexOf(table.getSelectionModel().getSelectedItem()));
         cambiarSeleccion();
         tab = PLAYER;
         activaSeleccion();
     }
-    
-    public void ponerActualizarMetaDatos() throws IOException, UnsupportedTagException, InvalidDataException{
+
+    public void ponerActualizarMetaDatos() throws IOException, UnsupportedTagException, InvalidDataException {
         Mp3File mp3file = new Mp3File(loadedSong.getAbsoluteFile());
         ID3v2 tag;
         if (mp3file.hasId3v2Tag()) {
