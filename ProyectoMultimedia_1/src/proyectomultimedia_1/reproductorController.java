@@ -332,24 +332,56 @@ public class reproductorController implements Initializable {
     @FXML
     private AnchorPane okCancelPlPane;
     @FXML
-    private ImageView play1;
+    ImageView play1;
     @FXML
     private AnchorPane tapa;
+    @FXML
+    Label artist1;
+    @FXML
+    Label name1;
+    @FXML
+    ImageView fav1;
+    @FXML
+    ImageView musicImage1;
+    @FXML
+    MediaView musicVideo1;
+    @FXML
+    Slider sliderDuration1;
+    @FXML
+    Label timeCounter1;
+    @FXML
+    Label duration1;
+    @FXML
+    ImageView change1;
+    @FXML
+    AnchorPane controls1;
+    @FXML
+    ImageView next1;
+    @FXML
+    ImageView previous1;
+    @FXML
+    ImageView shuffle1;
+    @FXML
+    ImageView repeat1;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
         double valor = sliderDuration.getValue();
         System.out.println("valor: " + valor);
         valor = valor / 60;
+
         int minutos = (int) valor;
+
         String[] arr = String.valueOf(valor).split("\\.");
+
         int segundos = Integer.parseInt(arr[1].substring(0, 2));
         segundos = (segundos * 60) / 100;
         System.out.println("minutos: " + minutos + " segundos: " + segundos);
         tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
         timeCounter.setText(tiempo);
+        timeCounter1.setText(tiempo);
 
-        player.setPos(valor * 60);
+            player.setPos(valor * 60);
     }
 
     @FXML
@@ -357,6 +389,24 @@ public class reproductorController implements Initializable {
         double valor = sliderDuration.getValue();
         System.out.println("valor: " + valor);
         valor = valor / 60;
+
+        int minutos = (int) valor;
+
+        String[] arr = String.valueOf(valor).split("\\.");
+
+        int segundos = Integer.parseInt(arr[1].substring(0, 2));
+        segundos = (segundos * 60) / 100;
+        System.out.println("minutos: " + minutos + " segundos: " + segundos);
+        tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
+        timeCounter.setText(tiempo);
+        timeCounter1.setText(tiempo);
+
+
+            player.setPos(valor * 60);
+        /*double valor = sliderDuration.getValue();
+        double valor1 = sliderDuration1.getValue();
+        System.out.println("valor: " + valor);
+        valor = valor / 60;
         int minutos = (int) valor;
         String[] arr = String.valueOf(valor).split("\\.");
         int segundos = Integer.parseInt(arr[1].substring(0, 2));
@@ -364,8 +414,9 @@ public class reproductorController implements Initializable {
         System.out.println("minutos: " + minutos + " segundos: " + segundos);
         tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
         timeCounter.setText(tiempo);
+        timeCounter1.setText(tiempo);
 
-        player.setPos(valor * 60);
+        player.setPos(valor * 60);*/
     }
 
     //Variables
@@ -389,6 +440,7 @@ public class reproductorController implements Initializable {
     public boolean repeatActive;
     public boolean playActive;
     public boolean favActive;
+    public boolean miniplayerActive;
     public int tab;
     public String tiempo;
     public DecimalFormat df = new DecimalFormat("##.##");
@@ -590,7 +642,7 @@ public class reproductorController implements Initializable {
             File playlistFile = new File(playlistPath);
             fstream = new FileWriter(playlistFile, true); // Escribe al final
             BufferedWriter out = new BufferedWriter(fstream);
-            
+
             out.write("\n" + selectedSongToAddToPL.file.getAbsolutePath()); // Escribimos la cancion al final
             out.close();
             fstream.close();
@@ -608,6 +660,40 @@ public class reproductorController implements Initializable {
     @FXML
     private void cancelPlConfirmBtnOnClick(ActionEvent event) {
         okCancelPlPane.toBack();
+    }
+
+    @FXML
+    private void sliderDurationKeyPressed1(KeyEvent event) {
+        double valor = sliderDuration1.getValue();
+        System.out.println("valor: " + valor);
+        valor = valor / 60;
+        int minutos = (int) valor;
+        String[] arr = String.valueOf(valor).split("\\.");
+        int segundos = Integer.parseInt(arr[1].substring(0, 2));
+        segundos = (segundos * 60) / 100;
+        System.out.println("minutos: " + minutos + " segundos: " + segundos);
+        tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
+        timeCounter.setText(tiempo);
+        timeCounter1.setText(tiempo);
+
+        player.setPos(valor * 60);
+    }
+
+    @FXML
+    private void sliderDurationOnDragged1(MouseEvent event) {
+        double valor = sliderDuration1.getValue();
+        System.out.println("valor: " + valor);
+        valor = valor / 60;
+        int minutos = (int) valor;
+        String[] arr = String.valueOf(valor).split("\\.");
+        int segundos = Integer.parseInt(arr[1].substring(0, 2));
+        segundos = (segundos * 60) / 100;
+        System.out.println("minutos: " + minutos + " segundos: " + segundos);
+        tiempo = String.format("%02d", minutos) + ":" + String.format("%02d", segundos);
+        timeCounter.setText(tiempo);
+        timeCounter1.setText(tiempo);
+
+        player.setPos(valor * 60);
     }
 
     public class Song {
@@ -639,7 +725,7 @@ public class reproductorController implements Initializable {
             this.file = null;
             this.fav = false;
         }
-        
+
         public String getSongName() {
             return songName;
         }
@@ -754,6 +840,13 @@ public class reproductorController implements Initializable {
         repeat.setDisable(true);
         sliderDuration.setDisable(true);
         fav.setDisable(true);
+        play1.setDisable(true);
+        previous1.setDisable(true);
+        next1.setDisable(true);
+        shuffle1.setDisable(true);
+        repeat1.setDisable(true);
+        sliderDuration1.setDisable(true);
+        fav1.setDisable(true);
 
         tab = preferences.getInt("tab", PLAYER);
         activaSeleccion();
@@ -788,6 +881,7 @@ public class reproductorController implements Initializable {
 
         sliderVolume.setValue(50);
         sliderDuration.setValue(0);
+        sliderDuration1.setValue(0);
 
         player = new Player(this, false);
     }
@@ -798,13 +892,20 @@ public class reproductorController implements Initializable {
         if (favActive) {
             if (daltonism) {
                 fav.setImage(favDaltImg);
+                fav1.setImage(favDaltImg);
+
             } else {
                 fav.setImage(favRedImg);
+                fav1.setImage(favRedImg);
+
             }
             addFavourite(playingSong);
         } else {
             fav.setImage(favImg);
+            fav1.setImage(favImg);
+
             removeFavourite(playingSong);
+
         }
 
     }
@@ -890,11 +991,17 @@ public class reproductorController implements Initializable {
         if (favActive) {
             if (daltonism) {
                 fav.setImage(favDaltImg);
+                fav1.setImage(favDaltImg);
+
             } else {
                 fav.setImage(favRedImg);
+                fav1.setImage(favRedImg);
+
             }
         } else {
             fav.setImage(favImg);
+            fav1.setImage(favImg);
+
         }
     }
 
@@ -1136,16 +1243,32 @@ public class reproductorController implements Initializable {
     private void changeOnClick(MouseEvent event) {
         if (!video) {
             change.setImage(changeMusicImg);
+            change1.setImage(changeMusicImg);
+
             video = true;
             musicVideo.toFront();
+            musicVideo1.toFront();
+
             musicVideo.setVisible(true);
+            musicVideo1.setVisible(true);
+
             musicImage.setVisible(false);
+            musicImage1.setVisible(false);
+
         } else {
             change.setImage(changeVideoImg);
+            change1.setImage(changeVideoImg);
+
             video = false;
             musicImage.toFront();
+            musicImage1.toFront();
+
             musicVideo.setVisible(false);
+            musicVideo1.setVisible(false);
+
             musicImage.setVisible(true);
+            musicImage1.setVisible(true);
+
         }
     }
 
@@ -1223,9 +1346,9 @@ public class reproductorController implements Initializable {
             if (tab != FAVOURITES) {
                 addFav = new MenuItem("Añadir/Quitar a/de Favoritos");
                 addFav.setOnAction((ActionEvent e) -> {
-                    if(table.getSelectionModel().getSelectedItem().fav){
+                    if (table.getSelectionModel().getSelectedItem().fav) {
                         removeFavourite(table.getSelectionModel().getSelectedItem());
-                    }else{
+                    } else {
                         addFavourite(table.getSelectionModel().getSelectedItem());
                     }
                 });
@@ -1266,14 +1389,14 @@ public class reproductorController implements Initializable {
                         alert.setTitle("¿Está Seguro?"); //TODO Internacionalizar
                         alert.setHeaderText("El archivo será retirado solamente de la Playlist.");
                         alert.setContentText("¿Está seguro de querer realizar esto?");
-                        
+
                         Optional<ButtonType> result = alert.showAndWait();
                         if (result.get() == ButtonType.OK) {
                             //TODO quitar de la playlist
                         } else {
                             // El usuario cancela y no se hace nada
                         }
-                    }); 
+                    });
                     break;
                 case LIBRARY:
                     delete = new MenuItem("Borrar*");
@@ -1282,7 +1405,7 @@ public class reproductorController implements Initializable {
                         alert.setTitle("¿Está Seguro?"); //TODO Internacionalizar
                         alert.setHeaderText("El archivo será borrado del disco por completo.");
                         alert.setContentText("¿Está seguro de querer realizar esto?");
-                        
+
                         Optional<ButtonType> result = alert.showAndWait();
                         if (result.get() == ButtonType.OK) {
                             table.getSelectionModel().getSelectedItem().file.delete();
@@ -1290,7 +1413,7 @@ public class reproductorController implements Initializable {
                         } else {
                             // El usuario cancela y no se hace nada
                         }
-                    }); 
+                    });
                     break;
                 case SEARCH:
                     if (searchChoice.getValue().equals("Library") || searchChoice.getValue().equals("Biblioteca")) {
@@ -1324,12 +1447,13 @@ public class reproductorController implements Initializable {
                     delete.setOnAction((ActionEvent e) -> {
                         removeFavourite(table.getSelectionModel().getSelectedItem());
                         fillFavourites();
-                    }); break;
+                    });
+                    break;
             }
             //Añadimos las opciones con un separador en borrar ya que esto borrara el fichero del disco.
-            if(addFav == null){
+            if (addFav == null) {
                 context.getItems().addAll(play, edit, addPl, new SeparatorMenuItem(), delete);
-            }else{
+            } else {
                 context.getItems().addAll(play, edit, addFav, addPl, new SeparatorMenuItem(), delete);
             }
             table.setContextMenu(context);
@@ -1341,6 +1465,7 @@ public class reproductorController implements Initializable {
     }
 
     private void playSong(TableView<Song> table) throws IOException, UnsupportedTagException, InvalidDataException {
+        player.stop();
         loadedSong = table.getSelectionModel().getSelectedItem().file;
         playingSong = table.getSelectionModel().getSelectedItem();
         audioPane.toFront();
@@ -1354,7 +1479,10 @@ public class reproductorController implements Initializable {
             mp3file.setId3v2Tag(tag);
         }
         name.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
+        name1.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
         artist.setText(tag.getTitle() == null ? "---" : tag.getArtist());
+        artist1.setText(tag.getTitle() == null ? "---" : tag.getArtist());
+
         Image caratula = null;
         if (tag.getAlbumImage() != null) {
             caratula = SwingFXUtils.toFXImage(ImageIO.read(new ByteArrayInputStream((byte[]) tag.getAlbumImage())), null);
@@ -1362,14 +1490,22 @@ public class reproductorController implements Initializable {
             caratula = new Image(getClass().getResourceAsStream("/assets/imagenes/disk.png"));
         }
         musicImage.setImage(caratula);
+        musicImage1.setImage(caratula);
+
         if (playingSong.fav) {
             if (daltonism) {
                 fav.setImage(favDaltImg);
+                fav1.setImage(favDaltImg);
+
             } else {
                 fav.setImage(favRedImg);
+                fav1.setImage(favRedImg);
+
             }
         } else {
             fav.setImage(favImg);
+            fav1.setImage(favImg);
+
         }
         player.playSong(0);
         cambiarSeleccion();
@@ -1441,14 +1577,17 @@ public class reproductorController implements Initializable {
                 searchSelected.setVisible(true);
                 break;
         }
+        guardarSeleccion(tab);
     }
 
     private void guardarSeleccion(int tab) {
         preferences.putInt("tab", tab);
-        if(tab == PLAYER){
+        if (tab == PLAYER) {
             tapa.toFront();
-        }else{
+            miniplayerActive = false;
+        } else {
             miniPlayer.toFront();
+            miniplayerActive = false;
         }
     }
 

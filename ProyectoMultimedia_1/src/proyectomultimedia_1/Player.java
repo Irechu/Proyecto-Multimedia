@@ -52,18 +52,16 @@ public class Player {
     private Thread updaterThread;
 
     //int songIndex;
-
     reproductorController reproductor;
 
     //String currentPlaylistName = "";
-
     String youtubeExecName = "youtube-dl.exe";
 
     public Player() {
         isPlaying = false;
         isActive = false;
     }
-    
+
     boolean playList;
 
     public Player(reproductorController d, boolean pl) {
@@ -73,11 +71,12 @@ public class Player {
         //playSong(inputIndex);
     }
 
-    public void setVolume(float volume){
-        if(isActive)
-            mediaPlayer.setVolume(volume/100);
+    public void setVolume(float volume) {
+        if (isActive) {
+            mediaPlayer.setVolume(volume / 100);
+        }
     }
-    
+
     public void playSong(int index) {
         Platform.runLater(() -> {
             reproductor.previous.setDisable(false);
@@ -86,8 +85,15 @@ public class Player {
             reproductor.repeat.setDisable(false);
             reproductor.play.setDisable(false);
             reproductor.fav.setDisable(false);
+            reproductor.previous1.setDisable(false);
+            reproductor.next1.setDisable(false);
+            reproductor.shuffle1.setDisable(false);
+            reproductor.repeat1.setDisable(false);
+            reproductor.play1.setDisable(false);
+            reproductor.fav1.setDisable(false);
+            reproductor.sliderDuration1.setDisable(false);
         });
-        
+
         x = new Thread(new Task<Void>() {
             @Override
             protected Void call() {
@@ -113,9 +119,9 @@ public class Player {
                                 System.out.println("concurrent exception, retrying ...");
                             }
                         }*/
-                    }else{
+                    } else {
                     }
-                    
+
                     if (true) { //TODO cambiar a local
                         java.net.URI uri = song.toURI();
                         source = uri.toString();
@@ -135,7 +141,8 @@ public class Player {
 
                             show();
                         });*/
-                    } /*else if (songDetails.get("location").toString().equals("youtube")) {
+                    }
+                    /*else if (songDetails.get("location").toString().equals("youtube")) {
                         Image x = new Image(songDetails.get("thumbnail").toString());
                         Platform.runLater(() -> {
                             dash.songNameLabel.setText(songDetails.get("title").toString());
@@ -190,11 +197,10 @@ public class Player {
 
                     }*/
 
-                    /*if (!isActive || index != songIndex) {
+ /*if (!isActive || index != songIndex) {
                         System.out.println("Skipping because video no longer required ...");
                         return null;
                     }*/
-
                     System.out.println("starting ...");
 
                     media = new Media(source);
@@ -213,6 +219,7 @@ public class Player {
                         totalCurr = media.getDuration().toSeconds();
 
                         Platform.runLater(() -> {
+                            /*if (!reproductor.miniplayerActive) {*/
                             reproductor.sliderDuration.setDisable(false);
                             reproductor.sliderDuration.setMin(0);
                             reproductor.sliderDuration.setMax(totalCurr);
@@ -223,6 +230,18 @@ public class Player {
                             reproductor.timeCounter.setVisible(true);
                             reproductor.playActive = false;
                             reproductor.play.setImage(reproductor.pauseImg);
+                            /* } else {*/
+                            reproductor.sliderDuration1.setMin(0);
+                            reproductor.sliderDuration1.setMax(totalCurr);
+                            reproductor.controls1.setDisable(false);
+                            reproductor.musicImage1.setOpacity(1.0);
+                            reproductor.duration1.setText(reproductor.durationFormatted((long) media.getDuration().toMillis()));
+                            reproductor.duration1.setVisible(true);
+                            reproductor.timeCounter1.setVisible(true);
+                            reproductor.playActive = false;
+                            reproductor.play1.setImage(reproductor.pauseImg);
+                            /* }*/
+
                         });
 
                         mediaPlayer.play();
@@ -232,9 +251,9 @@ public class Player {
                     });
 
                     mediaPlayer.setOnEndOfMedia(() -> {
-                        if(playList){
+                        if (playList) {
                             onEndOfMediaTrigger();
-                        }else{
+                        } else {
                             stop();
                             hide();
                         }
@@ -269,6 +288,8 @@ public class Player {
         }*/
         reproductor.playActive = false;
         reproductor.play.setImage(reproductor.playImg);
+        reproductor.play1.setImage(reproductor.playImg);
+
     }
 
     public void playNext() {
@@ -314,11 +335,15 @@ public class Player {
                     isPlaying = true;
                     reproductor.playActive = false;
                     reproductor.play.setImage(reproductor.pauseImg);
+                    reproductor.play1.setImage(reproductor.pauseImg);
+
                     mediaPlayer.play();
                 } else if (mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING)) {
                     isPlaying = false;
                     reproductor.playActive = true;
                     reproductor.play.setImage(reproductor.playImg);
+                    reproductor.play1.setImage(reproductor.playImg);
+
                     mediaPlayer.pause();
                 }
                 return null;
@@ -340,7 +365,7 @@ public class Player {
     }
 
     public void hide() {
-        
+
     }
 
     private void startUpdating() {
@@ -353,10 +378,11 @@ public class Player {
                             double currSec = mediaPlayer.getCurrentTime().toMillis();
                             String currentSimpleTimeStamp = reproductor.durationFormatted((long) currSec);
                             Platform.runLater(() -> reproductor.timeCounter.setText(currentSimpleTimeStamp));
-
-                            double currentProgress = currSec/1000;
-                            if (!reproductor.sliderDuration.isValueChanging()) {
+                            Platform.runLater(() -> reproductor.timeCounter1.setText(currentSimpleTimeStamp));
+                            double currentProgress = currSec / 1000;
+                            if (!reproductor.sliderDuration.isValueChanging() && !reproductor.sliderDuration1.isValueChanging()) {
                                 reproductor.sliderDuration.setValue(currentProgress);
+                                reproductor.sliderDuration1.setValue(currentProgress);
                                 //dash.refreshSlider(dash.songSeek);
                                 currentP = currentProgress;
                             }
@@ -373,6 +399,5 @@ public class Player {
     }
 
     double currentP = 0.0;
-    
-    
+
 }
