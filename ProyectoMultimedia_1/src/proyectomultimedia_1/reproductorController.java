@@ -55,6 +55,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -367,9 +369,7 @@ public class reproductorController implements Initializable {
     ImageView repeat1;
     @FXML
     private AnchorPane rectangleContainer;
-    @FXML
     Button importBtn;
-    @FXML
     Button pause;
     @FXML
     Slider slider1;
@@ -393,6 +393,14 @@ public class reproductorController implements Initializable {
     Slider slider10;
     @FXML
     Slider volumeSlider;
+    @FXML
+    private AreaChart<String, Number> chart;
+
+    XYChart.Data[] series1Data;
+    @FXML
+     ChoiceBox<String> equalizerModeChoiceBox;
+    @FXML
+    private ImageView sound1;
 
     @FXML
     private void sliderDurationKeyPressed(KeyEvent event) {
@@ -737,15 +745,16 @@ public class reproductorController implements Initializable {
     }
 
     @FXML
-    private void importFile(ActionEvent event) {
-    }
-
-    @FXML
-    private void playSong(ActionEvent event) {
-    }
-
-    @FXML
-    private void pauseSong(ActionEvent event) {
+    private void volumeSliderMouseDragged1(MouseEvent event) {
+        //sliderVolume.getValue();
+        System.out.println("volumen ajustado a: " + volumeSlider.getValue() / 100);
+        player.setVolume((float) volumeSlider.getValue());
+        preferences.putFloat("preferedVolume", (float) volumeSlider.getValue());
+        if (volumeSlider.getValue() == 0) {
+            sound1.setImage(muteImg);
+        } else {
+            sound1.setImage(soundImg);
+        }
     }
 
     public class Song {
@@ -838,7 +847,7 @@ public class reproductorController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         //Inicializamos las variables
         persistentDaltonims = preferences.getBoolean("daltonism", false);
         repeatActive = preferences.getBoolean("repeatActive", false);
@@ -846,21 +855,35 @@ public class reproductorController implements Initializable {
         daltonismFunc(persistentDaltonims);
         video = false;
 
+        //choice box búsquda
         if (preferences.getInt("idIdioma", 0) == 0) {
-            ObservableList<String> options = FXCollections.observableArrayList("Internet", "Biblioteca", "Favoritos");
+            ObservableList<String> options = FXCollections.observableArrayList("Biblioteca", "Favoritos");
             searchChoice.setItems(options);
             searchChoice.setValue("Biblioteca");
 
         } else {
-            ObservableList<String> options = FXCollections.observableArrayList("Internet", "Library", "Favourites");
+            ObservableList<String> options = FXCollections.observableArrayList("Library", "Favourites");
             searchChoice.setItems(options);
             searchChoice.setValue("Library");
 
         }
+
         searchChoice.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
                 searchBar.clear();
+            }
+        });
+
+        //choice box ecualizador
+        ObservableList<String> options1 = FXCollections.observableArrayList("Flat", "Electronic", "Classic","Jazz", "Pop", "Voice","Dance", "Rock");
+        equalizerModeChoiceBox.setItems(options1);
+        equalizerModeChoiceBox.setValue("Flat");
+
+        equalizerModeChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
+            player.equalize((String)equalizerModeChoiceBox.getItems().get((Integer) number2));
             }
         });
 
@@ -937,6 +960,14 @@ public class reproductorController implements Initializable {
         sliderDuration1.setValue(0);
 
         player = new Player(this, true);
+
+        XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+        series1Data = new XYChart.Data[32];
+        for (int i = 0; i < series1Data.length; i++) {
+            series1Data[i] = new XYChart.Data<>(Integer.toString(i + 1), 0);
+            series1.getData().add(series1Data[i]);
+        }
+        chart.getData().add(series1);
 
     }
 

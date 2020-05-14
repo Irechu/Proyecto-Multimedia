@@ -36,6 +36,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Random;
@@ -235,7 +236,8 @@ public class Player {
                     media = new Media(source);
 
                     mediaPlayer = new MediaPlayer(media);
-                    equalize();
+                    reproductor.equalizerModeChoiceBox.setValue("Flat");
+                    equalize("Flat");
                     mediaPlayer.getAudioEqualizer().setEnabled(true);
                     media.setOnError(() -> {
                         stop();
@@ -431,7 +433,7 @@ public class Player {
         updaterThread.start();
     }
 
-    public void equalize() {
+    /*  public void equalize() {
         reproductor.volumeSlider.setValue(100);
         reproductor.volumeSlider.valueProperty().addListener(new InvalidationListener() {
             @Override
@@ -445,7 +447,7 @@ public class Player {
             @Override
             public void changed(
                     ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(0).setGain((newValue.doubleValue()*0.36-24));
+                mediaPlayer.getAudioEqualizer().getBands().get(0).setGain((newValue.doubleValue() * 0.36 - 24));
                 System.out.println("valor de la primera banda: " + mediaPlayer.getAudioEqualizer().getBands().get(0).getGain());
             }
         });
@@ -453,7 +455,7 @@ public class Player {
         reproductor.slider2.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(1).setGain((newValue.doubleValue()*0.36-24));
+                mediaPlayer.getAudioEqualizer().getBands().get(1).setGain((newValue.doubleValue() * 0.36 - 24));
                 System.out.println("valor de la 1 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(0).getGain());
 
             }
@@ -462,7 +464,7 @@ public class Player {
         reproductor.slider3.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(2).setGain((newValue.doubleValue()*0.36-24));
+                mediaPlayer.getAudioEqualizer().getBands().get(2).setGain((newValue.doubleValue() * 0.36 - 24));
                 System.out.println("valor de la 2 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(2).getGain());
 
             }
@@ -471,7 +473,7 @@ public class Player {
         reproductor.slider4.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(3).setGain((newValue.doubleValue()*0.36-24));
+                mediaPlayer.getAudioEqualizer().getBands().get(3).setGain((newValue.doubleValue() * 0.36 - 24));
                 System.out.println("valor de la 3 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(3).getGain());
 
             }
@@ -480,7 +482,7 @@ public class Player {
         reproductor.slider5.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(4).setGain((newValue.doubleValue()*0.36-24));
+                mediaPlayer.getAudioEqualizer().getBands().get(4).setGain((newValue.doubleValue() * 0.36 - 24));
                 System.out.println("valor de la 4 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(4).getGain());
 
             }
@@ -489,7 +491,7 @@ public class Player {
         reproductor.slider6.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(5).setGain((newValue.doubleValue()*0.36-24));
+                mediaPlayer.getAudioEqualizer().getBands().get(5).setGain((newValue.doubleValue() * 0.36 - 24));
                 System.out.println("valor de la 5 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(5).getGain());
 
             }
@@ -498,7 +500,7 @@ public class Player {
         reproductor.slider7.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(6).setGain((newValue.doubleValue()*0.36-24));
+                mediaPlayer.getAudioEqualizer().getBands().get(6).setGain((newValue.doubleValue() * 0.36 - 24));
                 System.out.println("valor de la 6 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(6).getGain());
 
             }
@@ -507,7 +509,7 @@ public class Player {
         reproductor.slider8.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(7).setGain((newValue.doubleValue()*0.36-24));
+                mediaPlayer.getAudioEqualizer().getBands().get(7).setGain((newValue.doubleValue() * 0.36 - 24));
                 System.out.println("valor de la 7 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(7).getGain());
 
             }
@@ -516,7 +518,7 @@ public class Player {
         reproductor.slider9.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(8).setGain((newValue.doubleValue()*0.36-24));
+                mediaPlayer.getAudioEqualizer().getBands().get(8).setGain((newValue.doubleValue() * 0.36 - 24));
                 System.out.println("valor de la 8 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(8).getGain());
 
             }
@@ -525,13 +527,252 @@ public class Player {
         reproductor.slider10.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(9).setGain(newValue.doubleValue()*0.36-24);
+                mediaPlayer.getAudioEqualizer().getBands().get(9).setGain(newValue.doubleValue() * 0.36 - 24);
                 System.out.println("valor de la 9 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(9).getGain());
 
             }
         });
+
+        mediaPlayer.setAudioSpectrumListener((double timestamp, double duration, float[] magnitudes, float[] phases) -> {
+            handleUpdate(timestamp, duration, magnitudes, phases);
+        });
+
+    }*/
+    float magnitudesCorregidas[];
+
+    private void handleUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {
+        float[] buffer = createFilledBuffer(mediaPlayer.getAudioSpectrumNumBands(), mediaPlayer.getAudioSpectrumThreshold());
+
+        for (int i = 0; i < magnitudes.length; i++) {
+            if (magnitudes[i] >= buffer[i]) {
+                buffer[i] = magnitudes[i];
+                reproductor.series1Data[i].setYValue(magnitudes[i] - mediaPlayer.getAudioSpectrumThreshold());
+            } else {
+                reproductor.series1Data[i].setYValue(buffer[i] - mediaPlayer.getAudioSpectrumThreshold());
+                buffer[i] -= 0.25;
+            }
+        }
+    }
+
+    private float[] createFilledBuffer(int size, float fillValue) {
+        float[] floats = new float[size];
+        Arrays.fill(floats, fillValue);
+        return floats;
     }
 
     double currentP = 0.0;
+
+    void equalize(String modo) {
+        float a[] = new float[10];
+        //miramos el modo para poner unos valores u otros
+        switch (modo) {
+            case "Flat":
+                a[0] = 50f;
+                a[1] = 50f;
+                a[2] = 50f;
+                a[3] = 50f;
+                a[4] = 50f;
+                a[5] = 50f;
+                a[6] = 50f;
+                a[7] = 50f;
+                a[8] = 50f;
+                a[9] = 50f;
+                break;
+            case "Electronic":
+                a[0] = (4f +24)/0.36f;
+                a[1] = (3.5f+24)/0.36f;
+                a[2] = (1f+24)/0.36f;
+                a[3] = (0f+24)/0.36f;
+                a[4] = (-2f+24)/0.36f;
+                a[5] = (2f+24)/0.36f;
+                a[6] = (0.5f+24)/0.36f;
+                a[7] = (1f+24)/0.36f;
+                a[8] = (4f+24)/0.36f;
+                a[9] = (5f+24)/0.36f;
+
+                break;
+            case "Classic":
+                a[0] = (4.5f+24)/0.36f;
+                a[1] = (3.5f+24)/0.36f;
+                a[2] = (3f+24)/0.36f;
+                a[3] = (2.5f+24)/0.36f;
+                a[4] = (-2f+24)/0.36f;
+                a[5] = (-1.5f+24)/0.36f;
+                a[6] = (0f+24)/0.36f;
+                a[7] = (2f+24)/0.36f;
+                a[8] = (3.5f+24)/0.36f;
+                a[9] = (4f+24)/0.36f;
+
+                break;
+            case "Jazz":
+                a[0] = (4f+24)/0.36f;
+                a[1] = (3f+24)/0.36f;
+                a[2] = (1f+24)/0.36f;
+                a[3] = (2f+24)/0.36f;
+                a[4] = (-2f+24)/0.36f;
+                a[5] = (-2f+24)/0.36f;
+                a[6] = (0f+24)/0.36f;
+                a[7] = (1.5f+24)/0.36f;
+                a[8] = (3f+24)/0.36f;
+                a[9] = (3.5f+24)/0.36f;
+
+                break;
+            case "Pop":
+                a[0] = (-2f+24)/0.36f;
+                a[1] = (-1f+24)/0.36f;
+                a[2] = (0f+24)/0.36f;
+                a[3] = (2f+24)/0.36f;
+                a[4] = (4f+24)/0.36f;
+                a[5] = (4f+24)/0.36f;
+                a[6] = (2f+24)/0.36f;
+                a[7] = (0f+24)/0.36f;
+                a[8] = (-1.5f+24)/0.36f;
+                a[9] = (-2f+24)/0.36f;
+
+                break;
+            case "Voice":
+                a[0] = (-2f+24)/0.36f;
+                a[1] = (-3.5f+24)/0.36f;
+                a[2] = (-3f+24)/0.36f;
+                a[3] = (1f+24)/0.36f;
+                a[4] = (3.5f+24)/0.36f;
+                a[5] = (3.5f+24)/0.36f;
+                a[6] = (3f+24)/0.36f;
+                a[7] = (1.5f+24)/0.36f;
+                a[8] = (0.5f+24)/0.36f;
+                a[9] = (-2f+24)/0.36f;
+
+                break;
+            case "Dance":
+                a[0] = (3.5f+24)/0.36f;
+                a[1] = (6.5f+24)/0.36f;
+                a[2] = (5f+24)/0.36f;
+                a[3] = (0f+24)/0.36f;
+                a[4] = (2f+24)/0.36f;
+                a[5] = (3.5f+24)/0.36f;
+                a[6] = (5f+24)/0.36f;
+                a[7] = (4f+24)/0.36f;
+                a[8] = (3.5f+24)/0.36f;
+                a[9] = (0f+24)/0.36f;
+
+                break;
+            case "Rock":
+                a[0] = (5f+24)/0.36f;
+                a[1] = (4f+24)/0.36f;
+                a[2] = (3f+24)/0.36f;
+                a[3] = (1.5f+24)/0.36f;
+                a[4] = (-0.5f+24)/0.36f;
+                a[5] = (-1.5f+24)/0.36f;
+                a[6] = (0.5f+24)/0.36f;
+                a[7] = (2.5f+24)/0.36f;
+                a[8] = (3.5f+24)/0.36f;
+                a[9] = (4.5f+24)/0.36f;
+
+                break;
+        }
+        reproductor.volumeSlider.setValue(100);
+        reproductor.volumeSlider.valueProperty().addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(Observable observable) {
+                mediaPlayer.setVolume(reproductor.volumeSlider.getValue() / 100);
+            }
+        });
+        reproductor.slider1.setValue(a[0]);
+        reproductor.slider1.valueProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(
+                    ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+                mediaPlayer.getAudioEqualizer().getBands().get(0).setGain((newValue.doubleValue() * 0.36 - 24));
+                System.out.println("valor de la primera banda: " + mediaPlayer.getAudioEqualizer().getBands().get(0).getGain());
+            }
+        });
+        reproductor.slider2.setValue(a[1]);
+        reproductor.slider2.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
+                mediaPlayer.getAudioEqualizer().getBands().get(1).setGain((newValue.doubleValue() * 0.36 - 24));
+                System.out.println("valor de la 1 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(0).getGain());
+
+            }
+        });
+        reproductor.slider3.setValue(a[2]);
+        reproductor.slider3.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
+                mediaPlayer.getAudioEqualizer().getBands().get(2).setGain((newValue.doubleValue() * 0.36 - 24));
+                System.out.println("valor de la 2 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(2).getGain());
+
+            }
+        });
+        reproductor.slider4.setValue(a[3]);
+        reproductor.slider4.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
+                mediaPlayer.getAudioEqualizer().getBands().get(3).setGain((newValue.doubleValue() * 0.36 - 24));
+                System.out.println("valor de la 3 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(3).getGain());
+
+            }
+        });
+        reproductor.slider5.setValue(a[4]);
+        reproductor.slider5.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
+                mediaPlayer.getAudioEqualizer().getBands().get(4).setGain((newValue.doubleValue() * 0.36 - 24));
+                System.out.println("valor de la 4 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(4).getGain());
+
+            }
+        });
+        reproductor.slider6.setValue(a[5]);
+        reproductor.slider6.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
+                mediaPlayer.getAudioEqualizer().getBands().get(5).setGain((newValue.doubleValue() * 0.36 - 24));
+                System.out.println("valor de la 5 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(5).getGain());
+
+            }
+        });
+        reproductor.slider7.setValue(a[6]);
+        reproductor.slider7.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
+                mediaPlayer.getAudioEqualizer().getBands().get(6).setGain((newValue.doubleValue() * 0.36 - 24));
+                System.out.println("valor de la 6 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(6).getGain());
+
+            }
+        });
+        reproductor.slider8.setValue(a[7]);
+        reproductor.slider8.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
+                mediaPlayer.getAudioEqualizer().getBands().get(7).setGain((newValue.doubleValue() * 0.36 - 24));
+                System.out.println("valor de la 7 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(7).getGain());
+
+            }
+        });
+        reproductor.slider9.setValue(a[8]);
+        reproductor.slider9.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
+                mediaPlayer.getAudioEqualizer().getBands().get(8).setGain((newValue.doubleValue() * 0.36 - 24));
+                System.out.println("valor de la 8 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(8).getGain());
+
+            }
+        });
+        reproductor.slider10.setValue(a[9]);
+        reproductor.slider10.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
+                mediaPlayer.getAudioEqualizer().getBands().get(9).setGain(newValue.doubleValue() * 0.36 - 24);
+                System.out.println("valor de la 9 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(9).getGain());
+
+            }
+        });
+
+        mediaPlayer.setAudioSpectrumListener((double timestamp, double duration, float[] magnitudes, float[] phases) -> {
+            handleUpdate(timestamp, duration, magnitudes, phases);
+        });
+
+    }
 
 }
