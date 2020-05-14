@@ -484,7 +484,7 @@ public class reproductorController implements Initializable {
 
     @FXML
     private void searchKeyPressed(KeyEvent event) {
-
+//TODO sumar una constante para poder mover con el teclado
         TableView<Song> table = null;
         switch (searchChoice.getValue()) {
             case "Library":
@@ -992,20 +992,38 @@ public class reproductorController implements Initializable {
             repeat.setImage(repeatNotSelectedImg);
         }
 
-        if (favActive) {
-            if (daltonism) {
-                fav.setImage(favDaltImg);
-                fav1.setImage(favDaltImg);
+        if(playingSong == null){
+            if (favActive) {
+                if (daltonism) {
+                    fav.setImage(favDaltImg);
+                    fav1.setImage(favDaltImg);
 
+                } else {
+                    fav.setImage(favRedImg);
+                    fav1.setImage(favRedImg);
+
+                }
             } else {
-                fav.setImage(favRedImg);
-                fav1.setImage(favRedImg);
+                fav.setImage(favImg);
+                fav1.setImage(favImg);
 
             }
-        } else {
-            fav.setImage(favImg);
-            fav1.setImage(favImg);
+        }else{
+            if (playingSong.fav) {
+                if (daltonism) {
+                    fav.setImage(favDaltImg);
+                    fav1.setImage(favDaltImg);
 
+                } else {
+                    fav.setImage(favRedImg);
+                    fav1.setImage(favRedImg);
+
+                }
+            } else {
+                fav.setImage(favImg);
+                fav1.setImage(favImg);
+
+            }
         }
     }
 
@@ -1022,7 +1040,7 @@ public class reproductorController implements Initializable {
 
             ResourceBundle resourceBundle = ResourceBundle.getBundle("languages.text_es");
             root = FXMLLoader.load(getClass().getResource("reproductor.fxml"), resourceBundle);
-
+            
             VBox.setVgrow(root, Priority.ALWAYS);
         } catch (IOException ex) {
             System.out.println("Recurso no encontrado");
@@ -1080,6 +1098,10 @@ public class reproductorController implements Initializable {
             libraryPaneLabel.setStyle("-fx-text-fill:#ff9500");
             searchLabel.setStyle("-fx-text-fill:#ff9500");
             favouritesPaneLabel.setStyle("-fx-text-fill:#ff9500");
+            
+            tapa.setStyle("-fx-background-color:#ff9500");
+            name1.setTextFill(Color.web("#ff9500"));
+            miniPlayer.setStyle("-fx-background-color:#cc7700");
         } else {
             preferences.putBoolean("daltonism", false);
             menuSplitPane.setStyle("-fx-background-color:#4a0707");
@@ -1099,6 +1121,10 @@ public class reproductorController implements Initializable {
             libraryPaneLabel.setStyle("-fx-text-fill:#4a0707");
             searchLabel.setStyle("-fx-text-fill:#4a0707");
             favouritesPaneLabel.setStyle("-fx-text-fill:#4a0707");
+            
+            tapa.setStyle("-fx-background-color:#4a0707");
+            name1.setTextFill(Color.web("#4a0707"));
+            miniPlayer.setStyle("-fx-background-color:#240000");
         }
         shuffleRepeatActive();
     }
@@ -1124,6 +1150,10 @@ public class reproductorController implements Initializable {
             libraryPaneLabel.setStyle("-fx-text-fill:#ff9500");
             searchLabel.setStyle("-fx-text-fill:#ff9500");
             favouritesPaneLabel.setStyle("-fx-text-fill:#ff9500");
+            
+            tapa.setStyle("-fx-background-color:#ff9500");
+            name1.setTextFill(Color.web("#ff9500"));
+            miniPlayer.setStyle("-fx-background-color:#cc7700");
         } else {
             preferences.putBoolean("daltonism", false);
             menuSplitPane.setStyle("-fx-background-color:#4a0707");
@@ -1142,6 +1172,10 @@ public class reproductorController implements Initializable {
             libraryPaneLabel.setStyle("-fx-text-fill:#4a0707");
             searchLabel.setStyle("-fx-text-fill:#4a0707");
             favouritesPaneLabel.setStyle("-fx-text-fill:#4a0707");
+            
+            tapa.setStyle("-fx-background-color:#4a0707");
+            name1.setTextFill(Color.web("#4a0707"));
+            miniPlayer.setStyle("-fx-background-color:#240000");
         }
         shuffleRepeatActive();
     }
@@ -1149,7 +1183,12 @@ public class reproductorController implements Initializable {
     @FXML
     private void pathBtnOnClick(MouseEvent event) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Seleccione Carpeta Biblioteca");//TODO INTERNACIONALIZAR
+        if(preferences.getInt("idIdioma", 0) == 0){
+            directoryChooser.setTitle("Seleccione Carpeta Biblioteca");
+        }else{
+            directoryChooser.setTitle("Selecct Your Library Folder");
+        }
+        
 
         // Obtener la carpeta de la biblioteca
         File defaultDirectory = new File("./src/assets/audio");
@@ -1299,7 +1338,13 @@ public class reproductorController implements Initializable {
             System.out.println(table.getSelectionModel().getSelectedItem().file);
             //Creamos menu contextual del click derecho
             ContextMenu context = new ContextMenu();
-            MenuItem play = new MenuItem("Reproducir"); //TODO Internacionalizar
+            MenuItem play;
+            if(preferences.getInt("idIdioma", 0) == 0){
+                play = new MenuItem("Reproducir");
+            }else{
+                play = new MenuItem("Play");
+            }
+            
             play.setOnAction((ActionEvent e) -> {
                 System.out.println("PLAY");
                 try {
@@ -1312,7 +1357,12 @@ public class reproductorController implements Initializable {
                     Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
-            MenuItem edit = new MenuItem("Editar");
+            MenuItem edit;
+            if(preferences.getInt("idIdioma", 0) == 0){
+                edit = new MenuItem("Editar");
+            }else{
+                edit = new MenuItem("Edit");
+            }
             edit.setOnAction((ActionEvent e) -> {
                 try {
                     int idIdioma = preferences.getInt("idIdioma", PLAYER);
@@ -1328,7 +1378,7 @@ public class reproductorController implements Initializable {
                     AnchorPane page = (AnchorPane) loader.load();
                     // Crear el dialogo de la escena
                     Stage dialogStage = new Stage();
-                    dialogStage.setTitle("Edit Person");
+                    dialogStage.setTitle("Edit");
                     dialogStage.initModality(Modality.APPLICATION_MODAL);
                     Scene scene = new Scene(page);
                     dialogStage.setScene(scene);
@@ -1338,7 +1388,7 @@ public class reproductorController implements Initializable {
                     controller.setDialogStage(dialogStage);
                     controller.setFile(table.getSelectionModel().getSelectedItem().file);
                     controller.fillWindow(table.getSelectionModel().getSelectedItem().file);
-
+                    controller.setIdioma(idIdioma);
                     // Se muestra y espera
                     dialogStage.showAndWait();
                     fillLibrary();
@@ -1348,7 +1398,11 @@ public class reproductorController implements Initializable {
             });
             MenuItem addFav = null;
             if (tab != FAVOURITES) {
-                addFav = new MenuItem("Añadir/Quitar a/de Favoritos");
+                if(preferences.getInt("idIdioma", 0) == 0){
+                    addFav = new MenuItem("Añadir/Quitar a/de Favoritos");
+                }else{
+                    addFav = new MenuItem("Add/Remove from Favourites");
+                }
                 addFav.setOnAction((ActionEvent e) -> {
                     if (table.getSelectionModel().getSelectedItem().fav) {
                         removeFavourite(table.getSelectionModel().getSelectedItem());
@@ -1357,7 +1411,12 @@ public class reproductorController implements Initializable {
                     }
                 });
             }
-            MenuItem addPl = new MenuItem("Añadir a Playlist");
+            MenuItem addPl;
+            if(preferences.getInt("idIdioma", 0) == 0){
+                addPl = new MenuItem("Añadir a Playlist");
+            }else{
+                addPl = new MenuItem("Add to Playlist");
+            }
             addPl.setOnAction((ActionEvent e) -> {
                 // Guardamos qué cancion se quiere añadir
                 selectedSongToAddToPL = table.getSelectionModel().getSelectedItem();
@@ -1387,12 +1446,22 @@ public class reproductorController implements Initializable {
             MenuItem delete;
             switch (tab) {
                 case PLAYLIST:
-                    delete = new MenuItem("Eliminar de esta Playlist");
+                    if(preferences.getInt("idIdioma", 0) == 0){
+                        delete = new MenuItem("Eliminar de esta Playlist");
+                    }else{
+                        delete = new MenuItem("Remove from Playlist");
+                    }
                     delete.setOnAction((ActionEvent e) -> {
                         Alert alert = new Alert(AlertType.CONFIRMATION);
-                        alert.setTitle("¿Está Seguro?"); //TODO Internacionalizar
-                        alert.setHeaderText("El archivo será retirado solamente de la Playlist.");
-                        alert.setContentText("¿Está seguro de querer realizar esto?");
+                        if (preferences.getInt("idIdioma", 0) == 0) {
+                            alert.setTitle("¿Está Seguro?");
+                            alert.setHeaderText("El archivo será borrado del disco por completo.");
+                            alert.setContentText("¿Está seguro de querer realizar esto?");
+                        } else {
+                            alert.setTitle("You sure?");
+                            alert.setHeaderText("The file will be deleted from the disk completely.");
+                            alert.setContentText("Are you sure that you want to do this?");
+                        }
 
                         Optional<ButtonType> result = alert.showAndWait();
                         if (result.get() == ButtonType.OK) {
@@ -1403,12 +1472,22 @@ public class reproductorController implements Initializable {
                     });
                     break;
                 case LIBRARY:
-                    delete = new MenuItem("Borrar*");
+                    if (preferences.getInt("idIdioma", 0) == 0) {
+                        delete = new MenuItem("Borrar*");
+                    } else {
+                        delete = new MenuItem("Delete*");
+                    }
                     delete.setOnAction((ActionEvent e) -> {
                         Alert alert = new Alert(AlertType.CONFIRMATION);
-                        alert.setTitle("¿Está Seguro?"); //TODO Internacionalizar
-                        alert.setHeaderText("El archivo será borrado del disco por completo.");
-                        alert.setContentText("¿Está seguro de querer realizar esto?");
+                        if (preferences.getInt("idIdioma", 0) == 0) {
+                            alert.setTitle("¿Está Seguro?");
+                            alert.setHeaderText("El archivo será borrado del disco por completo.");
+                            alert.setContentText("¿Está seguro de querer realizar esto?");
+                        } else {
+                            alert.setTitle("You sure?");
+                            alert.setHeaderText("The file will be deletit from the disk completely.");
+                            alert.setContentText("Are you sure that you want to do this?");
+                        }
 
                         Optional<ButtonType> result = alert.showAndWait();
                         if (result.get() == ButtonType.OK) {
@@ -1421,12 +1500,22 @@ public class reproductorController implements Initializable {
                     break;
                 case SEARCH:
                     if (searchChoice.getValue().equals("Library") || searchChoice.getValue().equals("Biblioteca")) {
-                        delete = new MenuItem("Borrar*");
+                        if (preferences.getInt("idIdioma", 0) == 0) {
+                            delete = new MenuItem("Borrar*");
+                        } else {
+                            delete = new MenuItem("Delete*");
+                        }
                         delete.setOnAction((ActionEvent e) -> {
                             Alert alert = new Alert(AlertType.CONFIRMATION);
-                            alert.setTitle("¿Está Seguro?"); //TODO Internacionalizar
-                            alert.setHeaderText("El archivo será borrado del disco por completo.");
-                            alert.setContentText("¿Está seguro de querer realizar esto?");
+                            if (preferences.getInt("idIdioma", 0) == 0) {
+                                alert.setTitle("¿Está Seguro?");
+                                alert.setHeaderText("El archivo será borrado del disco por completo.");
+                                alert.setContentText("¿Está seguro de querer realizar esto?");
+                            } else {
+                                alert.setTitle("You sure?");
+                                alert.setHeaderText("The file will be deleted from the disk completely.");
+                                alert.setContentText("Are you sure that you want to do this?");
+                            }
 
                             Optional<ButtonType> result = alert.showAndWait();
                             if (result.get() == ButtonType.OK) {
@@ -1438,7 +1527,11 @@ public class reproductorController implements Initializable {
 
                         });
                     } else {
-                        delete = new MenuItem("Quitar de favoritos");
+                        if (preferences.getInt("idIdioma", 0) == 0) {
+                            delete = new MenuItem("Quitar de favoritos");
+                        } else {
+                            delete = new MenuItem("Remove from favourites");
+                        }
                         delete.setOnAction((ActionEvent e) -> {
                             removeFavourite(table.getSelectionModel().getSelectedItem());
                             fillFavourites();
@@ -1447,7 +1540,11 @@ public class reproductorController implements Initializable {
                     }
                     break;
                 default:
-                    delete = new MenuItem("Quitar de favoritos");
+                    if (preferences.getInt("idIdioma", 0) == 0) {
+                        delete = new MenuItem("Quitar de favoritos");
+                    } else {
+                        delete = new MenuItem("Remove from favourites");
+                    }
                     delete.setOnAction((ActionEvent e) -> {
                         removeFavourite(table.getSelectionModel().getSelectedItem());
                         fillFavourites();
@@ -1476,7 +1573,12 @@ public class reproductorController implements Initializable {
             System.out.println(listaPlaylist.getSelectionModel().getSelectedItem());
             //Creamos menu contextual del click derecho
             ContextMenu context = new ContextMenu();
-            MenuItem play = new MenuItem("Reproducir"); //TODO Internacionalizar
+            MenuItem play;
+            if (preferences.getInt("idIdioma", 0) == 0) {
+                play = new MenuItem("Reproducir");
+            } else {
+                play = new MenuItem("Play");
+            }
             play.setOnAction((ActionEvent e) -> {
                 System.out.println("PLAY playlist");
                 try {
@@ -1490,12 +1592,22 @@ public class reproductorController implements Initializable {
                 }
             });
             MenuItem delete;
-            delete = new MenuItem("Borrar*");
+            if (preferences.getInt("idIdioma", 0) == 0) {
+                delete = new MenuItem("Borrar*");
+            } else {
+                delete = new MenuItem("Delete*");
+            }
             delete.setOnAction((ActionEvent e) -> {
                 Alert alert = new Alert(AlertType.CONFIRMATION);
-                alert.setTitle("¿Está Seguro?"); //TODO Internacionalizar
-                alert.setHeaderText("La playlist será borrada del disco por completo.");
-                alert.setContentText("¿Está seguro de querer realizar esto?");
+                if (preferences.getInt("idIdioma", 0) == 0) {
+                    alert.setTitle("¿Está Seguro?");
+                    alert.setHeaderText("El archivo será borrado del disco por completo.");
+                    alert.setContentText("¿Está seguro de querer realizar esto?");
+                } else {
+                    alert.setTitle("You sure?");
+                    alert.setHeaderText("The file will be deleted from the disk completely.");
+                    alert.setContentText("Are you sure that you want to do this?");
+                }
 
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
