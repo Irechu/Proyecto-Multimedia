@@ -605,7 +605,7 @@ public class Player {
 
                 break;
         }
-        reproductor.volumeSlider.setValue(100);
+        reproductor.volumeSlider.setValue(reproductor.sliderVolume.getValue());
         reproductor.volumeSlider.valueProperty().addListener(new InvalidationListener() {
             @Override
             public void invalidated(Observable observable) {

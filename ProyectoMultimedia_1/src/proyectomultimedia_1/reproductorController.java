@@ -521,7 +521,6 @@ public class reproductorController implements Initializable {
 
     @FXML
     private void searchKeyPressed(KeyEvent event) {
-//TODO sumar una constante para poder mover con el teclado
         TableView<Song> table = null;
         switch (searchChoice.getValue()) {
             case "Library":
