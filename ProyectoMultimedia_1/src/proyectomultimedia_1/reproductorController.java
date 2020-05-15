@@ -1036,6 +1036,7 @@ public class reproductorController implements Initializable {
         escribeCambioIdioma(es_EN);
 
         try {
+            player.stop();
             Locale.setDefault(new Locale("es_es"));
 
             ResourceBundle resourceBundle = ResourceBundle.getBundle("languages.text_es");
@@ -1058,6 +1059,7 @@ public class reproductorController implements Initializable {
         escribeCambioIdioma(es_EN);
 
         try {
+            player.stop();
             Locale.setDefault(Locale.ENGLISH);
 
             ResourceBundle resourceBundle = ResourceBundle.getBundle("languages.text_en");
