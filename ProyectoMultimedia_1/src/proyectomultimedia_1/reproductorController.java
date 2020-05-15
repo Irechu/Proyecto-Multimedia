@@ -28,12 +28,14 @@ import java.io.RandomAccessFile;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.List;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
@@ -86,6 +88,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
@@ -493,8 +496,8 @@ public class reproductorController implements Initializable {
     final private Image favRedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/favRed.png"));
     final private Image favImg = new Image(getClass().getResourceAsStream("/assets/imagenes/fav.png"));
     final private Image favDaltImg = new Image(getClass().getResourceAsStream("/assets/imagenes/favDalt.png"));
-    final private Image changeMusicImg = new Image(getClass().getResourceAsStream("/assets/imagenes/music.png"));
-    final private Image changeVideoImg = new Image(getClass().getResourceAsStream("/assets/imagenes/video.png"));
+    final public Image changeMusicImg = new Image(getClass().getResourceAsStream("/assets/imagenes/music.png"));
+    final public Image changeVideoImg = new Image(getClass().getResourceAsStream("/assets/imagenes/video.png"));
     final private Image muteImg = new Image(getClass().getResourceAsStream("/assets/imagenes/mute.png"));
     final private Image soundImg = new Image(getClass().getResourceAsStream("/assets/imagenes/sound.png"));
     final private Image shuffleSelectedImg = new Image(getClass().getResourceAsStream("/assets/imagenes/shuffleSelected.png"));
@@ -518,7 +521,7 @@ public class reproductorController implements Initializable {
 
     @FXML
     private void searchKeyPressed(KeyEvent event) {
-
+//TODO sumar una constante para poder mover con el teclado
         TableView<Song> table = null;
         switch (searchChoice.getValue()) {
             case "Library":
@@ -1073,20 +1076,38 @@ public class reproductorController implements Initializable {
             repeat.setImage(repeatNotSelectedImg);
         }
 
-        if (favActive) {
-            if (daltonism) {
-                fav.setImage(favDaltImg);
-                fav1.setImage(favDaltImg);
+        if(playingSong == null){
+            if (favActive) {
+                if (daltonism) {
+                    fav.setImage(favDaltImg);
+                    fav1.setImage(favDaltImg);
 
+                } else {
+                    fav.setImage(favRedImg);
+                    fav1.setImage(favRedImg);
+
+                }
             } else {
-                fav.setImage(favRedImg);
-                fav1.setImage(favRedImg);
+                fav.setImage(favImg);
+                fav1.setImage(favImg);
 
             }
-        } else {
-            fav.setImage(favImg);
-            fav1.setImage(favImg);
+        }else{
+            if (playingSong.fav) {
+                if (daltonism) {
+                    fav.setImage(favDaltImg);
+                    fav1.setImage(favDaltImg);
 
+                } else {
+                    fav.setImage(favRedImg);
+                    fav1.setImage(favRedImg);
+
+                }
+            } else {
+                fav.setImage(favImg);
+                fav1.setImage(favImg);
+
+            }
         }
     }
 
@@ -1099,11 +1120,12 @@ public class reproductorController implements Initializable {
         escribeCambioIdioma(es_EN);
 
         try {
+            player.stop();
             Locale.setDefault(new Locale("es_es"));
 
             ResourceBundle resourceBundle = ResourceBundle.getBundle("languages.text_es");
             root = FXMLLoader.load(getClass().getResource("reproductor.fxml"), resourceBundle);
-
+            
             VBox.setVgrow(root, Priority.ALWAYS);
         } catch (IOException ex) {
             System.out.println("Recurso no encontrado");
@@ -1121,6 +1143,7 @@ public class reproductorController implements Initializable {
         escribeCambioIdioma(es_EN);
 
         try {
+            player.stop();
             Locale.setDefault(Locale.ENGLISH);
 
             ResourceBundle resourceBundle = ResourceBundle.getBundle("languages.text_en");
@@ -1161,6 +1184,10 @@ public class reproductorController implements Initializable {
             libraryPaneLabel.setStyle("-fx-text-fill:#ff9500");
             searchLabel.setStyle("-fx-text-fill:#ff9500");
             favouritesPaneLabel.setStyle("-fx-text-fill:#ff9500");
+            
+            tapa.setStyle("-fx-background-color:#ff9500");
+            name1.setTextFill(Color.web("#ff9500"));
+            miniPlayer.setStyle("-fx-background-color:#cc7700");
         } else {
             preferences.putBoolean("daltonism", false);
             menuSplitPane.setStyle("-fx-background-color:#4a0707");
@@ -1180,6 +1207,10 @@ public class reproductorController implements Initializable {
             libraryPaneLabel.setStyle("-fx-text-fill:#4a0707");
             searchLabel.setStyle("-fx-text-fill:#4a0707");
             favouritesPaneLabel.setStyle("-fx-text-fill:#4a0707");
+            
+            tapa.setStyle("-fx-background-color:#4a0707");
+            name1.setTextFill(Color.web("#4a0707"));
+            miniPlayer.setStyle("-fx-background-color:#240000");
         }
         shuffleRepeatActive();
     }
@@ -1205,6 +1236,10 @@ public class reproductorController implements Initializable {
             libraryPaneLabel.setStyle("-fx-text-fill:#ff9500");
             searchLabel.setStyle("-fx-text-fill:#ff9500");
             favouritesPaneLabel.setStyle("-fx-text-fill:#ff9500");
+            
+            tapa.setStyle("-fx-background-color:#ff9500");
+            name1.setTextFill(Color.web("#ff9500"));
+            miniPlayer.setStyle("-fx-background-color:#cc7700");
         } else {
             preferences.putBoolean("daltonism", false);
             menuSplitPane.setStyle("-fx-background-color:#4a0707");
@@ -1223,6 +1258,10 @@ public class reproductorController implements Initializable {
             libraryPaneLabel.setStyle("-fx-text-fill:#4a0707");
             searchLabel.setStyle("-fx-text-fill:#4a0707");
             favouritesPaneLabel.setStyle("-fx-text-fill:#4a0707");
+            
+            tapa.setStyle("-fx-background-color:#4a0707");
+            name1.setTextFill(Color.web("#4a0707"));
+            miniPlayer.setStyle("-fx-background-color:#240000");
         }
         shuffleRepeatActive();
     }
@@ -1230,7 +1269,12 @@ public class reproductorController implements Initializable {
     @FXML
     private void pathBtnOnClick(MouseEvent event) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Seleccione Carpeta Biblioteca");//TODO INTERNACIONALIZAR
+        if(preferences.getInt("idIdioma", 0) == 0){
+            directoryChooser.setTitle("Seleccione Carpeta Biblioteca");
+        }else{
+            directoryChooser.setTitle("Selecct Your Library Folder");
+        }
+        
 
         // Obtener la carpeta de la biblioteca
         File defaultDirectory = new File("./src/assets/audio");
@@ -1380,7 +1424,13 @@ public class reproductorController implements Initializable {
             System.out.println(table.getSelectionModel().getSelectedItem().file);
             //Creamos menu contextual del click derecho
             ContextMenu context = new ContextMenu();
-            MenuItem play = new MenuItem("Reproducir"); //TODO Internacionalizar
+            MenuItem play;
+            if(preferences.getInt("idIdioma", 0) == 0){
+                play = new MenuItem("Reproducir");
+            }else{
+                play = new MenuItem("Play");
+            }
+            
             play.setOnAction((ActionEvent e) -> {
                 System.out.println("PLAY");
                 try {
@@ -1393,7 +1443,12 @@ public class reproductorController implements Initializable {
                     Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
-            MenuItem edit = new MenuItem("Editar");
+            MenuItem edit;
+            if(preferences.getInt("idIdioma", 0) == 0){
+                edit = new MenuItem("Editar");
+            }else{
+                edit = new MenuItem("Edit");
+            }
             edit.setOnAction((ActionEvent e) -> {
                 try {
                     int idIdioma = preferences.getInt("idIdioma", PLAYER);
@@ -1409,7 +1464,7 @@ public class reproductorController implements Initializable {
                     AnchorPane page = (AnchorPane) loader.load();
                     // Crear el dialogo de la escena
                     Stage dialogStage = new Stage();
-                    dialogStage.setTitle("Edit Person");
+                    dialogStage.setTitle("Edit");
                     dialogStage.initModality(Modality.APPLICATION_MODAL);
                     Scene scene = new Scene(page);
                     dialogStage.setScene(scene);
@@ -1419,7 +1474,7 @@ public class reproductorController implements Initializable {
                     controller.setDialogStage(dialogStage);
                     controller.setFile(table.getSelectionModel().getSelectedItem().file);
                     controller.fillWindow(table.getSelectionModel().getSelectedItem().file);
-
+                    controller.setIdioma(idIdioma);
                     // Se muestra y espera
                     dialogStage.showAndWait();
                     fillLibrary();
@@ -1429,7 +1484,11 @@ public class reproductorController implements Initializable {
             });
             MenuItem addFav = null;
             if (tab != FAVOURITES) {
-                addFav = new MenuItem("Añadir/Quitar a/de Favoritos");
+                if(preferences.getInt("idIdioma", 0) == 0){
+                    addFav = new MenuItem("Añadir/Quitar a/de Favoritos");
+                }else{
+                    addFav = new MenuItem("Add/Remove from Favourites");
+                }
                 addFav.setOnAction((ActionEvent e) -> {
                     if (table.getSelectionModel().getSelectedItem().fav) {
                         removeFavourite(table.getSelectionModel().getSelectedItem());
@@ -1438,7 +1497,12 @@ public class reproductorController implements Initializable {
                     }
                 });
             }
-            MenuItem addPl = new MenuItem("Añadir a Playlist");
+            MenuItem addPl;
+            if(preferences.getInt("idIdioma", 0) == 0){
+                addPl = new MenuItem("Añadir a Playlist");
+            }else{
+                addPl = new MenuItem("Add to Playlist");
+            }
             addPl.setOnAction((ActionEvent e) -> {
                 // Guardamos qué cancion se quiere añadir
                 selectedSongToAddToPL = table.getSelectionModel().getSelectedItem();
@@ -1468,12 +1532,22 @@ public class reproductorController implements Initializable {
             MenuItem delete;
             switch (tab) {
                 case PLAYLIST:
-                    delete = new MenuItem("Eliminar de esta Playlist");
+                    if(preferences.getInt("idIdioma", 0) == 0){
+                        delete = new MenuItem("Eliminar de esta Playlist");
+                    }else{
+                        delete = new MenuItem("Remove from Playlist");
+                    }
                     delete.setOnAction((ActionEvent e) -> {
                         Alert alert = new Alert(AlertType.CONFIRMATION);
-                        alert.setTitle("¿Está Seguro?"); //TODO Internacionalizar
-                        alert.setHeaderText("El archivo será retirado solamente de la Playlist.");
-                        alert.setContentText("¿Está seguro de querer realizar esto?");
+                        if (preferences.getInt("idIdioma", 0) == 0) {
+                            alert.setTitle("¿Está Seguro?");
+                            alert.setHeaderText("El archivo será borrado del disco por completo.");
+                            alert.setContentText("¿Está seguro de querer realizar esto?");
+                        } else {
+                            alert.setTitle("You sure?");
+                            alert.setHeaderText("The file will be deleted from the disk completely.");
+                            alert.setContentText("Are you sure that you want to do this?");
+                        }
 
                         Optional<ButtonType> result = alert.showAndWait();
                         if (result.get() == ButtonType.OK) {
@@ -1484,12 +1558,22 @@ public class reproductorController implements Initializable {
                     });
                     break;
                 case LIBRARY:
-                    delete = new MenuItem("Borrar*");
+                    if (preferences.getInt("idIdioma", 0) == 0) {
+                        delete = new MenuItem("Borrar*");
+                    } else {
+                        delete = new MenuItem("Delete*");
+                    }
                     delete.setOnAction((ActionEvent e) -> {
                         Alert alert = new Alert(AlertType.CONFIRMATION);
-                        alert.setTitle("¿Está Seguro?"); //TODO Internacionalizar
-                        alert.setHeaderText("El archivo será borrado del disco por completo.");
-                        alert.setContentText("¿Está seguro de querer realizar esto?");
+                        if (preferences.getInt("idIdioma", 0) == 0) {
+                            alert.setTitle("¿Está Seguro?");
+                            alert.setHeaderText("El archivo será borrado del disco por completo.");
+                            alert.setContentText("¿Está seguro de querer realizar esto?");
+                        } else {
+                            alert.setTitle("You sure?");
+                            alert.setHeaderText("The file will be deletit from the disk completely.");
+                            alert.setContentText("Are you sure that you want to do this?");
+                        }
 
                         Optional<ButtonType> result = alert.showAndWait();
                         if (result.get() == ButtonType.OK) {
@@ -1502,12 +1586,22 @@ public class reproductorController implements Initializable {
                     break;
                 case SEARCH:
                     if (searchChoice.getValue().equals("Library") || searchChoice.getValue().equals("Biblioteca")) {
-                        delete = new MenuItem("Borrar*");
+                        if (preferences.getInt("idIdioma", 0) == 0) {
+                            delete = new MenuItem("Borrar*");
+                        } else {
+                            delete = new MenuItem("Delete*");
+                        }
                         delete.setOnAction((ActionEvent e) -> {
                             Alert alert = new Alert(AlertType.CONFIRMATION);
-                            alert.setTitle("¿Está Seguro?"); //TODO Internacionalizar
-                            alert.setHeaderText("El archivo será borrado del disco por completo.");
-                            alert.setContentText("¿Está seguro de querer realizar esto?");
+                            if (preferences.getInt("idIdioma", 0) == 0) {
+                                alert.setTitle("¿Está Seguro?");
+                                alert.setHeaderText("El archivo será borrado del disco por completo.");
+                                alert.setContentText("¿Está seguro de querer realizar esto?");
+                            } else {
+                                alert.setTitle("You sure?");
+                                alert.setHeaderText("The file will be deleted from the disk completely.");
+                                alert.setContentText("Are you sure that you want to do this?");
+                            }
 
                             Optional<ButtonType> result = alert.showAndWait();
                             if (result.get() == ButtonType.OK) {
@@ -1519,7 +1613,11 @@ public class reproductorController implements Initializable {
 
                         });
                     } else {
-                        delete = new MenuItem("Quitar de favoritos");
+                        if (preferences.getInt("idIdioma", 0) == 0) {
+                            delete = new MenuItem("Quitar de favoritos");
+                        } else {
+                            delete = new MenuItem("Remove from favourites");
+                        }
                         delete.setOnAction((ActionEvent e) -> {
                             removeFavourite(table.getSelectionModel().getSelectedItem());
                             fillFavourites();
@@ -1528,7 +1626,11 @@ public class reproductorController implements Initializable {
                     }
                     break;
                 default:
-                    delete = new MenuItem("Quitar de favoritos");
+                    if (preferences.getInt("idIdioma", 0) == 0) {
+                        delete = new MenuItem("Quitar de favoritos");
+                    } else {
+                        delete = new MenuItem("Remove from favourites");
+                    }
                     delete.setOnAction((ActionEvent e) -> {
                         removeFavourite(table.getSelectionModel().getSelectedItem());
                         fillFavourites();
@@ -1548,6 +1650,66 @@ public class reproductorController implements Initializable {
             playSong(table);
         }
     }
+    
+    @FXML
+    private void listOnClick(MouseEvent event) {
+        ListView<String> listaPlaylist = playlistList;
+
+        if (event.getButton().equals(MouseButton.SECONDARY) && (listaPlaylist.getSelectionModel().getSelectedItem() != null)) {
+            System.out.println(listaPlaylist.getSelectionModel().getSelectedItem());
+            //Creamos menu contextual del click derecho
+            ContextMenu context = new ContextMenu();
+            MenuItem play;
+            if (preferences.getInt("idIdioma", 0) == 0) {
+                play = new MenuItem("Reproducir");
+            } else {
+                play = new MenuItem("Play");
+            }
+            play.setOnAction((ActionEvent e) -> {
+                System.out.println("PLAY playlist");
+                try {
+                    cargaPlaylist(listaPlaylist.getSelectionModel().getSelectedItem());
+                    if(!playlistTable.getItems().isEmpty()){
+                        playlistTable.getSelectionModel().selectFirst();
+                        playSong(playlistTable);
+                    }
+                } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
+                    Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            });
+            MenuItem delete;
+            if (preferences.getInt("idIdioma", 0) == 0) {
+                delete = new MenuItem("Borrar*");
+            } else {
+                delete = new MenuItem("Delete*");
+            }
+            delete.setOnAction((ActionEvent e) -> {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                if (preferences.getInt("idIdioma", 0) == 0) {
+                    alert.setTitle("¿Está Seguro?");
+                    alert.setHeaderText("El archivo será borrado del disco por completo.");
+                    alert.setContentText("¿Está seguro de querer realizar esto?");
+                } else {
+                    alert.setTitle("You sure?");
+                    alert.setHeaderText("The file will be deleted from the disk completely.");
+                    alert.setContentText("Are you sure that you want to do this?");
+                }
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    File pl = new File(PLAYLIST_PATH + listaPlaylist.getSelectionModel().getSelectedItem() + ".txt");
+                    pl.delete();
+                    fillPlaylists();
+                } else {
+                    // El usuario cancela y no se hace nada
+                }
+            });
+            //Añadimos las opciones con un separador en borrar ya que esto borrara el fichero del disco.
+            context.getItems().addAll(play, new SeparatorMenuItem(), delete);
+            listaPlaylist.setContextMenu(context);
+            //Añadimos el gestor de eventos del raton para la seleccion del men
+        }
+    }
 
     private void playSong(TableView<Song> table) throws IOException, UnsupportedTagException, InvalidDataException {
         player.stop();
@@ -1565,30 +1727,41 @@ public class reproductorController implements Initializable {
         tab = PLAYER;
         activaSeleccion();
     }
-
-    public void ponerActualizarMetaDatos() throws IOException, UnsupportedTagException, InvalidDataException {
-        Mp3File mp3file = new Mp3File(loadedSong.getAbsoluteFile());
-        ID3v2 tag;
-        if (mp3file.hasId3v2Tag()) {
-            tag = mp3file.getId3v2Tag();
-        } else {
-            // mp3 does not have an ID3v2 tag, let's create one..
-            tag = new ID3v24Tag();
-            mp3file.setId3v2Tag(tag);
+    
+    public void ponerActualizarMetaDatos() throws IOException, UnsupportedTagException, InvalidDataException{
+        if(loadedSong.getName().toLowerCase().endsWith(".mp3")){
+            Mp3File mp3file = new Mp3File(loadedSong.getAbsoluteFile());
+            ID3v2 tag;
+            if (mp3file.hasId3v2Tag()) {
+                tag = mp3file.getId3v2Tag();
+            } else {
+                // mp3 does not have an ID3v2 tag, let's create one..
+                tag = new ID3v24Tag();
+                mp3file.setId3v2Tag(tag);
+            }
+            name.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
+            name1.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
+            artist.setText(tag.getTitle() == null ? "---" : tag.getArtist());
+            artist1.setText(tag.getTitle() == null ? "---" : tag.getArtist());
+            
+            Image caratula = null;
+            if (tag.getAlbumImage() != null) {
+                caratula = SwingFXUtils.toFXImage(ImageIO.read(new ByteArrayInputStream((byte[]) tag.getAlbumImage())), null);
+            } else {
+                caratula = new Image(getClass().getResourceAsStream("/assets/imagenes/disk.png"));
+            }
+            musicImage.setImage(caratula);
+            musicImage1.setImage(caratula);
+        }else{
+            name.setText(playingSong.songName);
+            name1.setText(playingSong.songName);
+            artist.setText(playingSong.artist);
+            artist1.setText(playingSong.artist);
+            
+            Image caratula = new Image(getClass().getResourceAsStream("/assets/imagenes/disk.png"));
+            musicImage.setImage(caratula);
+            musicImage1.setImage(caratula);
         }
-        name.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
-        name1.setText(tag.getTitle() == null ? loadedSong.getName() : tag.getTitle());
-        artist.setText(tag.getTitle() == null ? "---" : tag.getArtist());
-        artist1.setText(tag.getTitle() == null ? "---" : tag.getArtist());
-
-        Image caratula = null;
-        if (tag.getAlbumImage() != null) {
-            caratula = SwingFXUtils.toFXImage(ImageIO.read(new ByteArrayInputStream((byte[]) tag.getAlbumImage())), null);
-        } else {
-            caratula = new Image(getClass().getResourceAsStream("/assets/imagenes/disk.png"));
-        }
-        musicImage.setImage(caratula);
-        musicImage1.setImage(caratula);
 
         if (playingSong.fav) {
             if (daltonism) {
@@ -1721,8 +1894,7 @@ public class reproductorController implements Initializable {
         File dir = new File(path.getText()); //Conseguimos la carpeta que quiere usar el usuario como biblioteca
         File[] listado = dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) { //Filtramos a las extensiones y obtenemos la lista
-                //TODO ampliar quizas
-                return (name.toLowerCase().endsWith(".mp3") || name.toLowerCase().endsWith(".avi"));
+                return (name.toLowerCase().endsWith(".mp3") || name.toLowerCase().endsWith(".mp4"));
             }
         });
         if (listado == null || listado.length == 0) {
@@ -1748,12 +1920,14 @@ public class reproductorController implements Initializable {
                             if (favSong.equals(mp3.getAbsolutePath())) { //La cancion de la libreria está marcada como favorita
                                 int index = 0;
                                 ObservableList<Song> list = favouritesTable.getItems();  //Buscamos el indice de la tabla donde está dicha cancion, pueden estar ordenadas de otra manera
-                                while (!yaExiste) {
-                                    if (list.get(index).file.getAbsolutePath().equals(favSong)) {
-                                        yaExiste = true;
-                                        s = list.get(index); //Conseguimos la cancion en cuestion
+                                if(!list.isEmpty()){
+                                    while (!yaExiste) {
+                                        if (list.get(index).file.getAbsolutePath().equals(favSong)) {
+                                            yaExiste = true;
+                                            s = list.get(index); //Conseguimos la cancion en cuestion
+                                        }
+                                        index++;
                                     }
-                                    index++;
                                 }
                             }
                         }
@@ -1768,22 +1942,28 @@ public class reproductorController implements Initializable {
                         }
                     }
                     if (!yaExiste) {
-                        Mp3File mp3file = new Mp3File(mp3.getAbsoluteFile());
-                        //Atributos de la cancion por defecto, por si no hay
-                        String title = "---";
-                        String artist = "---";
-                        String album = "---";
-                        //La fecha de creacion la vamos a tener siempre
-                        LocalDate date = creationDate(mp3.getAbsoluteFile());
-                        //Duracion igual, simpre la vamos a tener
-                        String time = durationFormatted(mp3file.getLengthInMilliseconds());
-                        if (mp3file.hasId3v2Tag()) {
-                            ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-                            title = id3v2Tag.getTitle() == null ? mp3.getName() : id3v2Tag.getTitle();
-                            artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
-                            album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
+                        if(mp3.getName().toLowerCase().endsWith(".mp3")){
+                            Mp3File mp3file = new Mp3File(mp3.getAbsoluteFile());
+                            //Atributos de la cancion por defecto, por si no hay
+                            String title = "---";
+                            String artist = "---";
+                            String album = "---";
+                            //La fecha de creacion la vamos a tener siempre
+                            LocalDate date = creationDate(mp3.getAbsoluteFile());
+                            //Duracion igual, simpre la vamos a tener
+                            String time = durationFormatted(mp3file.getLengthInMilliseconds());
+                            if (mp3file.hasId3v2Tag()) {
+                                ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                                title = id3v2Tag.getTitle() == null ? mp3.getName() : id3v2Tag.getTitle();
+                                artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
+                                album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
+                            }
+                            s = new Song(title, artist, album, date, time, mp3, false);
+                        }else{
+                            LocalDate fecha = creationDate(mp3);
+                            Media media = new Media(mp3.toURI().toString());
+                            s = new Song(mp3.getName(), "---", "---", fecha, durationFormatted((long) media.getDuration().toMillis()), mp3, false);
                         }
-                        s = new Song(title, artist, album, date, time, mp3, false);
                     }
                     addEntrie(LIBRARY_TABLE, s);
                 }
@@ -1806,28 +1986,36 @@ public class reproductorController implements Initializable {
             while ((archivo = b.readLine()) != null) {
                 File file = new File(archivo);
                 if (file.exists()) {
-                    Mp3File mp3file = new Mp3File(file.getAbsoluteFile());
-                    //Atributos de la cancion por defecto, por si no hay
-                    String title = "---";
-                    String artist = "---";
-                    String album = "---";
-                    //La fecha de creacion la vamos a tener siempre
-                    LocalDate date = creationDate(file.getAbsoluteFile());
-                    //Duracion igual, simpre la vamos a tener
-                    String time = durationFormatted(mp3file.getLengthInMilliseconds());
-                    if (mp3file.hasId3v2Tag()) {
-                        ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-                        title = id3v2Tag.getTitle() == null ? file.getName() : id3v2Tag.getTitle();
-                        artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
-                        album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
+                    Song s;
+                    if(archivo.toLowerCase().endsWith(".mp3")){
+                        Mp3File mp3file = new Mp3File(file.getAbsoluteFile());
+                        //Atributos de la cancion por defecto, por si no hay
+                        String title = "---";
+                        String artist = "---";
+                        String album = "---";
+                        //La fecha de creacion la vamos a tener siempre
+                        LocalDate date = creationDate(file.getAbsoluteFile());
+                        //Duracion igual, simpre la vamos a tener
+                        String time = durationFormatted(mp3file.getLengthInMilliseconds());
+                        if (mp3file.hasId3v2Tag()) {
+                            ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                            title = id3v2Tag.getTitle() == null ? file.getName() : id3v2Tag.getTitle();
+                            artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
+                            album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
+                        }
+                        s = new Song(title, artist, album, date, time, file, true);
+                    }else{
+                        LocalDate fecha = creationDate(file);
+                        Media media = new Media(file.toURI().toString());
+                        s = new Song(file.getName(), "---", "---", fecha, durationFormatted((long) media.getDuration().toMillis()), file, false);
                     }
-                    Song s = new Song(title, artist, album, date, time, file, true);
                     addEntrie(FAVOURITES_TABLE, s);
                 }
             }
             b.close();
         } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
             System.out.println("ERROR AL CARGAR LA LISTA DE FAVORITOS");
+            System.out.println(ex);
         } finally {
             try {
                 f.close();
@@ -1959,25 +2147,32 @@ public class reproductorController implements Initializable {
                         }
                         if (!yaExiste) {
                             try {
-                                Mp3File mp3file = new Mp3File(mp3.getAbsoluteFile());
-                                //Atributos de la cancion por defecto, por si no hay
-                                String title = "---";
-                                String artist = "---";
-                                String album = "---";
-                                //La fecha de creacion la vamos a tener siempre
-                                LocalDate date = creationDate(mp3.getAbsoluteFile());
-                                //Duracion igual, simpre la vamos a tener
-                                String time = durationFormatted(mp3file.getLengthInMilliseconds());
-                                if (mp3file.hasId3v2Tag()) {
-                                    ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-                                    title = id3v2Tag.getTitle() == null ? mp3.getName() : id3v2Tag.getTitle();
-                                    artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
-                                    album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
+                                if(mp3.getName().toLowerCase().endsWith(".mp3")){
+                                    Mp3File mp3file = new Mp3File(mp3.getAbsoluteFile());
+                                    //Atributos de la cancion por defecto, por si no hay
+                                    String title = "---";
+                                    String artist = "---";
+                                    String album = "---";
+                                    //La fecha de creacion la vamos a tener siempre
+                                    LocalDate date = creationDate(mp3.getAbsoluteFile());
+                                    //Duracion igual, simpre la vamos a tener
+                                    String time = durationFormatted(mp3file.getLengthInMilliseconds());
+                                    if (mp3file.hasId3v2Tag()) {
+                                        ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                                        title = id3v2Tag.getTitle() == null ? mp3.getName() : id3v2Tag.getTitle();
+                                        artist = id3v2Tag.getArtist() == null ? "---" : id3v2Tag.getArtist();
+                                        album = id3v2Tag.getAlbum() == null ? "---" : id3v2Tag.getAlbum();
+                                    }
+                                    s = new Song(title, artist, album, date, time, mp3, false);
+                                }else{
+                                    LocalDate fecha = creationDate(mp3);
+                                    Media media = new Media(mp3.toURI().toString());
+                                    s = new Song(mp3.getName(), "---", "---", fecha, durationFormatted((long) media.getDuration().toMillis()), mp3, false);
                                 }
-                                s = new Song(title, artist, album, date, time, mp3, false);
                             } catch (Exception ex) {
                                 Logger.getLogger(reproductorController.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                            
                         }
                         addEntrie(PLAYLISTS_TABLE, s);
                     }

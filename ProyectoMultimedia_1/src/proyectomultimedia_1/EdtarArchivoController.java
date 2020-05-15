@@ -60,7 +60,11 @@ public class EdtarArchivoController implements Initializable {
 
     private File file;
     private Stage dialogStage;
-
+    private int idioma;
+    
+    public void setIdioma(int idioma){
+        this.idioma = idioma;
+    }
     /**
      * Initializes the controller class.
      */
@@ -87,9 +91,14 @@ public class EdtarArchivoController implements Initializable {
         }
         if (!editViewRating.getText().isEmpty() && (Integer.parseInt(editViewRating.getText()) < -1 || Integer.parseInt(editViewRating.getText()) > 5)) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error en el Rating"); //TODO Internacionalizar
-            alert.setHeaderText("El rating debe de ser entre 0 y 5. Para ponerlo por defecto introduzca -1 o dejelo en blanco");
-
+            if(idioma == 0){
+                alert.setTitle("Error en el Rating");
+                alert.setHeaderText("El rating debe de ser entre 0 y 5. Para ponerlo por defecto introduzca -1 o dejelo en blanco");
+            }else{
+                alert.setTitle("Error in Rating");
+                alert.setHeaderText("Ther rating must be betweeb 0 and 5. To put the default value enter -1 o let it empty");
+            }
+            
             alert.showAndWait();
         } else {
             if (editViewRating.getText().isEmpty()) {
