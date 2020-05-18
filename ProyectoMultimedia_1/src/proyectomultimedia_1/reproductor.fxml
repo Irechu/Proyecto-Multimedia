@@ -535,53 +535,6 @@
                                 </AnchorPane>
                             </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="newPlaylistPane" prefHeight="795.0" prefWidth="1059.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                            <children>
-                                <AnchorPane opacity="0.7" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                <AnchorPane fx:id="newPlayListWindow" layoutX="234.0" layoutY="191.0" prefHeight="292.0" prefWidth="591.0" style="-fx-background-color: #ababab;" AnchorPane.bottomAnchor="312.0" AnchorPane.leftAnchor="234.0" AnchorPane.rightAnchor="234.0" AnchorPane.topAnchor="191.0">
-                                    <effect>
-                                        <InnerShadow blurType="ONE_PASS_BOX" color="#0000000a">
-                                            <input>
-                                                <InnerShadow />
-                                            </input>
-                                        </InnerShadow>
-                                    </effect>
-                                    <children>
-                                        <Label layoutX="131.0" layoutY="44.0" prefHeight="38.0" prefWidth="323.0" text="%newPlaylist">
-                                            <font>
-                                                <Font name="Arial Rounded MT Bold" size="32.0" />
-                                            </font>
-                                        </Label>
-                                        <TextArea fx:id="newPlaylistTextField" layoutX="133.0" layoutY="98.0" prefHeight="28.0" prefWidth="325.0" promptText="%playlistList" AnchorPane.leftAnchor="133.0" AnchorPane.rightAnchor="133.0">
-                                            <font>
-                                                <Font name="Arial Rounded MT Bold" size="18.0" />
-                                            </font>
-                                        </TextArea>
-                                        <ImageView fx:id="crossBtn" fitHeight="30.0" fitWidth="30.0" layoutX="530.0" layoutY="21.0" onMouseClicked="#crossOnClick" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="197.0" AnchorPane.leftAnchor="530.0" AnchorPane.rightAnchor="31.0" AnchorPane.topAnchor="21.0">
-                                            <image>
-                                                <Image url="@../assets/imagenes/cross.png" />
-                                            </image>
-                                            <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                            </cursor>
-                                        </ImageView>
-                                        <Label fx:id="newPlaylistExist" layoutX="133.0" layoutY="233.0" opacity="0.52" text="%exists" AnchorPane.leftAnchor="133.0" AnchorPane.rightAnchor="133.0">
-                                            <font>
-                                                <Font name="Arial Rounded MT Bold" size="18.0" />
-                                            </font>
-                                        </Label>
-                                        <Label fx:id="okBtn" layoutX="270.0" layoutY="188.0" onMouseClicked="#okBtnOnClick" text="%ok">
-                                            <font>
-                                                <Font name="Arial Rounded MT Bold" size="29.0" />
-                                            </font>
-                                            <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                            </cursor>
-                                        </Label>
-                                    </children>
-                                </AnchorPane>
-                            </children>
-                        </AnchorPane>
                         <AnchorPane fx:id="addSongToPlaylistPane" layoutX="10.0" layoutY="10.0" prefHeight="795.0" prefWidth="1059.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <children>
                                 <AnchorPane opacity="0.7" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
@@ -915,6 +868,130 @@
                         </ImageView>
                             </children>
                         </AnchorPane>
+                        <AnchorPane fx:id="newPlaylistPane" prefHeight="795.0" prefWidth="1059.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <children>
+                                <AnchorPane opacity="0.7" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                <AnchorPane fx:id="newPlayListWindow" layoutX="234.0" layoutY="191.0" prefHeight="292.0" prefWidth="591.0" style="-fx-background-color: #ababab;" AnchorPane.bottomAnchor="312.0" AnchorPane.leftAnchor="234.0" AnchorPane.rightAnchor="234.0" AnchorPane.topAnchor="191.0">
+                                    <effect>
+                                        <InnerShadow blurType="ONE_PASS_BOX" color="#0000000a">
+                                            <input>
+                                                <InnerShadow />
+                                            </input>
+                                        </InnerShadow>
+                                    </effect>
+                                    <children>
+                                        <Label layoutX="131.0" layoutY="44.0" prefHeight="38.0" prefWidth="323.0" text="%newPlaylist">
+                                            <font>
+                                                <Font name="Arial Rounded MT Bold" size="32.0" />
+                                            </font>
+                                        </Label>
+                                        <TextArea fx:id="newPlaylistTextField" layoutX="133.0" layoutY="98.0" prefHeight="28.0" prefWidth="325.0" promptText="%playlistList" AnchorPane.leftAnchor="133.0" AnchorPane.rightAnchor="133.0">
+                                            <font>
+                                                <Font name="Arial Rounded MT Bold" size="18.0" />
+                                            </font>
+                                        </TextArea>
+                                        <ImageView fx:id="crossBtn" fitHeight="30.0" fitWidth="30.0" layoutX="530.0" layoutY="21.0" onMouseClicked="#crossOnClick" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="197.0" AnchorPane.leftAnchor="530.0" AnchorPane.rightAnchor="31.0" AnchorPane.topAnchor="21.0">
+                                            <image>
+                                                <Image url="@../assets/imagenes/cross.png" />
+                                            </image>
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                        </ImageView>
+                                        <Label fx:id="newPlaylistExist" layoutX="133.0" layoutY="233.0" opacity="0.52" text="%exists" AnchorPane.leftAnchor="133.0" AnchorPane.rightAnchor="133.0">
+                                            <font>
+                                                <Font name="Arial Rounded MT Bold" size="18.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="okBtn" layoutX="270.0" layoutY="188.0" onMouseClicked="#okBtnOnClick" text="%ok">
+                                            <font>
+                                                <Font name="Arial Rounded MT Bold" size="29.0" />
+                                            </font>
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                        </Label>
+                                    </children>
+                                </AnchorPane>
+                            </children>
+                        </AnchorPane>
+                  <AnchorPane id="AnchorPane" fx:id="editarMetadatos" prefHeight="795.0" prefWidth="1059.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <AnchorPane opacity="0.7" prefHeight="795.0" prefWidth="1059.0" style="-fx-background-color: #393d42;" />
+                        <AnchorPane layoutY="101.0" prefHeight="405.0" prefWidth="566.0" style="-fx-background-color: #ababab;" AnchorPane.leftAnchor="256.0" AnchorPane.rightAnchor="237.0" AnchorPane.topAnchor="101.0">
+                           <children>
+                              <Label layoutX="31.0" prefHeight="48.0" prefWidth="278.0" text="%title">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="37.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="215.0" prefHeight="48.0" prefWidth="278.0" text="%copyright">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="37.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="104.0" prefHeight="48.0" prefWidth="278.0" text="%album">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="37.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="48.0" prefHeight="48.0" prefWidth="271.0" text="%artist">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="37.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="31.0" layoutY="271.0" prefHeight="48.0" prefWidth="278.0" text="%rating">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="37.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="editViewTitle" layoutX="278.0" layoutY="5.0" prefHeight="37.0" prefWidth="261.0" promptText="%title...">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </TextField>
+                              <TextField fx:id="editViewArtist" layoutX="278.0" layoutY="53.0" prefHeight="37.0" prefWidth="261.0" promptText="%artist...">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </TextField>
+                              <TextField fx:id="editViewAlbum" layoutX="278.0" layoutY="109.0" prefHeight="37.0" prefWidth="261.0" promptText="%album...">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </TextField>
+                              <TextField fx:id="editViewRating" layoutX="278.0" layoutY="276.0" prefHeight="39.0" prefWidth="131.0" promptText="%rating...">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </TextField>
+                              <TextField fx:id="editViewCopyright" layoutX="278.0" layoutY="220.0" prefHeight="37.0" prefWidth="261.0" promptText="%copyright...">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </TextField>
+                              <Label layoutX="420.0" layoutY="277.0" text="/5">
+                                 <font>
+                                    <Font name="Arial Rounded MT Bold" size="32.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="editViewSaveButon" layoutX="317.0" layoutY="344.0" mnemonicParsing="false" onMouseClicked="#saveViewOnClick" text="%save">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="editViewCancelButton" layoutX="155.0" layoutY="345.0" mnemonicParsing="false" onMouseClicked="#cancelViewOnClick" text="%cancel">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                           <effect>
+                              <InnerShadow blurType="ONE_PASS_BOX" color="#00000066" />
+                           </effect>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
                     </children>
                 </AnchorPane>
             </children>

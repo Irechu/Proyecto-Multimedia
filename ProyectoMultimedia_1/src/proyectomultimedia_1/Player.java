@@ -5,53 +5,23 @@
  */
 package proyectomultimedia_1;
 
-/*import animatefx.animation.FadeIn;
-import animatefx.animation.FadeInUp;
-import animatefx.animation.FadeOutDown;
-import com.jfoenix.controls.JFXButton;*/
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.concurrent.Task;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-/*import org.json.JSONArray;
-import org.json.JSONObject;*/
-
-import javax.imageio.ImageIO;
 import java.io.*;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.geometry.Orientation;
-import javafx.scene.control.Slider;
-import javafx.scene.media.AudioEqualizer;
-import javafx.scene.media.AudioSpectrumListener;
-import javafx.scene.media.EqualizerBand;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import proyectomultimedia_1.reproductorController.Song;
 
 public class Player {
 
@@ -72,7 +42,6 @@ public class Player {
 
     reproductorController reproductor;
 
-    //String currentPlaylistName = "";
     String youtubeExecName = "youtube-dl.exe";
 
     public Player() {
@@ -82,13 +51,11 @@ public class Player {
 
     boolean playList;
 
-    public Player(reproductorController d, boolean pl) {
+    public Player(reproductorController d, boolean pl) { //Instancia el player con el reproductor que lo llame y asocia el volumen que hubiese
         reproductor = d;
         this.playList = pl;
 
         volumen = (float) reproductor.sliderVolume.getValue();
-
-        //playSong(inputIndex);
     }
 
     public void setVolume(float volume) {
@@ -98,10 +65,18 @@ public class Player {
         }
     }
 
+    /**
+     * *
+     * Reproduce la cancion que tenga el index de la tabla que se le pase como
+     * argumento
+     *
+     * @param table Tabla donde están las canciones a reproducir
+     * @param index El indice de la canción que queremos reproducir
+     */
     public void playSong(ObservableList<Song> table, int index) {
         this.table = table;
         this.songIndex = index;
-        Platform.runLater(() -> {
+        Platform.runLater(() -> { //Se activan los botones del reproductor
             reproductor.previous.setDisable(false);
             reproductor.next.setDisable(false);
             reproductor.shuffle.setDisable(false);
@@ -117,128 +92,33 @@ public class Player {
             reproductor.fav1.setDisable(false);
             reproductor.sliderDuration1.setDisable(false);
 
-            reproductor.loadedSong = table.get(songIndex).getFile();
+            reproductor.loadedSong = table.get(songIndex).getFile(); //Se guardan como activas la cancion que toque
             reproductor.playingSong = table.get(songIndex);
             try {
-                reproductor.ponerActualizarMetaDatos();
+                reproductor.ponerActualizarMetaDatos(); //Actualiza los nombres y descripciones del player
             } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
                 Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
-        x = new Thread(new Task<Void>() {
+        x = new Thread(new Task<Void>() { //Hilo que albergara la ejecución de la canción o vídeo
             @Override
             protected Void call() {
                 try {
 
-                    //HashMap<String,Object> songDetails = reproductor.cachedPlaylist.get(currentPlaylistName).get(index);
-                    File song = table.get(songIndex).getFile();
+                    File song = table.get(songIndex).getFile(); //Conseguimos el fichero que toque reproducir
 
                     isActive = true;
-                    if (playList) {
-                        /*while (true) {
-                            try {
-                                for (Node eachNode : dash.playlistListView.getItems()) {
-                                    HBox x = (HBox) eachNode;
 
-                                    if (x.getChildren().get(0).getId().equals(songIndex + "")) {
-                                        Platform.runLater(() -> dash.playlistListView.getSelectionModel().select(x));
-                                        break;
-                                    }
-                                }
-                                break;
-                            } catch (ConcurrentModificationException e) {
-                                System.out.println("concurrent exception, retrying ...");
-                            }
-                        }*/
-                    } else {
-                    }
+                    java.net.URI uri = song.toURI();
+                    source = uri.toString();
 
-                    if (true) { //TODO cambiar a local
-                        java.net.URI uri = song.toURI();
-                        source = uri.toString();
-                        //TODO foto del album
-                        /*Platform.runLater(() -> {
-                            if (songDetails.containsKey("album_art")) {
-                                try {
-                                    Image x = SwingFXUtils.toFXImage(ImageIO.read(new ByteArrayInputStream((byte[]) songDetails.get("album_art"))), null);
-                                    dash.albumArtImgView.setImage(x);
-                                } catch (IOException e) {
-                                    dash.albumArtImgView.setImage(dash.defaultAlbumArt);
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                dash.albumArtImgView.setImage(dash.defaultAlbumArt);
-                            }
-
-                            show();
-                        });*/
-                    }
-                    /*else if (songDetails.get("location").toString().equals("youtube")) {
-                        Image x = new Image(songDetails.get("thumbnail").toString());
-                        Platform.runLater(() -> {
-                            dash.songNameLabel.setText(songDetails.get("title").toString());
-                            dash.artistLabel.setText(songDetails.get("channelTitle").toString());
-                            dash.albumArtImgView.setImage(x);
-                            show();
-                        });
-
-                        String videoURL = songDetails.getOrDefault("videoURL", "null").toString();
-                        if (videoURL.equals("null")) {
-                            String youtubeDLQuery = youtubeExecName + " -f 18 -g https://www.youtube.com/watch?v=" + songDetails.get("videoID");
-                            Process p = Runtime.getRuntime().exec(youtubeDLQuery);
-                            InputStream i = p.getInputStream();
-                            InputStream e = p.getErrorStream();
-
-                            String result = "";
-                            while (true) {
-                                int c = i.read();
-                                if (c == -1) {
-                                    break;
-                                }
-                                result += (char) c;
-                            }
-
-                            if (result.length() == 0) {
-                                //get errors
-                                String errResult = "";
-                                while (true) {
-                                    int c = e.read();
-                                    if (c == -1) {
-                                        break;
-                                    }
-                                    errResult += (char) c;
-                                }
-
-                                e.close();
-                                dash.showErrorAlert("Uh OH!", "Unable to play, probably because Age Restricted/Live Video. If not, check connection and try again!\n\n" + errResult);
-                                stop();
-                                hide();
-                                return null;
-                            }
-
-                            i.close();
-                            e.close();
-
-                            videoURL = result.substring(0, result.length() - 1);
-                            songDetails.put("videoURL", videoURL);
-                            dash.cachedPlaylist.get(currentPlaylistName).get(songIndex).put("videoURL", videoURL);
-                        }
-
-                        source = videoURL;
-
-                    }*/
-
- /*if (!isActive || index != songIndex) {
-                        System.out.println("Skipping because video no longer required ...");
-                        return null;
-                    }*/
                     System.out.println("starting ...");
 
-                    media = new Media(source);
-
+                    media = new Media(source); //Creamos los medios necesarios
                     mediaPlayer = new MediaPlayer(media);
-                    reproductor.equalizerModeChoiceBox.setValue("Flat");
+
+                    reproductor.equalizerModeChoiceBox.setValue("Flat"); //Introducimos los parametros del ecualizador
                     equalize("Flat");
                     mediaPlayer.getAudioEqualizer().setEnabled(true);
                     media.setOnError(() -> {
@@ -246,7 +126,7 @@ public class Player {
                         media.getError().printStackTrace();
                     });
 
-                    mediaPlayer.setOnReady(() -> {
+                    mediaPlayer.setOnReady(() -> { //Cuando todo esté listo comenzamos la reproducción
 
                         System.out.println("Start Playing ...");
 
@@ -277,7 +157,7 @@ public class Player {
                             reproductor.playActive = false;
                             reproductor.play1.setImage(reproductor.pauseImg);
                             /* }*/
-                            if(song.getName().toLowerCase().endsWith(".mp4")){ // Es un video-clip
+                            if (song.getName().toLowerCase().endsWith(".mp4")) { // Es un video-clip
                                 reproductor.musicVideo.setMediaPlayer(mediaPlayer);
                                 reproductor.musicVideo1.setMediaPlayer(mediaPlayer);
                                 /*reproductor.musicVideo.setFitHeight(300);
@@ -288,7 +168,7 @@ public class Player {
                                 reproductor.musicVideo1.setFitHeight(100);
                                 reproductor.musicVideo1.setFitWidth(150);
                                 reproductor.musicVideo1.setPreserveRatio(false);*/
-                                
+
                                 reproductor.change.setImage(reproductor.changeMusicImg);
                                 reproductor.change1.setImage(reproductor.changeMusicImg);
 
@@ -301,7 +181,7 @@ public class Player {
 
                                 reproductor.musicImage.setVisible(false);
                                 reproductor.musicImage1.setVisible(false);
-                            }else{
+                            } else {
                                 reproductor.change.setImage(reproductor.changeVideoImg);
                                 reproductor.change1.setImage(reproductor.changeVideoImg);
 
@@ -318,13 +198,23 @@ public class Player {
 
                         });
 
-                        mediaPlayer.play();
+                        mediaPlayer.play(); //Comenzamos la reproduccion
                         isPlaying = true;
 
-                        startUpdating();
+                        startUpdating(); // y el actualizado de la GUI
+                        equalize("Flat");
+                        reproductor.equalizerModeChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+                            @Override
+                            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
+                                equalize((String) reproductor.equalizerModeChoiceBox.getItems().get((Integer) number2));
+                            }
+                        });
+                        mediaPlayer.setAudioSpectrumListener((double timestamp, double duration, float[] magnitudes, float[] phases) -> {
+                            handleUpdate(timestamp, duration, magnitudes, phases);
+                        });
                     });
 
-                    mediaPlayer.setOnEndOfMedia(() -> {
+                    mediaPlayer.setOnEndOfMedia(() -> { //cuando se acabe el archivo vemos si es una playlist o no para seguir
                         if (playList) {
                             onEndOfMediaTrigger();
                         } else {
@@ -345,14 +235,14 @@ public class Player {
 
     Thread x;
 
-    public void onEndOfMediaTrigger() {
+    public void onEndOfMediaTrigger() { // Se termina la cancion o vídeo
         if (reproductor.shuffleActive) {
             playNextRandom();
         } else {
-            if (reproductor.repeatActive) {
+            if (reproductor.repeatActive) { // Si hay que repetir la cancion se pone al inicio y no se hacen nada mas
                 setPos(0);
             } else {
-                if (songIndex == (table.size() - 1)) {
+                if (songIndex == (table.size() - 1)) { // Si hemos llegado a la ultima cancion de la tabla se para
                     reproductor.playActive = false;
                     reproductor.play.setImage(reproductor.playImg);
                     reproductor.play1.setImage(reproductor.playImg);
@@ -365,7 +255,7 @@ public class Player {
         }
     }
 
-    public void playNext() {
+    public void playNext() { // Pasa a la siguiente cancion si la hay
         if (songIndex < (table.size() - 1)) {
             if (isPlaying) {
                 mediaPlayer.stop();
@@ -375,8 +265,8 @@ public class Player {
         }
     }
 
-    private void playNextRandom() {
-        if (reproductor.repeatActive) {
+    private void playNextRandom() { // Pasa la siguiente cancion de manera aleatoria
+        if (reproductor.repeatActive) { // Si hay que repetir no se calcula otra aleatoria
             setPos(0);
         } else {
             if (isPlaying) {
@@ -388,7 +278,7 @@ public class Player {
         }
     }
 
-    public void playPrevious() {
+    public void playPrevious() { //Pasa a la anterior cancion si la hay
         if (mediaPlayer.getCurrentTime().toSeconds() > 3) { //Si han pasado 3 segundos reinicia la cancion, si no pasa a la anterior
             setPos(0);
         } else if (songIndex > 0) {
@@ -398,11 +288,11 @@ public class Player {
         }
     }
 
-    public void setPos(double newDurSecs) {
+    public void setPos(double newDurSecs) { //Establece la "posicion" del archivo que está siendo reproducido
         mediaPlayer.seek(Duration.seconds(newDurSecs));
     }
 
-    public void pauseResume() {
+    public void pauseResume() { // Continua o pausa la ejecucion
         new Thread(new Task() {
             @Override
             protected Object call() throws Exception {
@@ -426,7 +316,7 @@ public class Player {
         }).start();
     }
 
-    public void stop() {
+    public void stop() { // Para la ejecucion
         if (isPlaying) {
             isPlaying = false;
             try {
@@ -443,7 +333,7 @@ public class Player {
 
     }
 
-    private void startUpdating() {
+    private void startUpdating() { // Hilo que se llama cada cierto tiempo para actualizar principalmente el tiempo de ejecucion y sliders.
         updaterThread = new Thread(new Task<Void>() {
             @Override
             protected Void call() {
@@ -458,7 +348,6 @@ public class Player {
                             if (!reproductor.sliderDuration.isValueChanging() && !reproductor.sliderDuration1.isValueChanging()) {
                                 reproductor.sliderDuration.setValue(currentProgress);
                                 reproductor.sliderDuration1.setValue(currentProgress);
-                                //dash.refreshSlider(dash.songSeek);
                                 currentP = currentProgress;
                             }
                         }
@@ -498,6 +387,7 @@ public class Player {
     double currentP = 0.0;
 
     void equalize(String modo) {
+
         float a[] = new float[10];
         //miramos el modo para poner unos valores u otros
         switch (modo) {
@@ -514,97 +404,98 @@ public class Player {
                 a[9] = 50f;
                 break;
             case "Electronic":
-                a[0] = (4f +24)/0.36f;
-                a[1] = (3.5f+24)/0.36f;
-                a[2] = (1f+24)/0.36f;
-                a[3] = (0f+24)/0.36f;
-                a[4] = (-2f+24)/0.36f;
-                a[5] = (2f+24)/0.36f;
-                a[6] = (0.5f+24)/0.36f;
-                a[7] = (1f+24)/0.36f;
-                a[8] = (4f+24)/0.36f;
-                a[9] = (5f+24)/0.36f;
+                a[0] = (4f + 24) / 0.36f;
+                a[1] = (3.5f + 24) / 0.36f;
+                a[2] = (1f + 24) / 0.36f;
+                a[3] = (0f + 24) / 0.36f;
+                a[4] = (-2f + 24) / 0.36f;
+                a[5] = (2f + 24) / 0.36f;
+                a[6] = (0.5f + 24) / 0.36f;
+                a[7] = (1f + 24) / 0.36f;
+                a[8] = (4f + 24) / 0.36f;
+                a[9] = (5f + 24) / 0.36f;
 
                 break;
             case "Classic":
-                a[0] = (4.5f+24)/0.36f;
-                a[1] = (3.5f+24)/0.36f;
-                a[2] = (3f+24)/0.36f;
-                a[3] = (2.5f+24)/0.36f;
-                a[4] = (-2f+24)/0.36f;
-                a[5] = (-1.5f+24)/0.36f;
-                a[6] = (0f+24)/0.36f;
-                a[7] = (2f+24)/0.36f;
-                a[8] = (3.5f+24)/0.36f;
-                a[9] = (4f+24)/0.36f;
+                a[0] = (4.5f + 24) / 0.36f;
+                a[1] = (3.5f + 24) / 0.36f;
+                a[2] = (3f + 24) / 0.36f;
+                a[3] = (2.5f + 24) / 0.36f;
+                a[4] = (-2f + 24) / 0.36f;
+                a[5] = (-1.5f + 24) / 0.36f;
+                a[6] = (0f + 24) / 0.36f;
+                a[7] = (2f + 24) / 0.36f;
+                a[8] = (3.5f + 24) / 0.36f;
+                a[9] = (4f + 24) / 0.36f;
 
                 break;
             case "Jazz":
-                a[0] = (4f+24)/0.36f;
-                a[1] = (3f+24)/0.36f;
-                a[2] = (1f+24)/0.36f;
-                a[3] = (2f+24)/0.36f;
-                a[4] = (-2f+24)/0.36f;
-                a[5] = (-2f+24)/0.36f;
-                a[6] = (0f+24)/0.36f;
-                a[7] = (1.5f+24)/0.36f;
-                a[8] = (3f+24)/0.36f;
-                a[9] = (3.5f+24)/0.36f;
+                a[0] = (4f + 24) / 0.36f;
+                a[1] = (3f + 24) / 0.36f;
+                a[2] = (1f + 24) / 0.36f;
+                a[3] = (2f + 24) / 0.36f;
+                a[4] = (-2f + 24) / 0.36f;
+                a[5] = (-2f + 24) / 0.36f;
+                a[6] = (0f + 24) / 0.36f;
+                a[7] = (1.5f + 24) / 0.36f;
+                a[8] = (3f + 24) / 0.36f;
+                a[9] = (3.5f + 24) / 0.36f;
 
                 break;
             case "Pop":
-                a[0] = (-2f+24)/0.36f;
-                a[1] = (-1f+24)/0.36f;
-                a[2] = (0f+24)/0.36f;
-                a[3] = (2f+24)/0.36f;
-                a[4] = (4f+24)/0.36f;
-                a[5] = (4f+24)/0.36f;
-                a[6] = (2f+24)/0.36f;
-                a[7] = (0f+24)/0.36f;
-                a[8] = (-1.5f+24)/0.36f;
-                a[9] = (-2f+24)/0.36f;
+                a[0] = (-2f + 24) / 0.36f;
+                a[1] = (-1f + 24) / 0.36f;
+                a[2] = (0f + 24) / 0.36f;
+                a[3] = (2f + 24) / 0.36f;
+                a[4] = (4f + 24) / 0.36f;
+                a[5] = (4f + 24) / 0.36f;
+                a[6] = (2f + 24) / 0.36f;
+                a[7] = (0f + 24) / 0.36f;
+                a[8] = (-1.5f + 24) / 0.36f;
+                a[9] = (-2f + 24) / 0.36f;
 
                 break;
             case "Voice":
-                a[0] = (-2f+24)/0.36f;
-                a[1] = (-3.5f+24)/0.36f;
-                a[2] = (-3f+24)/0.36f;
-                a[3] = (1f+24)/0.36f;
-                a[4] = (3.5f+24)/0.36f;
-                a[5] = (3.5f+24)/0.36f;
-                a[6] = (3f+24)/0.36f;
-                a[7] = (1.5f+24)/0.36f;
-                a[8] = (0.5f+24)/0.36f;
-                a[9] = (-2f+24)/0.36f;
+                a[0] = (-2f + 24) / 0.36f;
+                a[1] = (-3.5f + 24) / 0.36f;
+                a[2] = (-3f + 24) / 0.36f;
+                a[3] = (1f + 24) / 0.36f;
+                a[4] = (3.5f + 24) / 0.36f;
+                a[5] = (3.5f + 24) / 0.36f;
+                a[6] = (3f + 24) / 0.36f;
+                a[7] = (1.5f + 24) / 0.36f;
+                a[8] = (0.5f + 24) / 0.36f;
+                a[9] = (-2f + 24) / 0.36f;
 
                 break;
             case "Dance":
-                a[0] = (3.5f+24)/0.36f;
-                a[1] = (6.5f+24)/0.36f;
-                a[2] = (5f+24)/0.36f;
-                a[3] = (0f+24)/0.36f;
-                a[4] = (2f+24)/0.36f;
-                a[5] = (3.5f+24)/0.36f;
-                a[6] = (5f+24)/0.36f;
-                a[7] = (4f+24)/0.36f;
-                a[8] = (3.5f+24)/0.36f;
-                a[9] = (0f+24)/0.36f;
+                a[0] = (3.5f + 24) / 0.36f;
+                a[1] = (6.5f + 24) / 0.36f;
+                a[2] = (5f + 24) / 0.36f;
+                a[3] = (0f + 24) / 0.36f;
+                a[4] = (2f + 24) / 0.36f;
+                a[5] = (3.5f + 24) / 0.36f;
+                a[6] = (5f + 24) / 0.36f;
+                a[7] = (4f + 24) / 0.36f;
+                a[8] = (3.5f + 24) / 0.36f;
+                a[9] = (0f + 24) / 0.36f;
 
                 break;
             case "Rock":
-                a[0] = (5f+24)/0.36f;
-                a[1] = (4f+24)/0.36f;
-                a[2] = (3f+24)/0.36f;
-                a[3] = (1.5f+24)/0.36f;
-                a[4] = (-0.5f+24)/0.36f;
-                a[5] = (-1.5f+24)/0.36f;
-                a[6] = (0.5f+24)/0.36f;
-                a[7] = (2.5f+24)/0.36f;
-                a[8] = (3.5f+24)/0.36f;
-                a[9] = (4.5f+24)/0.36f;
+                a[0] = (5f + 24) / 0.36f;
+                a[1] = (4f + 24) / 0.36f;
+                a[2] = (3f + 24) / 0.36f;
+                a[3] = (1.5f + 24) / 0.36f;
+                a[4] = (-0.5f + 24) / 0.36f;
+                a[5] = (-1.5f + 24) / 0.36f;
+                a[6] = (0.5f + 24) / 0.36f;
+                a[7] = (2.5f + 24) / 0.36f;
+                a[8] = (3.5f + 24) / 0.36f;
+                a[9] = (4.5f + 24) / 0.36f;
 
                 break;
         }
+        //Eventos para las diferentes frecuencias del ecualizador
         reproductor.volumeSlider.setValue(reproductor.sliderVolume.getValue());
         reproductor.volumeSlider.valueProperty().addListener(new InvalidationListener() {
             @Override
@@ -618,7 +509,7 @@ public class Player {
             @Override
             public void changed(
                     ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(0).setGain((newValue.doubleValue() * 0.36 - 24));
+                mediaPlayer.getAudioEqualizer().getBands().get(0).setGain((newValue.doubleValue() * 0.36 - 24)); // Se pasa del intervalo [0, 100] al [-24, 12]
                 System.out.println("valor de la primera banda: " + mediaPlayer.getAudioEqualizer().getBands().get(0).getGain());
             }
         });
@@ -626,7 +517,7 @@ public class Player {
         reproductor.slider2.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(1).setGain((newValue.doubleValue() * 0.36 - 24));
+                mediaPlayer.getAudioEqualizer().getBands().get(1).setGain((newValue.doubleValue() * 0.36 - 24)); // Se pasa del intervalo [0, 100] al [-24, 12]
                 System.out.println("valor de la 1 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(0).getGain());
 
             }
@@ -635,7 +526,7 @@ public class Player {
         reproductor.slider3.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(2).setGain((newValue.doubleValue() * 0.36 - 24));
+                mediaPlayer.getAudioEqualizer().getBands().get(2).setGain((newValue.doubleValue() * 0.36 - 24)); // Se pasa del intervalo [0, 100] al [-24, 12]
                 System.out.println("valor de la 2 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(2).getGain());
 
             }
@@ -644,7 +535,7 @@ public class Player {
         reproductor.slider4.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(3).setGain((newValue.doubleValue() * 0.36 - 24));
+                mediaPlayer.getAudioEqualizer().getBands().get(3).setGain((newValue.doubleValue() * 0.36 - 24)); // Se pasa del intervalo [0, 100] al [-24, 12]
                 System.out.println("valor de la 3 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(3).getGain());
 
             }
@@ -653,7 +544,7 @@ public class Player {
         reproductor.slider5.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(4).setGain((newValue.doubleValue() * 0.36 - 24));
+                mediaPlayer.getAudioEqualizer().getBands().get(4).setGain((newValue.doubleValue() * 0.36 - 24)); // Se pasa del intervalo [0, 100] al [-24, 12]
                 System.out.println("valor de la 4 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(4).getGain());
 
             }
@@ -662,7 +553,7 @@ public class Player {
         reproductor.slider6.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(5).setGain((newValue.doubleValue() * 0.36 - 24));
+                mediaPlayer.getAudioEqualizer().getBands().get(5).setGain((newValue.doubleValue() * 0.36 - 24)); // Se pasa del intervalo [0, 100] al [-24, 12]
                 System.out.println("valor de la 5 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(5).getGain());
 
             }
@@ -671,7 +562,7 @@ public class Player {
         reproductor.slider7.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(6).setGain((newValue.doubleValue() * 0.36 - 24));
+                mediaPlayer.getAudioEqualizer().getBands().get(6).setGain((newValue.doubleValue() * 0.36 - 24)); // Se pasa del intervalo [0, 100] al [-24, 12]
                 System.out.println("valor de la 6 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(6).getGain());
 
             }
@@ -680,7 +571,7 @@ public class Player {
         reproductor.slider8.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(7).setGain((newValue.doubleValue() * 0.36 - 24));
+                mediaPlayer.getAudioEqualizer().getBands().get(7).setGain((newValue.doubleValue() * 0.36 - 24)); // Se pasa del intervalo [0, 100] al [-24, 12]
                 System.out.println("valor de la 7 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(7).getGain());
 
             }
@@ -689,7 +580,7 @@ public class Player {
         reproductor.slider9.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(8).setGain((newValue.doubleValue() * 0.36 - 24));
+                mediaPlayer.getAudioEqualizer().getBands().get(8).setGain((newValue.doubleValue() * 0.36 - 24)); // Se pasa del intervalo [0, 100] al [-24, 12]
                 System.out.println("valor de la 8 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(8).getGain());
 
             }
@@ -698,14 +589,10 @@ public class Player {
         reproductor.slider10.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-                mediaPlayer.getAudioEqualizer().getBands().get(9).setGain(newValue.doubleValue() * 0.36 - 24);
+                mediaPlayer.getAudioEqualizer().getBands().get(9).setGain(newValue.doubleValue() * 0.36 - 24); // Se pasa del intervalo [0, 100] al [-24, 12]
                 System.out.println("valor de la 9 banda: " + mediaPlayer.getAudioEqualizer().getBands().get(9).getGain());
 
             }
-        });
-
-        mediaPlayer.setAudioSpectrumListener((double timestamp, double duration, float[] magnitudes, float[] phases) -> {
-            handleUpdate(timestamp, duration, magnitudes, phases);
         });
 
     }
