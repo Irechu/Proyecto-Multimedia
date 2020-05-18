@@ -1,0 +1,5 @@
+
+C:\Users\Amy\Documents\NetBeansProjects\Proyecto Multimedia\ProyectoMultimedia_1\src\assets\audio\Queen - Don't Stop Me Now.mp3
+C:\Users\Amy\Documents\NetBeansProjects\Proyecto Multimedia\ProyectoMultimedia_1\src\assets\audio\Queen - Somebody To Love (Official Video) (YTCONVERT.IN).mp3
+C:\Users\Amy\Documents\NetBeansProjects\Proyecto Multimedia\ProyectoMultimedia_1\src\assets\audio\Queen - We Will Rock You.mp3
+C:\Users\Amy\Documents\NetBeansProjects\Proyecto Multimedia\ProyectoMultimedia_1\src\assets\audio\Queen Bohemian Rhapsody.mp3
