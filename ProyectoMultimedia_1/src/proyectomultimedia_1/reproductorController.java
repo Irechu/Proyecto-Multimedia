@@ -80,6 +80,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -522,60 +523,61 @@ public class reproductorController implements Initializable {
     @FXML
     private void searchKeyPressed(KeyEvent event) {
         TableView<Song> table = null;
-        switch (searchChoice.getValue()) {
-            case "Library":
-            case "Biblioteca":
-                System.out.println("biblioteca");
-                table = libraryTable;
-                break;
-            case "Favourites":
-            case "Favoritos":
-                System.out.println("fav");
-                table = favouritesTable;
-                break;
-            case "Internet":
-                //TODO
-                searchLabel.setText("Buscando en internet...");
-                break;
+        if(!event.getCode().equals(KeyCode.ENTER)){
+            switch (searchChoice.getValue()) {
+                case "Library":
+                case "Biblioteca":
+                    System.out.println("biblioteca");
+                    table = libraryTable;
+                    break;
+                case "Favourites":
+                case "Favoritos":
+                    System.out.println("fav");
+                    table = favouritesTable;
+                    break;
+                case "Internet":
+                    //TODO
+                    searchLabel.setText("Buscando en internet...");
+                    break;
 
-        }
-        FilteredList<Song> filteredData = new FilteredList<Song>(table.getItems(), p -> true);
-        searchTable.setItems(filteredData);
-
-        searchBar.textProperty().addListener((prop, old, text) -> {
-            filteredData.setPredicate(song -> {
-                if (text == null || text.isEmpty()) {
-                    return true;
-                }
-                String cancion = "";
-
-                switch (searchGroup.getSelectedToggle().toString().split("'")[1]) {
-                    case "Song":
-                    case "Canción":
-                        cancion = song.getSongName().toLowerCase();
-                        break;
-                    case "Artist":
-                    case "Artista":
-                        cancion = song.getArtist().toLowerCase();
-                        break;
-                    case "Album":
-                        cancion = song.getAlbum().toLowerCase();
-                        break;
-                }
-
-                return cancion.contains(text.toLowerCase());
-            });
-            if (searchTable.getItems().size() == 0) {
-                if (preferences.getInt("idIdioma", 0) == 0) {
-                    searchLabel.setText("No hay resulatdos");
-                } else {
-                    searchLabel.setText("No results");
-                }
-            } else {
-                searchLabel.setText("");
             }
-        });
+            FilteredList<Song> filteredData = new FilteredList<Song>(table.getItems(), p -> true);
+            searchTable.setItems(filteredData);
 
+            searchBar.textProperty().addListener((prop, old, text) -> {
+                filteredData.setPredicate(song -> {
+                    if (text == null || text.isEmpty()) {
+                        return true;
+                    }
+                    String cancion = "";
+
+                    switch (searchGroup.getSelectedToggle().toString().split("'")[1]) {
+                        case "Song":
+                        case "Canción":
+                            cancion = song.getSongName().toLowerCase();
+                            break;
+                        case "Artist":
+                        case "Artista":
+                            cancion = song.getArtist().toLowerCase();
+                            break;
+                        case "Album":
+                            cancion = song.getAlbum().toLowerCase();
+                            break;
+                    }
+
+                    return cancion.contains(text.toLowerCase());
+                });
+                if (searchTable.getItems().size() == 0) {
+                    if (preferences.getInt("idIdioma", 0) == 0) {
+                        searchLabel.setText("No hay resulatdos");
+                    } else {
+                        searchLabel.setText("No results");
+                    }
+                } else {
+                    searchLabel.setText("");
+                }
+            });
+        }
     }
 
     @FXML
