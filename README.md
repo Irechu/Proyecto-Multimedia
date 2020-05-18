@@ -12,3 +12,30 @@ proyecto realizado por Sergio Bonachera e Irene Padilla para la asignatura de Si
 * Busqueda en colecciones
 * Edición de metadatos
 
+
+
+                               _-_
+                             +|\G/|+
+                             +|\ /|+
+                             +|\ /|+
+                              `|H|'
+                               |H|
+                               |H|
+                               |H|
+                               |H|
+                               |H|
+                               |H|
+                               |H|
+                         _-_   |H|   _-_
+                        /   \  |H|  /   \
+                        |    \_|H|_/    |
+                        \      |H|      /
+                         \     |H|     /
+                          |            |
+                         /     ===      \
+                        /      ===  !    \
+                       |            |  o  |
+                       |       ---  /   o |
+                       \       ___ /   o  /
+                        \     |   |     l/
+                         `-____\_/_____-"
