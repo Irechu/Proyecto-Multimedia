@@ -1492,7 +1492,8 @@ public class reproductorController implements Initializable {
         }
     }
 
-    //menu contextual en la lista de playliusts
+    //menu contextual en la lista de playlists
+    @FXML
     private void listOnClick(MouseEvent event) {
         ListView<String> listaPlaylist = playlistList;
 
